@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16
+    container_name: price_intel_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: price_intel
+      POSTGRES_PASSWORD: change_me_local_only
+      POSTGRES_DB: price_intel
+    ports:
+      - "5432:5432"
+    volumes:
+      - price_intel_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+      - ./db/queries_utiles.sql:/docker-entrypoint-initdb.d/2_queries_utiles.sql
+
+  adminer:
+    image: adminer
+    container_name: price_intel_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  price_intel_data:

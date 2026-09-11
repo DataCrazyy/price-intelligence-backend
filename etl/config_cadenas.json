@@ -1,0 +1,57 @@
+{
+  "_comentario": "Cadenas que se scrapean automaticamente con 'python run_all.py' o desde panel.py. 'shopify': sin navegador, casi gratis, 'colecciones': 'todas' descubre y scrapea el catalogo completo solo (listar_colecciones()); si preferis limitar a categorias puntuales, pone un array de handles en su lugar, ej. [\"lacteos\"]. 'navegador': necesitan Playwright (mas lento, hay que agregar categorias a mano copiando la URL, no hay auto-descubrimiento todavia).",
+  "_urls_chavez_pendientes": {
+    "_comentario": "URLs de Chavez que estaban comentadas con // (JSON no soporta comentarios, asi que quedaban invalidas). Movidas aca para no perderlas -- para activar una, pasala a la lista 'urls' de Chavez mas abajo.",
+    "urls": [
+      "https://www.farmaciaschavez.com.bo/ca/mamas-y-bebes/nutricion-infantil/leches-y-formulas/108/10806/1080603",
+      "https://www.farmaciaschavez.com.bo/ca/medicamentos/109",
+      "https://www.farmaciaschavez.com.bo/ca/cuidado-de-la-piel/103",
+      "https://www.farmaciaschavez.com.bo/ca/cuidado-e-higiene/104",
+      "https://www.farmaciaschavez.com.bo/ca/insumos-medicos/107",
+      "https://www.farmaciaschavez.com.bo/ca/mamas-y-bebes/108",
+      "https://www.farmaciaschavez.com.bo/ca/nutricion-saludable/110",
+      "https://www.farmaciaschavez.com.bo/ca/salud-sexual/111",
+      "https://www.farmaciaschavez.com.bo/ca/suplementos-y-vitaminas/112"
+    ]
+  },
+  "shopify": [
+    {
+      "cadena": "Fidalga",
+      "sitio_base": "https://www.fidalga.com",
+      "colecciones": "todas"
+    },
+    {
+      "cadena": "Farmacorp",
+      "sitio_base": "https://farmacorp.com",
+      "colecciones": "todas"
+    },
+    {
+      "cadena": "Amarket",
+      "sitio_base": "https://amarket.com.bo",
+      "colecciones": "todas"
+    }
+  ],
+  "navegador": [
+    {
+      "cadena": "Hipermaxi",
+      "script": "scraper_hipermaxi.py",
+      "urls": [
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas",
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes",
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados",
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-personal",
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar",
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-bebe",
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/farmacia-otc",
+        "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cudados-otc/oct-salas"
+      ]
+    },
+    {
+      "cadena": "Chavez",
+      "script": "scraper_chavez.py",
+      "urls": [
+        "https://www.farmaciaschavez.com.bo/ca/alimentos-y-bebidas/101"
+      ]
+    }
+  ]
+}
