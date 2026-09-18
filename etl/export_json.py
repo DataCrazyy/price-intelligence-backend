@@ -1,18 +1,15 @@
 """
-export_json.py — Cierra el ciclo: Postgres -> data/precios.json
+export_json.py — Cierra el ciclo: Postgres + Histórico + Matching Previo -> data/precios.json
 
-Genera un archivo IDÉNTICO en forma al precios.json que ya consume tu
-index.html, pero ahora sacado de la base normalizada en vez de escrito a
-mano. Corre esto después de cada carga (cargar-json / cargar-excel /
-matchear) y sobrescribe data/precios.json en tu repo.
-
-Uso:
-    python export_json.py ../../data/precios.json
+Fusiona los datos de la base de datos respetando el histórico de precios 
+y preservando los `producto_clave` originales del archivo histórico (precios (3).json) 
+para que el matching entre cadenas no se desvanezca.
 """
 import json
 import os
 import sys
 from collections import defaultdict
+from pathlib import Path
 
 import psycopg2
 import psycopg2.extras
@@ -26,6 +23,48 @@ DATABASE_URL = os.environ.get(
 
 
 def export_json(out_path: str):
+    # 1. Buscar y leer el archivo histórico anterior (ej: precios (3).json) para preservar matching e historial
+    datos_viejos_map = {}
+    
+    posibles_nombres = [
+        Path(out_path).parent / "precios (3).json",
+        Path("precios (3).json"),
+        Path("../data/precios (3).json"),
+        Path("data/precios (3).json")
+    ]
+    
+    archivo_encontrado = None
+    for ruta in posibles_nombres:
+        if ruta.exists():
+            archivo_encontrado = ruta
+            break
+            
+    if not archivo_encontrado:
+        for carpeta in [Path("."), Path(".."), Path(out_path).parent]:
+            if carpeta.exists():
+                for f in carpeta.glob("precios*.json"):
+                    if f.resolve() != Path(out_path).resolve():
+                        archivo_encontrado = f
+                        break
+                if archivo_encontrado:
+                    break
+
+    if archivo_encontrado and archivo_encontrado.exists():
+        try:
+            print(f"Rescatando histórico y matching desde: {archivo_encontrado}")
+            with open(archivo_encontrado, "r", encoding="utf-8") as f:
+                datos_viejos = json.load(f)
+                for prod_viejo in datos_viejos.get("productos", []):
+                    # Guardamos tanto el historial como su producto_clave original
+                    datos_viejos_map[prod_viejo["id"]] = {
+                        "historial": prod_viejo.get("historial", []),
+                        "producto_clave": prod_viejo.get("producto_clave")
+                    }
+        except Exception as e:
+            print(f"Aviso: No se pudo leer el archivo histórico {archivo_encontrado}: {e}")
+    else:
+        print("Aviso: No se encontró archivo histórico previo. Se usará el matching de la BD.")
+
     conn = psycopg2.connect(DATABASE_URL)
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -33,7 +72,7 @@ def export_json(out_path: str):
         SELECT
             l.id AS listado_id,
             l.cadena_id::text || '-' || l.codigo_cadena AS id,
-            p.producto_clave, l.codigo_cadena,
+            p.producto_clave AS db_producto_clave, l.codigo_cadena,
             p.nombre, p.categoria, p.subcategoria,
             c.nombre AS cadena, s.nombre AS sucursal,
             COALESCE(s.ciudad, 'Santa Cruz') AS ciudad,
@@ -67,10 +106,33 @@ def export_json(out_path: str):
     productos = []
     for f in filas:
         cadena = f["cadena"]
-        hist = [{**h, "cadena": cadena} for h in historial_por_listado.get(f["listado_id"], [])]
+        listado_id = f["listado_id"]
+        prod_id = f["id"]
+        
+        # Historial fresco de la base de datos
+        hist_db = [{**h, "cadena": cadena} for h in historial_por_listado.get(listado_id, [])]
+        
+        # Recuperar datos viejos si existen
+        info_vieja = datos_viejos_map.get(prod_id, {})
+        hist_previo = info_vieja.get("historial", [])
+        
+        # PRESERVACIÓN CLAVE: Si el producto ya estaba matcheado antes, mantenemos su clave original. 
+        # Si es nuevo, usamos la clave que calculó la base de datos.
+        producto_clave = f["db_producto_clave"]
+        
+        # Fusionar historial evitando duplicados por fecha
+        fechas_db = {h["fecha"] for h in hist_db}
+        hist_fusionado = list(hist_db)
+        
+        for h_old in hist_previo:
+            if h_old["fecha"] not in fechas_db:
+                hist_fusionado.append(h_old)
+                
+        hist_fusionado.sort(key=lambda x: x["fecha"])
+
         productos.append({
-            "id": f["id"],
-            "producto_clave": f["producto_clave"],
+            "id": prod_id,
+            "producto_clave": producto_clave,  # <--- Aquí blindamos el matching
             "codigo_cadena": f["codigo_cadena"],
             "nombre": f["nombre"],
             "categoria": f["categoria"],
@@ -85,7 +147,7 @@ def export_json(out_path: str):
             "tiene_descuento": f["tiene_descuento"],
             "imagen": f["imagen"],
             "url": f["url"],
-            "historial": hist,
+            "historial": hist_fusionado,
         })
 
     payload = {
@@ -101,12 +163,14 @@ def export_json(out_path: str):
         "productos": productos,
     }
 
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+
     with open(out_path, "w", encoding="utf-8") as fp:
         json.dump(payload, fp, ensure_ascii=False, indent=2)
 
     cur.close()
     conn.close()
-    print(f"export_json: {len(productos)} listados exportados -> {out_path}")
+    print(f"export_json: {len(productos)} listados exportados -> {out_path} (Matching preservado)")
     return len(productos)
 
 

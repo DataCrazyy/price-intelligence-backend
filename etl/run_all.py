@@ -33,7 +33,7 @@ from contrato import ScrapeRequest
 
 CONFIG_PATH = Path(__file__).parent / "config_cadenas.json"
 RAW_DIR = Path(__file__).parent.parent / "scrapes_raw"
-EXPORT_PATH = Path(__file__).parent.parent.parent / "data" / "precios.json"
+EXPORT_PATH = Path(__file__).parent.parent / "data" / "precios.json"
 
 # script configurado en config_cadenas.json -> módulo con ejecutar(request)
 NAVEGADOR_MODULOS = {
