@@ -16,3 +16,10 @@ reportes/
 
 # Archivos de trabajo temporales
 _fix_config.py
+
+# Exports de datos sueltos generados a mano (export_json.py sin argumento
+# cae acá por default) -- el export real de la pipeline va a ../data/precios.json,
+# fuera de este repo.
+etl/precios_export.json
+etl/precios*.json
+data/precios*.json

@@ -1,0 +1,9 @@
+# Normaliza saltos de línea a LF en el repo, sin importar el editor/SO de
+# quien commitea (Windows suele guardar en CRLF y ensucia los diffs).
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.pdf binary

@@ -1,27 +1,21 @@
-services:
-  db:
-    image: postgres:16
-    container_name: price_intel_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: price_intel
-      POSTGRES_PASSWORD: change_me_local_only
-      POSTGRES_DB: price_intel
-    ports:
-      - "5432:5432"
-    volumes:
-      - price_intel_data:/var/lib/postgresql/data
-      - ./db/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
-      - ./db/queries_utiles.sql:/docker-entrypoint-initdb.d/2_queries_utiles.sql
+# Desde que la base pasó a ser compartida en Supabase (proyecto
+# "price-intelligence" bajo la org PrometeoTech), este docker-compose
+# YA NO ES NECESARIO para correr el proyecto -- ni vos ni Diego necesitan
+# Docker para nada del día a día. La base vive en Supabase y se administra
+# desde su propio dashboard (Table Editor / SQL Editor), que reemplaza a
+# Adminer.
+#
+# Se deja este servicio de Adminer solo como herramienta opcional, por si
+# alguna vez preferís un cliente de DB local en vez del dashboard web de
+# Supabase. Para usarlo: `docker compose up -d` y entrá a localhost:8080,
+# con el connection string de Supabase (ver .env -> DATABASE_URL) como
+# datos de login (servidor = el host que aparece después de la @, ej.
+# db.xxxxx.supabase.co).
 
+services:
   adminer:
     image: adminer
     container_name: price_intel_adminer
     restart: unless-stopped
     ports:
       - "8080:8080"
-    depends_on:
-      - db
-
-volumes:
-  price_intel_data:
