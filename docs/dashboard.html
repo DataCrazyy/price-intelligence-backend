@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Panel de Precios — Farmacorp vs Competencia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6D5DFC;
+            --soft: #F1F0FF;
+            --bg: #F7F8FC;
+            --text: #151923;
+            --muted: #6B7280;
+            --border: #E7EAF3;
+            --green: #15803D;
+            --green-bg: #DCFCE7;
+            --red: #DC2626;
+            --red-bg: #FEE2E2;
+            --amber: #B45309;
+            --amber-bg: #FEF3C7;
+            --shadow: 0 20px 40px rgba(109, 93, 252, .08)
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0 }
+
+        body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text) }
+
+        button, input, select { font: inherit }
+
+        .container { max-width: 1440px; margin: auto; padding: 0 40px }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 20
+        }
+
+        .nav {
+            min-height: 80px;
+            padding: 14px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px
+        }
+
+        .logo { display: flex; align-items: center; gap: 14px }
+
+        .logo-icon {
+            width: 44px; height: 44px; border-radius: 13px;
+            background: var(--primary);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 18px rgba(15, 157, 88, .3); flex-shrink: 0
+        }
+
+        .logo-icon svg { width: 22px; height: 22px }
+
+        .logo-icon img { width: 100%; height: 100%; object-fit: contain; padding: 6px }
+
+        .logo-text { font-weight: 800; font-size: 17px; letter-spacing: -.01em }
+
+        .logo-sub, .muted { font-size: 12px; color: var(--muted) }
+
+        /* Isologo de marca como textura de fondo, detrás del título -- solo
+           decorativo, opacidad baja para no competir con el texto. */
+        /* Antes: overflow:hidden (recortaba ambos ejes). Eso escondía en
+           silencio cualquier contenido que creciera más alto de lo previsto
+           (p.ej. una tarjeta de Top 5 con texto largo), cortándolo a la
+           mitad sin avisar. Solo hace falta contener el eje horizontal para
+           que el logo de fondo no sangre fuera de la pantalla. */
+        main { position: relative; overflow-x: hidden }
+
+        .brand-watermark {
+            position: absolute; top: -60px; right: -60px; width: 420px; height: 420px;
+            background: url('./assets/logos/farmacorp-isologo.png') no-repeat center / contain;
+            opacity: .08; pointer-events: none; z-index: -1
+        }
+
+        .nav-chip {
+            padding: 10px 16px; border-radius: 999px; background: var(--soft);
+            color: var(--primary); font-size: 13px; font-weight: 700
+        }
+
+        main { padding: 36px 0 80px }
+
+        h1 { font-size: 30px; letter-spacing: -.02em }
+
+        .subtitle { margin-top: 8px; color: var(--muted); font-size: 15px; max-width: 760px; line-height: 1.6 }
+
+        .filters-row {
+            margin-top: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap
+        }
+
+        .filters-row .label { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .06em }
+
+        /* Chips de competidores: texto + insignia de iniciales con el color de
+           marca (no logo grande) -- el logo real vive en las tarjetas de
+           "Comparación por cadena" más abajo. */
+        .chip {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 16px 8px 8px; border-radius: 999px; border: 2px solid var(--border);
+            background: #fff; cursor: pointer; transition: .15s; height: 44px
+        }
+
+        .chip.active { border-color: var(--chip-color, var(--primary)); box-shadow: 0 4px 10px rgba(0, 0, 0, .06) }
+
+        .chip:not(.active) { opacity: .5 }
+
+        .chip:not(.active):hover { opacity: .8 }
+
+        .chip-label { font-weight: 700; font-size: 13.5px; color: var(--text) }
+
+        .chip-badge {
+            display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+            width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 9.5px; font-weight: 800
+        }
+
+        /* Texto de cadena con color de marca, para usar en tabla/alertas/top5
+           en vez de logos chiquitos e inconsistentes -- ahí el logo real solo
+           vive en las tarjetas de "Comparación por cadena". */
+        .chain-name { font-weight: 700 }
+
+        /* Referencia discreta a una cadena junto a un precio -- sin color de
+           marca ni negrita, para que lo que resalte sea el precio/porcentaje,
+           no el nombre de la cadena. */
+        .chain-tag { font-size: 11.5px; color: var(--muted); font-weight: 600 }
+
+        .cell-price { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+
+        .pill.tiny { padding: 2px 8px; font-size: 10px }
+
+        .load-more-wrap { display: flex; justify-content: center; margin-top: 18px }
+
+        .btn-more {
+            height: 42px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--border);
+            background: #fff; font-weight: 700; font-size: 13.5px; cursor: pointer; color: var(--primary)
+        }
+
+        .btn-more:hover { background: var(--soft) }
+
+        .report-row { margin-top: 22px }
+
+        .btn-primary {
+            height: 44px; padding: 0 20px; border-radius: 999px; border: none;
+            background: var(--primary); color: #fff; font-weight: 700; font-size: 13.5px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 9px; transition: .15s;
+        }
+        .btn-primary:hover:not(:disabled) { filter: brightness(1.08) }
+        .btn-primary:disabled { opacity: .65; cursor: default }
+
+        .btn-secondary {
+            height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--border);
+            background: #fff; color: var(--primary); font-weight: 700; font-size: 13.5px; cursor: pointer;
+        }
+        .btn-secondary:hover { background: var(--soft) }
+
+        .spinner {
+            width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff;
+            border-radius: 50%; display: inline-block; animation: girar .7s linear infinite; flex-shrink: 0;
+        }
+        @keyframes girar { to { transform: rotate(360deg) } }
+
+        #reporte-frame { width: 100%; height: 640px; border: 1px solid var(--border); border-radius: 16px; display: block }
+
+        #reporte-status.ok { color: var(--green); font-weight: 700 }
+
+        /* Tarjetas de comparación por cadena -- acá SÍ vive el logo real de
+           cada competidor, sin caja blanca forzada detrás: se apoya
+           directo sobre el fondo suave de la tarjeta. */
+        .chain-cards {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px
+        }
+
+        .chain-card {
+            border: 1px solid var(--border); border-left: 4px solid var(--border); border-radius: 20px; padding: 22px;
+            display: flex; flex-direction: column; gap: 14px; background: var(--soft)
+        }
+
+        .chain-card.win { border-left-color: var(--green); background: var(--green-bg) }
+
+        .chain-card.lose { border-left-color: var(--red); background: var(--red-bg) }
+
+        .chain-card.flat { border-left-color: var(--primary) }
+
+        .chain-card-head { display: flex; align-items: center; gap: 10px }
+
+        .chain-card-logo { height: 34px; width: auto; max-width: 130px; object-fit: contain; display: block }
+
+        .chain-card-name { font-weight: 800; font-size: 14.5px }
+
+        .chain-card .stat { font-size: 32px; font-weight: 800; letter-spacing: -.02em }
+
+        .chain-card .stat.win { color: var(--green) }
+
+        .chain-card .stat.lose { color: var(--red) }
+
+        .chain-card .stat.flat { color: var(--primary) }
+
+        .chain-card .stat-label { font-size: 12.5px; color: var(--muted); margin-top: -6px }
+
+        .chain-card .split { display: flex; gap: 8px; flex-wrap: wrap; font-size: 12px; font-weight: 700; border-top: 1px solid var(--border); padding-top: 10px }
+
+        .chain-card .split span { padding: 3px 9px; border-radius: 999px }
+
+        .chain-card .split .w { color: var(--green); background: #fff }
+
+        .chain-card .split .l { color: var(--red); background: #fff }
+
+        .chain-card .split .f { color: var(--muted); background: #fff }
+
+        .chain-card .sku-count { font-size: 12px; color: var(--muted) }
+
+        .select.cat-select { min-width: 210px }
+
+        .metrics-grid {
+            margin-top: 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px
+        }
+
+        .metric, .panel, .card {
+            background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow);
+        }
+
+        .metric { padding: 24px; border-radius: 22px }
+
+        .metric small { color: var(--muted) }
+
+        .metric h2 { font-size: 34px; margin-top: 8px }
+
+        .metric span { display: block; font-size: 12px; font-weight: 700; margin-top: 8px }
+
+        .metric.win span { color: var(--green) }
+
+        .metric.lose span { color: var(--red) }
+
+        .panel { border-radius: 24px; padding: 26px; margin-top: 24px }
+
+        .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 18px; flex-wrap: wrap }
+
+        .panel-head h2 { font-size: 19px }
+
+        .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px }
+
+        .search {
+            height: 46px; flex: 1 1 260px; border: 1px solid var(--border);
+            border-radius: 14px; padding: 0 16px; outline: none
+        }
+
+        .select {
+            height: 46px; border: 1px solid var(--border); border-radius: 14px;
+            padding: 0 14px; background: #fff; font-weight: 600; cursor: pointer; min-width: 170px
+        }
+
+        .search:focus, .select:focus {
+            border-color: var(--primary); box-shadow: 0 0 0 4px rgba(109, 93, 252, .12)
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13.5px }
+
+        th {
+            text-align: left; padding: 12px 14px; background: #F5F4FF; color: #4C3FD7;
+            position: sticky; top: 0
+        }
+
+        td { padding: 12px 14px; border-top: 1px solid var(--border); vertical-align: middle }
+
+        .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; border: 1px solid var(--border) }
+
+        .pill {
+            display: inline-flex; padding: 4px 10px; border-radius: 999px;
+            font-size: 11px; font-weight: 800
+        }
+
+        .pill.win { background: var(--green-bg); color: var(--green) }
+
+        .pill.lose { background: var(--red-bg); color: var(--red) }
+
+        .pill.flat { background: var(--soft); color: var(--primary) }
+
+        .pill.alert { background: var(--amber-bg); color: var(--amber) }
+
+        .prod-name { font-weight: 700; max-width: 320px }
+
+        .prod-cat { color: var(--muted); font-size: 11.5px; margin-top: 2px }
+
+        .diff-cell { font-weight: 800 }
+
+        .diff-cell.win { color: var(--green) }
+
+        .diff-cell.lose { color: var(--red) }
+
+        .state { text-align: center; padding: 50px; color: var(--muted) }
+
+        .foot-note { margin-top: 14px; color: var(--muted); font-size: 12px; line-height: 1.6 }
+
+        /* ---- Top 5 cards ---- */
+        .top5-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px }
+
+        .top5-list { display: grid; gap: 12px }
+
+        /* Grid en vez de flex a propósito: con flex, un hijo de texto con
+           white-space:nowrap puede negarse a encogerse por debajo de su
+           ancho de contenido aunque el padre tenga min-width:0, y termina
+           desbordando la tarjeta hacia la derecha (recortado en pantallas
+           angostas). Con grid + minmax(0, 1fr) la columna del texto queda
+           realmente forzada a respetar el ancho disponible. */
+        .top5-card {
+            display: grid; grid-template-columns: 26px 52px minmax(0, 1fr) auto;
+            align-items: center; gap: 14px; padding: 12px;
+            border: 1px solid var(--border); border-radius: 16px
+        }
+
+        .top5-rank {
+            width: 26px; height: 26px; border-radius: 999px; background: var(--soft); color: var(--primary);
+            font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center
+        }
+
+        .top5-img {
+            width: 52px; height: 52px; border-radius: 12px; background: #F8F9FD;
+            display: flex; align-items: center; justify-content: center; overflow: hidden
+        }
+
+        .top5-img img { width: 100%; height: 100%; object-fit: contain }
+
+        .top5-info { min-width: 0 }
+
+        .top5-info .name {
+            font-weight: 700; font-size: 13.5px; white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .top5-info .meta { font-size: 11.5px; color: var(--muted); margin-top: 2px; overflow-wrap: anywhere }
+
+        /* ---- Diverging category bars ---- */
+        .cat-scale { display: grid; grid-template-columns: 190px 1fr 70px; gap: 14px; margin-bottom: 8px }
+
+        .cat-scale .scale-labels { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--muted); font-weight: 700; padding: 0 2px }
+
+        .cat-rows { display: grid; gap: 10px }
+
+        .cat-row { display: grid; grid-template-columns: 190px 1fr 70px; align-items: center; gap: 14px }
+
+        .cat-row .cat-label { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+
+        .cat-row .cat-n { font-size: 11px; color: var(--muted); font-weight: 500 }
+
+        .divbar { position: relative; height: 30px; background: var(--bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border) }
+
+        .divbar .mid { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: #C7CCDB; z-index: 1 }
+
+        .divbar .fill { position: absolute; top: 3px; bottom: 3px; border-radius: 4px }
+
+        .divbar .fill.win { background: var(--green); right: 50% }
+
+        .divbar .fill.lose { background: var(--red); left: 50% }
+
+        .cat-row .cat-gap { font-size: 12.5px; font-weight: 800; text-align: right }
+
+        /* Categoría "macro" plegable -- adentro, un desglose por la
+           etiqueta de categoría cruda original (ver renderCategorias) para
+           poder comparar, ej., "Insumos Médicos" vs "Suplementos" dentro de
+           "Salud y Medicamentos" en vez de un solo promedio que los tapa. */
+        .cat-details { border-radius: 8px }
+        .cat-details summary { cursor: pointer; list-style: none }
+        .cat-details summary::-webkit-details-marker { display: none }
+        .cat-details summary::marker { content: '' }
+        .cat-toggle { display: inline-block; width: 10px; transition: transform .15s; color: var(--muted) }
+        .cat-details[open] .cat-toggle { transform: rotate(90deg) }
+        .cat-subrows { display: grid; gap: 6px; margin: 8px 0 2px; padding-left: 18px; border-left: 2px solid var(--border) }
+        .cat-row-sub { grid-template-columns: 172px 1fr 70px; opacity: .88 }
+        .cat-row-sub .cat-label { font-size: 12px; font-weight: 600 }
+        .cat-row-sub .divbar { height: 24px }
+
+        .cat-legend { display: flex; justify-content: space-between; margin-top: 4px; font-size: 11px; color: var(--muted) }
+
+        /* ---- Trend chart ---- */
+        .chart-wrap { position: relative }
+
+        .chart-wrap svg { width: 100%; height: 290px; display: block }
+
+        .chart-wrap circle { cursor: pointer }
+
+        /* Tooltip al pasar el cursor/dedo sobre un punto -- reemplaza el
+           <title> nativo del navegador, que tarda en aparecer y se ve
+           distinto en cada navegador. Con pocas fechas además se ve un
+           precio fijo arriba de cada punto (ver .point-label); con muchas
+           fechas ese texto fijo se sacaría de encima, así que el precio
+           solo se ve al pasar el cursor -- así no se satura. */
+        .chart-tooltip {
+            position: absolute; pointer-events: none; left: 0; top: 0;
+            background: #151923; color: #fff; font-size: 11.5px; font-weight: 700;
+            padding: 6px 10px; border-radius: 8px; white-space: nowrap; z-index: 5;
+            opacity: 0; transition: opacity .1s; box-shadow: 0 6px 16px rgba(0, 0, 0, .18);
+            transform: translate(-50%, -125%)
+        }
+
+        .chart-tooltip.show { opacity: 1 }
+
+        .point-label { font-size: 10.5px; font-weight: 800; pointer-events: none }
+
+        .legend { display: flex; gap: 18px; margin-top: 12px; color: var(--muted); font-size: 12.5px; flex-wrap: wrap }
+
+        .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px }
+
+        /* ---- Pestañas: arriba queda el resumen general (KPIs, filtros),
+           acá abajo se agrupa el detalle para no tener todo en una sola
+           página larga de scroll. ---- */
+        .tabs {
+            display: flex; gap: 4px; margin-top: 30px; border-bottom: 1px solid var(--border);
+            overflow-x: auto; -webkit-overflow-scrolling: touch
+        }
+
+        .tab-btn {
+            flex: none; padding: 13px 18px; border: none; background: none; cursor: pointer;
+            font-weight: 700; font-size: 13.5px; color: var(--muted); border-bottom: 3px solid transparent;
+            white-space: nowrap; transition: .15s; margin-bottom: -1px
+        }
+
+        .tab-btn:hover { color: var(--text) }
+
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary) }
+
+        .tab-panel[hidden] { display: none }
+
+        /* ---- Histórico por SKU ---- */
+        /* Sin contenedor flex alrededor (a diferencia del buscador de la
+           pestaña Productos, que se estira porque vive dentro de .toolbar),
+           así que acá el ancho se fija a mano: 100% del panel, no el ancho
+           angosto por defecto del navegador. */
+        .sku-picker { position: relative; width: 100% }
+
+        .sku-picker .search {
+            width: 100%; padding-left: 46px;
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%239A96B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>') no-repeat 16px center
+        }
+
+        .sku-suggestions {
+            position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: #fff;
+            border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow);
+            max-height: 340px; overflow-y: auto; z-index: 10; padding: 6px
+        }
+
+        .sku-suggestions button {
+            display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+            padding: 10px 12px; border: none; border-radius: 10px; background: none; cursor: pointer;
+            font: inherit; color: var(--text)
+        }
+
+        .sku-suggestions button + button { margin-top: 2px }
+
+        .sku-suggestions button:hover, .sku-suggestions button:focus-visible { background: var(--soft); outline: none }
+
+        .sku-suggestions img { width: 36px; height: 36px; border-radius: 8px; object-fit: contain; background: #F8F9FD; flex-shrink: 0 }
+
+        .sku-suggestions .sk-name { font-weight: 600; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1 1 auto; min-width: 0 }
+
+        .sku-suggestions .sk-cat-tag { font-size: 11.5px; color: var(--muted); flex-shrink: 0 }
+
+        @media (max-width: 480px) {
+            .sku-picker .search { padding-left: 40px; background-position: 12px center }
+            .sku-suggestions .sk-cat-tag { display: none }
+        }
+
+        .sku-snapshot { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap }
+
+        .sku-snapshot img { width: 64px; height: 64px; border-radius: 14px; object-fit: contain; background: #F8F9FD; flex-shrink: 0 }
+
+        .sku-snapshot .sk-title { font-weight: 800; font-size: 16px }
+
+        .sku-snapshot .sk-cat { color: var(--muted); font-size: 12.5px; margin-top: 2px }
+
+        .sku-price-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px }
+
+        .sku-price-chip {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 14px;
+            border: 1px solid var(--border); font-size: 12.5px
+        }
+
+        .sku-price-chip strong { font-size: 14px }
+
+        @media(max-width:1000px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr) }
+            .top5-grid { grid-template-columns: 1fr }
+        }
+
+        @media(max-width:700px) {
+            .container { padding: 0 16px }
+            .metrics-grid { grid-template-columns: 1fr }
+            .panel { padding: 18px; border-radius: 18px }
+            .cat-scale, .cat-row, .cat-row-sub { grid-template-columns: 110px 1fr 56px; gap: 8px }
+            .cat-subrows { padding-left: 12px }
+            .nav { padding: 12px 0 }
+            .logo-icon { width: 38px; height: 38px; border-radius: 11px }
+            .logo-text { font-size: 15px }
+            #reporte-frame { height: 460px }
+            .chart-wrap svg { height: 230px }
+        }
+
+        @media(max-width:480px) {
+            h1 { font-size: 24px }
+            .subtitle { font-size: 13.5px }
+            .metric h2 { font-size: 26px }
+            .chain-card .stat { font-size: 24px }
+            .nav-chip { font-size: 11.5px; padding: 8px 12px }
+            .logo-sub { display: none }
+            .cat-scale, .cat-row, .cat-row-sub { grid-template-columns: 88px 1fr 46px; gap: 6px }
+            .cat-row .cat-label { font-size: 11.5px }
+            .btn-primary, .btn-secondary, .btn-more { font-size: 12.5px; padding: 0 14px }
+            .top5-img { width: 42px; height: 42px }
+            #reporte-frame { height: 380px }
+            .tab-btn { padding: 10px 13px; font-size: 12px }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="./assets/logos/farmacorp-isologo.png" alt="Farmacorp" onerror="this.remove()">
+                </div>
+                <div>
+                    <div class="logo-text">Panel de Precios — Farmacorp</div>
+                    <div class="logo-sub">Powered by Prometeo Tech</div>
+                </div>
+            </div>
+            <div class="nav-chip" id="date">Cargando datos...</div>
+        </div>
+    </header>
+    <main class="container">
+        <div class="brand-watermark"></div>
+        <h1 id="titulo">Farmacorp vs Competencia</h1>
+        <p class="subtitle">Comparación de precios propios contra la competencia trackeada, sobre los productos con
+            match confirmado. Nada acá está fijado por categoría — a medida que se sumen más SKUs esta misma vista
+            los va a mostrar sin cambios de diseño.</p>
+
+        <div class="filters-row">
+            <span class="label">Comparar contra:</span>
+            <div id="chips"></div>
+        </div>
+        <div class="filters-row">
+            <span class="label">Categoría:</span>
+            <select class="select cat-select" id="cat-global">
+                <option value="Todas">Todas las categorías</option>
+            </select>
+            <span class="muted" id="cat-global-note" style="font-size:12px">Filtra todo el panel, no solo la tabla de abajo.</span>
+        </div>
+
+        <div class="filters-row report-row">
+            <span class="label">Reporte ejecutivo:</span>
+            <button class="btn-primary" id="btn-reporte" onclick="generarReporte()">Generar reporte PDF</button>
+            <button class="btn-secondary" id="btn-exportar" style="display:none" onclick="exportarReporte()">⬇ Exportar PDF</button>
+            <span class="muted" id="reporte-status" style="font-size:12px"></span>
+        </div>
+
+        <section class="panel" id="reporte-preview-wrap" style="display:none">
+            <div class="panel-head">
+                <div>
+                    <h2>Vista previa del reporte</h2>
+                    <p class="muted">Con la categoría y los competidores que tengas elegidos arriba en este momento.</p>
+                </div>
+            </div>
+            <iframe id="reporte-frame"></iframe>
+        </section>
+
+        <section class="metrics-grid">
+            <article class="metric">
+                <small>SKUs comparados</small>
+                <h2 id="m-total">—</h2>
+                <span id="m-total-sub" class="muted">productos con match confirmado</span>
+            </article>
+            <article class="metric win">
+                <small>Somos más baratos</small>
+                <h2 id="m-win">—</h2>
+                <span id="m-win-sub"></span>
+            </article>
+            <article class="metric lose">
+                <small>La competencia es más barata</small>
+                <h2 id="m-lose">—</h2>
+                <span id="m-lose-sub"></span>
+            </article>
+            <article class="metric">
+                <small>Brecha promedio de precio</small>
+                <h2 id="m-gap">—</h2>
+                <span class="muted">positivo = somos más caros en promedio</span>
+            </article>
+        </section>
+
+        <div class="tabs" role="tablist">
+            <button class="tab-btn active" data-tab="resumen" type="button">Resumen</button>
+            <button class="tab-btn" data-tab="alertas" type="button">Alertas</button>
+            <button class="tab-btn" data-tab="productos" type="button">Productos</button>
+            <button class="tab-btn" data-tab="historico" type="button">Histórico por SKU</button>
+        </div>
+
+        <div class="tab-panel" data-tab="resumen">
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Comparación por cadena</h2>
+                        <p class="muted">Frente a cada competidor seleccionado: promedio de brecha, y sobre cuántos SKUs
+                            estamos más baratos, iguales o más caros. Ordenado de mayor riesgo a mayor ventaja.</p>
+                    </div>
+                </div>
+                <div class="chain-cards" id="chain-cards"></div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Dispersión por categoría</h2>
+                        <p class="muted">Brecha de precio promedio, ordenada de mayor riesgo a mayor ventaja. Tocá una categoría para abrir su desglose por segmento.</p>
+                    </div>
+                </div>
+                <div class="cat-scale">
+                    <div></div>
+                    <div class="scale-labels"><span>← Más barato</span><span>Igual</span><span>Más caro →</span></div>
+                    <div></div>
+                </div>
+                <div class="cat-rows" id="cat-rows"></div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Tendencia de precios</h2>
+                        <p class="muted">Precio promedio propio vs. competencia, sobre los SKUs comparados, día a día.</p>
+                    </div>
+                </div>
+                <div class="chart-wrap" id="trend-chart"></div>
+                <div class="legend" id="trend-legend"></div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Top 5</h2>
+                        <p class="muted">Mejor posicionados vs. mayor riesgo, entre los SKUs comparados ahora mismo.</p>
+                    </div>
+                </div>
+                <div class="top5-grid">
+                    <div>
+                        <p class="muted" style="margin-bottom:10px;font-weight:700">✅ Mejor posicionados</p>
+                        <div class="top5-list" id="top5-win"></div>
+                    </div>
+                    <div>
+                        <p class="muted" style="margin-bottom:10px;font-weight:700">⚠️ Mayor riesgo</p>
+                        <div class="top5-list" id="top5-lose"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="outliers-panel" style="display:none">
+                <div class="panel-head">
+                    <div>
+                        <h2>⚠ Diferencias extremas excluidas</h2>
+                        <p class="muted">Estos matches tienen una diferencia de precio tan grande que casi seguro están mal
+                            emparejados (tamaño, variante o precio mal capturado) — no real competencia de precios. Se
+                            sacan de todos los promedios y del Top 5 de arriba para no ensuciarlos. Revisalos si algo no
+                            cuadra; si el match es correcto, avisá para ajustar el umbral.</p>
+                    </div>
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Nuestro precio</th>
+                                <th>Precio rival</th>
+                                <th>Cadena</th>
+                                <th>Diferencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="outliers-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-panel" data-tab="alertas" hidden>
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Alertas de precio agresivo</h2>
+                        <p class="muted">Productos donde la competencia está más barata por encima del umbral — candidatos
+                            a revisar primero.</p>
+                    </div>
+                    <div class="toolbar" style="margin:0">
+                        <select class="select" id="umbral">
+                            <option value="5">Umbral: 5%+</option>
+                            <option value="10" selected>Umbral: 10%+</option>
+                            <option value="20">Umbral: 20%+</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Nuestro precio</th>
+                                <th>Competencia (mejor precio)</th>
+                                <th>Diferencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alert-body"></tbody>
+                    </table>
+                </div>
+                <p class="state" id="alert-empty" style="display:none">Ningún producto supera este umbral ahora mismo.</p>
+            </section>
+        </div>
+
+        <div class="tab-panel" data-tab="productos" hidden>
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Comparación producto por producto</h2>
+                        <p class="muted" id="count">0 productos</p>
+                    </div>
+                </div>
+                <div class="toolbar">
+                    <input class="search" id="search" placeholder="Buscar producto...">
+                    <select class="select" id="sort">
+                        <option value="gap-desc">Mayor desventaja primero</option>
+                        <option value="gap-asc">Mayor ventaja primero</option>
+                        <option value="name">Nombre A-Z</option>
+                    </select>
+                </div>
+                <div class="state" id="status">Cargando data/precios.json...</div>
+                <div class="table-scroll" id="table-wrap" style="display:none">
+                    <table>
+                        <thead id="thead"></thead>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+                <div class="load-more-wrap" id="table-load-more"></div>
+            </section>
+        </div>
+
+        <div class="tab-panel" data-tab="historico" hidden>
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Histórico por SKU</h2>
+                        <p class="muted">Buscá un producto puntual para ver su evolución de precio por cadena, día a
+                            día — no depende de los filtros de arriba, siempre muestra todas las cadenas trackeadas
+                            para ese producto.</p>
+                    </div>
+                </div>
+                <div class="sku-picker">
+                    <input class="search" id="sku-search" placeholder="Buscar producto por nombre..." autocomplete="off">
+                    <div class="sku-suggestions" id="sku-suggestions" hidden></div>
+                </div>
+                <div id="sku-detail" style="margin-top:24px">
+                    <p class="state">Buscá un producto arriba para ver su histórico de precio por cadena.</p>
+                </div>
+            </section>
+        </div>
+
+        <p class="foot-note">
+            Cliente: <strong id="cliente-nombre">Farmacorp</strong> · Competidores disponibles:
+            <span id="competidores-nombres"></span> — tocá los botones de arriba para elegir contra quién comparar
+            (por defecto se comparan todos). Sólo se muestran productos con match confirmado entre cadenas — los
+            pendientes de revisión no aparecen acá todavía.
+        </p>
+    </main>
+
+    <script src="categorias.js"></script>
+    <script>
+        // ---- Único dato fijo del panel: quién es "nuestro" cliente. La lista ----
+        // ---- de competidores se arma sola a partir de lo que traiga el pipeline. ----
+        const DATA_URL = './data/precios.json';
+        const CLIENTE = 'Farmacorp';
+        // API local (postgres_migration/etl/api.py, corrida con
+        // `uvicorn api:app --port 8000`) -- de ahí sale el PDF del botón
+        // "Generar reporte". Si corren la API en otro puerto, cambiar acá.
+        const REPORTE_API = 'http://127.0.0.1:8000';
+
+        // Colores y logos de marca por cadena -- logos guardados localmente en
+        // assets/logos/ (los que pasó David), colores sacados a ojo de cada
+        // sitio. Único lugar a tocar si cambia un logo o color.
+        const CHAIN_META = {
+            'Farmacorp': { color: '#0B3D63', logo: './assets/logos/farmacorp.jpg' },
+            'Fidalga': { color: '#39A935', logo: './assets/logos/fidalga.jpg' },
+            'Amarket': { color: '#E31E24', logo: './assets/logos/amarket.jpg' },
+            'Hipermaxi': { color: '#F26522', logo: './assets/logos/hipermaxi.jpg' },
+            'Farmacias Chavez': { color: '#00AEEF', logo: './assets/logos/chavez.png' },
+        };
+        const metaFor = c => CHAIN_META[c] || { color: '#6B7280', logo: null };
+        const iniciales = c => String(c || '').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+        // Insignia circular de iniciales -- fallback cuando no hay logo (o si
+        // el logo no carga).
+        const chainInitials = (c, size = 20) => {
+            const m = metaFor(c);
+            return `<span class="chip-badge" style="width:${size}px;height:${size}px;background:${m.color};font-size:${Math.round(size * 0.42)}px">${esc(iniciales(c))}</span>`;
+        };
+
+        // Logo real -- se usa en las tarjetas de "Comparación por cadena".
+        // En el resto del panel (chips, tabla, alertas, top 5) el nombre va en
+        // texto/insignia de color de marca -- un logo repetido en cada fila o
+        // chip quedaba chico e inconsistente entre cadenas con logos de
+        // proporciones muy distintas. Sin caja blanca forzada detrás: se
+        // apoya directo sobre el fondo de donde se lo ponga.
+        const chainLogoImg = (c, cls, height = 32) => {
+            const m = metaFor(c);
+            if (!m.logo) return chainInitials(c, height * 0.7) + `<span class="chain-card-name" style="margin-left:6px">${esc(c)}</span>`;
+            const fallbackJson = esc(JSON.stringify(chainInitials(c, height * 0.7) + `<span class="chain-card-name" style="margin-left:6px">${esc(c)}</span>`));
+            return `<img src="${esc(m.logo)}" class="${cls}" style="height:${height}px" alt="${esc(c)}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend',${fallbackJson})">`;
+        };
+
+        // Nombre de cadena en texto, coloreado con su color de marca -- para
+        // usar en tabla/alertas/top 5.
+        const chainText = c => `<span class="chain-name" style="color:${metaFor(c).color}">${esc(c)}</span>`;
+
+        const $ = x => document.getElementById(x);
+        const money = x => `Bs ${Number(x || 0).toFixed(2)}`;
+        const esc = x => String(x ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const norm = x => String(x || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+        // Las imágenes de producto (campo "imagen") vienen directo del sitio
+        // de cada cadena -- fotos a resolución completa (a veces 1000px+)
+        // que acá se muestran como miniatura de 60-160px. Eso es lo que hace
+        // que "tarde mucho" en cargar: se está bajando la foto entera para
+        // mostrar un ícono chico. imgUrl() pide una versión ya redimensionada
+        // y comprimida (webp) en vez de la original:
+        //  - si es una imagen de Shopify (cdn.shopify.com), el mismo CDN de
+        //    Shopify sabe redimensionar con "?width=", así que se usa eso
+        //    directo (más rápido, sin depender de un tercero);
+        //  - para cualquier otro origen, se pasa por images.weserv.nl (proxy
+        //    gratuito de redimensionado+compresión, ampliamente usado) que
+        //    cachea el resultado.
+        function imgUrl(url, ancho) {
+            if (!url) return '';
+            try {
+                const u = new URL(url, location.href);
+                if (/(^|\.)cdn\.shopify\.com$/i.test(u.hostname)) {
+                    u.searchParams.set('width', ancho);
+                    return u.toString();
+                }
+                if (!/^https?:$/i.test(u.protocol)) return url;
+                return `https://images.weserv.nl/?url=${encodeURIComponent(u.href.replace(/^https?:\/\//i, ''))}&w=${ancho}&q=75&output=webp`;
+            } catch (e) { return url; }
+        }
+
+        let DATA, CADENAS = [], SELECCION = new Set(), TODAS_COMPARACIONES = [], COMPARACIONES = [];
+        let query = '', catGlobal = 'Todas', sortMode = 'gap-desc', umbral = 10;
+
+        function agrupar(productos) {
+            const m = new Map();
+            productos.forEach(p => {
+                const k = p.producto_clave;
+                if (!m.has(k)) m.set(k, []);
+                m.get(k).push(p);
+            });
+            return [...m.values()];
+        }
+
+        function historialDe(p) {
+            return Array.isArray(p.historial)
+                ? p.historial.map(h => ({ fecha: h.fecha, precio: +(h.precio_oferta ?? h.precio) })).filter(h => h.fecha && Number.isFinite(h.precio))
+                : [];
+        }
+
+        // Umbral de diferencia (%) a partir del cual un match se trata como
+        // "outlier" -- casi seguro un error de emparejamiento (tamaño o
+        // variante distinta) o un precio mal capturado, no competencia real.
+        // Asimétrico a propósito: un descuento real rara vez pasa -85% (sería
+        // casi regalado), mientras que "más caro" no tiene techo natural, así
+        // que se necesita más margen de ese lado antes de sospechar.
+        const OUTLIER_GAP_MAX = 200;
+        const OUTLIER_GAP_MIN = -85;
+
+        function calcularGap(precioPropio, precioRival) {
+            // null = no se puede calcular un % con sentido (precio en 0 o
+            // negativo de cualquiera de los dos lados -- pasa por glitches
+            // del scraper, no por promociones reales; antes esto se mostraba
+            // como "0% -- prácticamente igual", que es engañoso).
+            if (!(precioPropio > 0) || !(precioRival > 0)) return null;
+            const gap = (precioPropio - precioRival) / precioRival * 100;
+            return { gap, esOutlier: gap > OUTLIER_GAP_MAX || gap < OUTLIER_GAP_MIN };
+        }
+
+        function construirComparaciones() {
+            const grupos = agrupar(DATA.productos);
+            const filas = [];
+            grupos.forEach(g => {
+                const propio = g.find(p => p.cadena === CLIENTE);
+                const rivales = g.filter(p => SELECCION.has(p.cadena) && p.precio_oferta > 0);
+                if (!propio || rivales.length === 0) return;
+                const mejorRival = [...rivales].sort((a, b) => a.precio_oferta - b.precio_oferta)[0];
+                const calc = calcularGap(propio.precio_oferta, mejorRival.precio_oferta);
+                if (!calc) return; // precio propio inválido -- no hay nada que comparar
+                // Un precio por cada competidor seleccionado que también matcheó
+                // este producto -- así la tabla puede mostrar una columna por
+                // cadena en vez de perder info cuando hay 3+ matches.
+                const porCadena = {};
+                rivales.forEach(r => { porCadena[r.cadena] = r.precio_oferta; });
+                filas.push({
+                    clave: propio.producto_clave,
+                    nombre: propio.nombre,
+                    imagen: propio.imagen || mejorRival.imagen,
+                    categoria: propio.categoria || propio.subcategoria || 'Sin categoría',
+                    precioPropio: propio.precio_oferta,
+                    precioRival: mejorRival.precio_oferta,
+                    rivalCadena: mejorRival.cadena,
+                    porCadena,
+                    gap: calc.gap,
+                    esOutlier: calc.esOutlier,
+                    propioHist: historialDe(propio),
+                    rivalesHist: rivales.flatMap(historialDe),
+                });
+            });
+            return filas;
+        }
+
+        function renderChips() {
+            $('chips').innerHTML = CADENAS.map(c => {
+                const activo = SELECCION.has(c), m = metaFor(c);
+                return `<button class="chip ${activo ? 'active' : ''}" data-c="${esc(c)}" style="--chip-color:${m.color}" title="${esc(c)}">${chainInitials(c)}<span class="chip-label">${esc(c)}</span></button>`;
+            }).join(' ');
+            document.querySelectorAll('#chips [data-c]').forEach(b => b.onclick = () => {
+                const c = b.dataset.c;
+                if (SELECCION.has(c)) SELECCION.delete(c); else SELECCION.add(c);
+                actualizar();
+            });
+        }
+
+        // Una tarjeta por cada competidor seleccionado que tenga al menos un
+        // SKU matcheado -- a diferencia del gap "vs mejor rival" que se usa
+        // en el resto del panel, acá la brecha es específicamente contra ESA
+        // cadena puntual (usa porCadena, no precioRival).
+        function renderComparacionPorCadena() {
+            const el = $('chain-cards');
+            const cadenas = CADENAS.filter(c => SELECCION.has(c));
+            const tarjetas = cadenas.map(c => {
+                const posibles = COMPARACIONES.filter(cmp => cmp.porCadena[c] !== undefined);
+                if (posibles.length === 0) return null;
+                // El gap "vs mejor rival" que ya trae cada fila puede no ser el
+                // mismo que el gap contra ESTA cadena puntual (si mejorRival es
+                // otra) -- por eso se recalcula acá, pero con el mismo filtro de
+                // outliers (calcularGap) para que "excluido" signifique lo mismo
+                // en todo el dashboard.
+                const evaluados = posibles
+                    .map(cmp => ({ cmp, calc: calcularGap(cmp.precioPropio, cmp.porCadena[c]) }))
+                    .filter(x => x.calc);
+                const validos = evaluados.filter(x => !x.calc.esOutlier);
+                const outliers = evaluados.filter(x => x.calc.esOutlier);
+                if (validos.length === 0) return null;
+                const gaps = validos.map(x => x.calc.gap);
+                const gapProm = gaps.reduce((a, b) => a + b, 0) / gaps.length;
+                const cls = gapProm > 1 ? 'lose' : gapProm < -1 ? 'win' : 'flat';
+                const etiqueta = gapProm > 1 ? 'más caros que' : gapProm < -1 ? 'más baratos que' : 'prácticamente igual a';
+                // Desglose SKU a SKU contra ESTA cadena puntual (no el promedio):
+                // cuántos ganamos, cuántos perdemos, cuántos están prácticamente
+                // parejos -- el promedio solo puede esconder, ej., 40% ganados y
+                // 60% perdidos por mucho, que resulta en un promedio chico.
+                let win = 0, lose = 0, flat = 0;
+                gaps.forEach(g => { if (g > 1) lose++; else if (g < -1) win++; else flat++; });
+                return { c, gapProm, cls, etiqueta, n: validos.length, win, lose, flat, outliers: outliers.length };
+            }).filter(Boolean);
+
+            // Peor primero: lo que más urge revisar arriba, sin que el gerente
+            // tenga que escanear todas las tarjetas para encontrar el riesgo.
+            tarjetas.sort((a, b) => b.gapProm - a.gapProm);
+
+            el.innerHTML = tarjetas.length
+                ? tarjetas.map(t => `
+                <div class="chain-card ${t.cls}">
+                    <div class="chain-card-head">${chainLogoImg(t.c, 'chain-card-logo')}</div>
+                    <div>
+                        <div class="stat ${t.cls}">${t.gapProm > 0 ? '+' : ''}${t.gapProm.toFixed(1)}%</div>
+                        <div class="stat-label">somos ${t.etiqueta} ${esc(t.c)}</div>
+                    </div>
+                    <div class="split">
+                        ${t.win ? `<span class="w">✓ ${t.win} más baratos</span>` : ''}
+                        ${t.lose ? `<span class="l">✕ ${t.lose} más caros</span>` : ''}
+                        ${t.flat ? `<span class="f">= ${t.flat} igual</span>` : ''}
+                    </div>
+                    <div class="sku-count">${t.n} SKU${t.n === 1 ? '' : 's'} comparados con ${esc(t.c)}${t.outliers ? ` · <span title="Diferencia de precio tan grande que probablemente el match está mal -- ver tabla de outliers más abajo">⚠ ${t.outliers} excluido${t.outliers === 1 ? '' : 's'}</span>` : ''}</div>
+                </div>`).join('')
+                : `<p class="state">Elegí al menos un competidor arriba para ver la comparación por cadena.</p>`;
+        }
+
+        function renderMetricas() {
+            const usables = COMPARACIONES.filter(c => !c.esOutlier);
+            const total = usables.length;
+            const wins = usables.filter(c => c.gap < -0.01).length;
+            const losses = usables.filter(c => c.gap > 0.01).length;
+            const gaps = usables.map(c => c.gap);
+            const gapProm = gaps.length ? gaps.reduce((a, b) => a + b, 0) / gaps.length : 0;
+            const excluidos = COMPARACIONES.length - total;
+
+            $('m-total').textContent = total.toLocaleString('es-BO');
+            $('m-total-sub').textContent = total
+                ? `productos con match confirmado${excluidos ? ` (+${excluidos} excluido${excluidos === 1 ? '' : 's'} por diferencia extrema)` : ''}`
+                : 'sin matches confirmados contra la selección actual';
+            $('m-win').textContent = total ? `${(wins / total * 100).toFixed(0)}%` : '—';
+            $('m-win-sub').textContent = `${wins} de ${total} SKUs`;
+            $('m-lose').textContent = total ? `${(losses / total * 100).toFixed(0)}%` : '—';
+            $('m-lose-sub').textContent = `${losses} de ${total} SKUs`;
+            $('m-gap').textContent = total ? `${gapProm > 0 ? '+' : ''}${gapProm.toFixed(1)}%` : '—';
+        }
+
+        function renderTop5() {
+            // Un mismo producto nunca debería aparecer en las dos listas a la
+            // vez -- con pocos SKUs comparados (menos de 10) el top 5 de cada
+            // lado se pisaba. Se ordena una sola vez y se reparte sin overlap:
+            // los N mejores van a "ventaja", los N peores a "riesgo", N tope 5.
+            const ordenados = COMPARACIONES.filter(c => !c.esOutlier).sort((a, b) => a.gap - b.gap);
+            const total = ordenados.length;
+            let ordenVentaja = [], ordenRiesgo = [];
+            if (total === 1) {
+                if (ordenados[0].gap <= 0) ordenVentaja = ordenados; else ordenRiesgo = ordenados;
+            } else if (total > 1) {
+                const nEach = Math.min(5, Math.floor(total / 2));
+                ordenVentaja = ordenados.slice(0, nEach);
+                ordenRiesgo = ordenados.slice(total - nEach).reverse();
+            }
+            const card = (c, i, tipo) => `<div class="top5-card">
+                <div class="top5-rank">${i + 1}</div>
+                <div class="top5-img"><img src="${esc(imgUrl(c.imagen, 104))}" onerror="this.style.display='none'" loading="lazy" decoding="async"></div>
+                <div class="top5-info">
+                    <div class="name">${esc(c.nombre)}</div>
+                    <div class="meta">${esc(c.categoria)} · ${money(c.precioPropio)} vs ${money(c.precioRival)} <span class="chain-tag">${esc(c.rivalCadena)}</span></div>
+                </div>
+                <span class="pill ${tipo}">${c.gap > 0 ? '+' : ''}${c.gap.toFixed(1)}%</span>
+            </div>`;
+            $('top5-win').innerHTML = ordenVentaja.length ? ordenVentaja.map((c, i) => card(c, i, 'win')).join('') : `<p class="state">Sin datos suficientes todavía.</p>`;
+            $('top5-lose').innerHTML = ordenRiesgo.length ? ordenRiesgo.map((c, i) => card(c, i, 'lose')).join('') : `<p class="state">Sin datos suficientes todavía.</p>`;
+        }
+
+        // En la práctica casi todas las brechas reales están entre 0% y ~5%
+        // (rara vez pasan de 8%); con una escala lineal a ±30% esas brechas
+        // típicas de 1-2% quedaban como una línea casi invisible pegada al
+        // centro. CAP baja el techo de la escala a algo realista, y además
+        // se usa raíz cuadrada (no lineal) para "estirar" visualmente las
+        // brechas chicas -- que son la mayoría -- sin perder la noción de
+        // que una brecha de 8%+ es mucho más grave que una de 1%.
+        const CAP = 8; // % de brecha a partir del cual la barra queda al 100%
+        const PISO_VISIBLE = 4; // ancho mínimo (%) para que hasta una brecha de 0.1% se note
+
+        function barraGap(gapProm) {
+            const esVentaja = gapProm < 0;
+            const abs = Math.abs(gapProm);
+            if (abs < 0.05) return { esVentaja, pct: 0 };
+            const norm = Math.min(abs, CAP) / CAP;
+            const pct = Math.max(PISO_VISIBLE, Math.sqrt(norm) * 50);
+            return { esVentaja, pct };
+        }
+
+        // La barra + el % (segunda y tercera columna del grid) -- se reusa
+        // igual para la fila de categoría "macro" y para cada sub-fila.
+        function barraGapHtml(gapProm) {
+            const { esVentaja, pct } = barraGap(gapProm);
+            return `<div class="divbar"><div class="mid"></div><div class="fill ${esVentaja ? 'win' : 'lose'}" style="width:${pct}%"></div></div>
+                <div class="cat-gap" style="color:${esVentaja ? 'var(--green)' : 'var(--red)'}">${gapProm > 0 ? '+' : ''}${gapProm.toFixed(1)}%</div>`;
+        }
+
+        // Fila completa de una sola línea (etiqueta + barra + %) -- para
+        // categorías sin sub-desglose y para cada sub-fila adentro de una
+        // categoría plegable.
+        function filaGap(etiqueta, n, gapProm) {
+            return `<div><div class="cat-label">${esc(etiqueta)}</div><div class="cat-n">${n} SKU${n === 1 ? '' : 's'}</div></div>${barraGapHtml(gapProm)}`;
+        }
+
+        function renderCategorias() {
+            // Nivel 1: categoría "macro" (categorias.js). Una macro como
+            // "Salud y Medicamentos" mezcla segmentos muy distintos --
+            // Insumos Médicos, Suplementos, etc. -- así que adentro (nivel
+            // 2, plegable) se desglosa por la etiqueta de categoría CRUDA
+            // original de cada cadena, para comparar ej. Farmacorp vs
+            // Chávez segmento por segmento en vez de un solo promedio que
+            // los tapa a todos.
+            const porCat = new Map();
+            COMPARACIONES.filter(c => !c.esOutlier).forEach(c => {
+                const cat = CategoriasMacro.macroCategoria(c.categoria);
+                if (!porCat.has(cat)) porCat.set(cat, []);
+                porCat.get(cat).push(c);
+            });
+            const filas = [...porCat.entries()].map(([cat, items]) => {
+                const gapProm = items.reduce((a, b) => a + b.gap, 0) / items.length;
+                const porSub = new Map();
+                items.forEach(c => {
+                    const sub = c.categoria || 'Sin categoría';
+                    if (!porSub.has(sub)) porSub.set(sub, []);
+                    porSub.get(sub).push(c);
+                });
+                const subs = [...porSub.entries()].map(([sub, subItems]) => ({
+                    sub, n: subItems.length,
+                    gapProm: subItems.reduce((a, b) => a + b.gap, 0) / subItems.length,
+                })).sort((a, b) => b.gapProm - a.gapProm);
+                return { cat, n: items.length, gapProm, subs };
+            }).sort((a, b) => b.gapProm - a.gapProm);
+
+            // Si el filtro de categoría de arriba ya dejó una sola macro
+            // categoría a la vista, abrirla sola de entrada -- es obvio que
+            // el desglose de adentro es justo lo que se quiere ver.
+            const abrirSola = filas.length === 1;
+
+            $('cat-rows').innerHTML = filas.length ? filas.map(f => {
+                const tieneSubs = f.subs.length > 1; // una sola sub-etiqueta = nada que desglosar
+                const subrows = tieneSubs
+                    ? `<div class="cat-subrows">${f.subs.map(s => `<div class="cat-row cat-row-sub">${filaGap(s.sub, s.n, s.gapProm)}</div>`).join('')}</div>`
+                    : '';
+                if (!tieneSubs) {
+                    return `<div class="cat-row">${filaGap(f.cat, f.n, f.gapProm)}</div>`;
+                }
+                return `<details class="cat-details"${abrirSola ? ' open' : ''}>
+                    <summary class="cat-row">
+                        <div><div class="cat-label"><span class="cat-toggle">▸</span>${esc(f.cat)}</div><div class="cat-n">${f.n} SKU${f.n === 1 ? '' : 's'} · ${f.subs.length} subcategorías</div></div>
+                        ${barraGapHtml(f.gapProm)}
+                    </summary>
+                    ${subrows}
+                </details>`;
+            }).join('') : `<p class="state">Todavía no hay categorías con productos matcheados contra la selección actual.</p>`;
+        }
+
+        function renderTendencia() {
+            const porFecha = new Map();
+            const add = (fecha, tipo, precio) => {
+                if (!porFecha.has(fecha)) porFecha.set(fecha, { cSum: 0, cN: 0, rSum: 0, rN: 0 });
+                const o = porFecha.get(fecha);
+                if (tipo === 'c') { o.cSum += precio; o.cN++ } else { o.rSum += precio; o.rN++ }
+            };
+            COMPARACIONES.forEach(c => {
+                c.propioHist.forEach(h => add(h.fecha, 'c', h.precio));
+                c.rivalesHist.forEach(h => add(h.fecha, 'r', h.precio));
+            });
+            const fechas = [...porFecha.keys()].sort();
+            const puntos = fechas.map(f => {
+                const o = porFecha.get(f);
+                return { fecha: f, cliente: o.cN ? o.cSum / o.cN : null, rival: o.rN ? o.rSum / o.rN : null };
+            });
+
+            if (fechas.length < 2) {
+                $('trend-chart').innerHTML = `<p class="state">Todavía no hay suficiente histórico (se necesitan al menos 2 corridas en días distintos) — esta vista se va a ir llenando sola con cada corrida del pipeline.</p>`;
+                $('trend-legend').innerHTML = '';
+                return;
+            }
+
+            const validos = puntos.filter(p => p.cliente !== null || p.rival !== null);
+            const valores = validos.flatMap(p => [p.cliente, p.rival]).filter(v => v !== null);
+            const W = 1100, H = 270, pad = { l: 70, r: 20, t: 20, b: 40 };
+            const lo = Math.min(...valores), hi = Math.max(...valores), span = (hi - lo) || 1;
+            const x = i => pad.l + i * (W - pad.l - pad.r) / (fechas.length - 1);
+            const y = v => pad.t + (hi - v) * (H - pad.t - pad.b) / span;
+
+            let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
+            for (let i = 0; i < 5; i++) {
+                const yy = pad.t + i * (H - pad.t - pad.b) / 4;
+                svg += `<line x1="${pad.l}" y1="${yy}" x2="${W - pad.r}" y2="${yy}" stroke="#E7EAF3"/>`;
+                svg += `<text x="${pad.l - 10}" y="${yy + 4}" font-size="11" fill="#6B7280" text-anchor="end">${money(hi - i * span / 4)}</text>`;
+            }
+            // En pantallas angostas mostrar todas las fechas hace que el
+            // texto del eje X se superponga -- se muestra 1 de cada N según
+            // el ancho disponible, siempre incluyendo la última fecha.
+            const anchoDisp = (document.querySelector('.chart-wrap') || {}).clientWidth || window.innerWidth;
+            const pasoFechas = anchoDisp < 420 ? Math.ceil(fechas.length / 4)
+                : anchoDisp < 700 ? Math.ceil(fechas.length / 6)
+                : 1;
+            fechas.forEach((f, i) => {
+                if (i % pasoFechas !== 0 && i !== fechas.length - 1) return;
+                svg += `<text x="${x(i)}" y="${H - 12}" font-size="11" fill="#6B7280" text-anchor="middle">${f.slice(5)}</text>`;
+            });
+
+            // Etiqueta de precio fija arriba de cada punto: solo si hay pocas
+            // fechas (≤6), para no saturar el gráfico cuando se acumulen
+            // muchas corridas -- ahí el precio se ve al pasar el cursor/dedo
+            // sobre el punto (ver wireTooltip más abajo), no fijo en pantalla.
+            const mostrarEtiquetaFija = fechas.length <= 6;
+            const linea = (key, color, etiqueta, offsetY) => {
+                const pts = puntos.map((p, i) => p[key] !== null ? `${x(i)},${y(p[key])}` : null).filter(Boolean);
+                if (pts.length < 2) return '';
+                let s = `<polyline fill="none" stroke="${color}" stroke-width="3" points="${pts.join(' ')}"/>`;
+                puntos.forEach((p, i) => {
+                    if (p[key] === null) return;
+                    const cx = x(i), cy = y(p[key]);
+                    s += `<circle cx="${cx}" cy="${cy}" r="5" fill="${color}" data-fecha="${esc(p.fecha)}" data-precio="${esc(money(p[key]))}" data-serie="${esc(etiqueta)}"></circle>`;
+                    if (mostrarEtiquetaFija) {
+                        s += `<text class="point-label" x="${cx}" y="${cy + offsetY}" text-anchor="middle" fill="${color}">${money(p[key])}</text>`;
+                    }
+                });
+                return s;
+            };
+            const colorCliente = metaFor(CLIENTE).color;
+            svg += linea('cliente', colorCliente, chainText(CLIENTE), -12);
+            svg += linea('rival', '#DC2626', 'Competencia seleccionada', 20);
+            svg += '</svg>';
+            svg += '<div class="chart-tooltip" id="trend-tooltip"></div>';
+            $('trend-chart').innerHTML = svg;
+            $('trend-legend').innerHTML = `<span><i class="dot" style="background:${colorCliente}"></i>${chainText(CLIENTE)} (promedio)</span><span><i class="dot" style="background:#DC2626"></i>Competencia seleccionada (promedio)</span>`;
+            wireTooltip($('trend-chart'));
+        }
+
+        // Tooltip compartido para cualquier gráfico de puntos con
+        // data-fecha/data-precio/data-serie en sus <circle> -- se re-conecta
+        // cada vez que se re-renderiza el gráfico (el innerHTML se
+        // reemplaza entero, así que los listeners viejos ya no existen).
+        function wireTooltip(contenedor) {
+            const tip = contenedor.querySelector('.chart-tooltip');
+            if (!tip) return;
+            contenedor.querySelectorAll('circle[data-precio]').forEach(c => {
+                const mostrar = e => {
+                    const rect = contenedor.getBoundingClientRect();
+                    const evt = e.touches ? e.touches[0] : e;
+                    tip.style.left = `${evt.clientX - rect.left}px`;
+                    tip.style.top = `${evt.clientY - rect.top}px`;
+                    tip.innerHTML = `${esc(c.dataset.serie)}<br>${esc(c.dataset.fecha)} · ${esc(c.dataset.precio)}`;
+                    tip.classList.add('show');
+                };
+                c.addEventListener('mouseenter', mostrar);
+                c.addEventListener('mousemove', mostrar);
+                c.addEventListener('mouseleave', () => tip.classList.remove('show'));
+                c.addEventListener('touchstart', e => { mostrar(e); e.preventDefault(); }, { passive: false });
+            });
+            contenedor.addEventListener('touchend', () => tip.classList.remove('show'));
+        }
+
+        function renderAlertas() {
+            // Sin esOutlier: un match mal emparejado con +900% de diferencia
+            // no es una alerta de precio real, es ruido de datos -- ver
+            // sección "Diferencias extremas excluidas" en Resumen.
+            const alertas = COMPARACIONES.filter(c => !c.esOutlier && c.gap > umbral).sort((a, b) => b.gap - a.gap);
+            $('alert-body').innerHTML = alertas.map(c => `<tr>
+                <td class="prod-name">${esc(c.nombre)}</td>
+                <td>${esc(c.categoria)}</td>
+                <td>${money(c.precioPropio)}</td>
+                <td>${money(c.precioRival)} <span class="chain-tag">${esc(c.rivalCadena)}</span></td>
+                <td class="diff-cell lose"><span class="pill alert">+${c.gap.toFixed(1)}%</span></td>
+            </tr>`).join('');
+            $('alert-empty').style.display = alertas.length ? 'none' : 'block';
+        }
+
+        function filtradas() {
+            let a = [...COMPARACIONES];
+            if (query) a = a.filter(c => norm(`${c.nombre} ${c.categoria}`).includes(norm(query)));
+            if (sortMode === 'gap-desc') a.sort((x, y) => y.gap - x.gap);
+            if (sortMode === 'gap-asc') a.sort((x, y) => x.gap - y.gap);
+            if (sortMode === 'name') a.sort((x, y) => x.nombre.localeCompare(y.nombre, 'es'));
+            return a;
+        }
+
+        const TABLA_PAGE_SIZE = 25;
+        let paginaTabla = TABLA_PAGE_SIZE;
+
+        function renderTabla() {
+            // Una columna por cadena competidora seleccionada, en vez de
+            // colapsar a "mejor precio de competencia" -- así con 3+ matches
+            // del mismo producto se ve todo en la misma fila, no una fila por
+            // cadena. Cada celda de precio lleva su % explícito además del
+            // color, para no depender solo de rojo/verde para entender quién
+            // está más caro.
+            const cadenasCols = [...SELECCION].sort();
+            const filas = filtradas();
+            $('count').textContent = `${filas.length} productos`;
+            $('thead').innerHTML = `<tr><th>Producto</th><th>Categoría</th><th>${chainText(CLIENTE)}</th>${cadenasCols.map(c => `<th>${chainText(c)}</th>`).join('')}</tr>`;
+            const visibles = filas.slice(0, paginaTabla);
+            $('tbody').innerHTML = visibles.map(c => {
+                const posCls = c.gap < -1 ? 'win' : (c.gap > 1 ? 'lose' : 'flat');
+                const posLabel = c.gap < -1 ? 'Más barato' : (c.gap > 1 ? 'Más caro' : 'Similar');
+                const cols = cadenasCols.map(cad => {
+                    const precio = c.porCadena[cad];
+                    if (precio === undefined) return `<td class="muted">—</td>`;
+                    const pct = (c.precioPropio - precio) / precio * 100; // + = Farmacorp más caro que esta cadena
+                    const cls = pct > 1 ? 'lose' : (pct < -1 ? 'win' : 'flat');
+                    return `<td><div class="cell-price">${money(precio)}<span class="pill tiny ${cls}">${pct > 0 ? '+' : ''}${pct.toFixed(1)}%</span></div></td>`;
+                }).join('');
+                return `<tr>
+                    <td>
+                        <div class="prod-name">${esc(c.nombre)}</div>
+                        <div class="prod-cat">${esc(c.categoria)}</div>
+                    </td>
+                    <td>${esc(c.categoria)}</td>
+                    <td><div class="cell-price"><strong>${money(c.precioPropio)}</strong><span class="pill tiny ${posCls}">${posLabel}</span></div></td>
+                    ${cols}
+                </tr>`;
+            }).join('');
+            const wrap = $('table-load-more');
+            if (wrap) {
+                wrap.innerHTML = filas.length > paginaTabla
+                    ? `<button class="btn-more" id="btn-ver-mas">Ver más (${visibles.length} de ${filas.length})</button>`
+                    : '';
+                const btn = $('btn-ver-mas');
+                if (btn) btn.onclick = () => { paginaTabla += TABLA_PAGE_SIZE; renderTabla(); };
+            }
+        }
+
+        function setupCategoriaGlobal() {
+            // Categoría "macro" (categorias.js), no la etiqueta cruda -- si no,
+            // el desplegable termina con cientos de nombres de campaña de
+            // marketing en vez de un puñado de categorías con sentido.
+            const cats = [...new Set(TODAS_COMPARACIONES.map(c => CategoriasMacro.macroCategoria(c.categoria)))].sort();
+            if (catGlobal !== 'Todas' && !cats.includes(catGlobal)) catGlobal = 'Todas';
+            $('cat-global').innerHTML = '<option value="Todas">Todas las categorías</option>' +
+                cats.map(c => `<option ${c === catGlobal ? 'selected' : ''}>${esc(c)}</option>`).join('');
+        }
+
+        function aplicarFiltroCategoria() {
+            COMPARACIONES = catGlobal === 'Todas' ? TODAS_COMPARACIONES : TODAS_COMPARACIONES.filter(c => CategoriasMacro.macroCategoria(c.categoria) === catGlobal);
+        }
+
+        // Tabla de transparencia para los matches marcados esOutlier (ver
+        // calcularGap): no se borran, se muestran acá aparte para que se
+        // puedan auditar -- si alguno en realidad es un match correcto,
+        // avisar para ajustar OUTLIER_GAP_MAX/MIN en vez de perder el dato.
+        function renderOutliers() {
+            const outliers = COMPARACIONES.filter(c => c.esOutlier);
+            const panel = $('outliers-panel');
+            if (!outliers.length) { panel.style.display = 'none'; return; }
+            panel.style.display = '';
+            $('outliers-body').innerHTML = [...outliers].sort((a, b) => Math.abs(b.gap) - Math.abs(a.gap)).map(c => `
+                <tr>
+                    <td>${esc(c.nombre)}</td>
+                    <td>${esc(c.categoria)}</td>
+                    <td>${money(c.precioPropio)}</td>
+                    <td>${money(c.precioRival)}</td>
+                    <td><span class="chain-tag">${esc(c.rivalCadena)}</span></td>
+                    <td style="color:var(--red);font-weight:700">${c.gap > 0 ? '+' : ''}${c.gap.toFixed(1)}%</td>
+                </tr>`).join('');
+        }
+
+        function actualizar() {
+            renderChips();
+            TODAS_COMPARACIONES = construirComparaciones();
+            paginaTabla = TABLA_PAGE_SIZE;
+            setupCategoriaGlobal();
+            aplicarFiltroCategoria();
+            renderMetricas();
+            renderTendencia();
+            renderTop5();
+            renderComparacionPorCadena();
+            renderCategorias();
+            renderOutliers();
+            renderAlertas();
+            renderTabla();
+        }
+
+        // ---- Botón "Generar reporte PDF" -- le pega al endpoint /reporte de ----
+        // ---- la API local (mismo generar_reporte.py, pero servido por      ----
+        // ---- api.py) con la categoría y competidores actuales, muestra el  ----
+        // ---- PDF en un iframe acá mismo, y recién ahí se puede exportar.   ----
+        let REPORTE_BLOB_URL = null;
+
+        async function generarReporte() {
+            const btn = $('btn-reporte');
+            const status = $('reporte-status');
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Generando reporte...';
+            status.textContent = '';
+            status.className = 'muted';
+            $('btn-exportar').style.display = 'none';
+            $('reporte-preview-wrap').style.display = 'none';
+            if (REPORTE_BLOB_URL) { URL.revokeObjectURL(REPORTE_BLOB_URL); REPORTE_BLOB_URL = null; }
+
+            try {
+                const params = new URLSearchParams();
+                if (catGlobal && catGlobal !== 'Todas') params.set('categoria', catGlobal);
+                if (SELECCION.size) params.set('cadenas', [...SELECCION].join(','));
+                const r = await fetch(`${REPORTE_API}/reporte?${params.toString()}`);
+                if (!r.ok) {
+                    const detalle = await r.json().catch(() => null);
+                    throw new Error(detalle?.detail || `HTTP ${r.status}`);
+                }
+                const blob = await r.blob();
+                REPORTE_BLOB_URL = URL.createObjectURL(blob);
+                $('reporte-frame').src = REPORTE_BLOB_URL;
+                $('reporte-preview-wrap').style.display = 'block';
+                $('reporte-preview-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                $('btn-exportar').style.display = 'inline-flex';
+            } catch (e) {
+                status.innerHTML = `No se pudo generar el reporte (¿está corriendo <code>uvicorn api:app --port 8000</code>?): ${esc(e.message)}`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        }
+
+        // "Exportar" -- si el navegador soporta elegir dónde guardar (Chrome/
+        // Edge de escritorio), abre el diálogo nativo "Guardar como..." en vez
+        // de tirar el archivo a la carpeta de Descargas sin avisar. Si no está
+        // disponible (Firefox/Safari), cae al <a download> de siempre, pero
+        // ahora con un mensaje de confirmación -- antes bajaba en silencio y
+        // no quedaba claro si había funcionado.
+        async function exportarReporte() {
+            if (!REPORTE_BLOB_URL) return;
+            const status = $('reporte-status');
+            const nombreSugerido = `reporte_farmacorp_${new Date().toISOString().slice(0, 10)}.pdf`;
+            const btn = $('btn-exportar');
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            status.className = 'muted';
+            status.textContent = '';
+
+            try {
+                const blob = await (await fetch(REPORTE_BLOB_URL)).blob();
+                if (window.showSaveFilePicker) {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: nombreSugerido,
+                        types: [{ description: 'Documento PDF', accept: { 'application/pdf': ['.pdf'] } }],
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                    status.textContent = `✓ Guardado como "${handle.name}".`;
+                } else {
+                    const a = document.createElement('a');
+                    a.href = REPORTE_BLOB_URL;
+                    a.download = nombreSugerido;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    status.textContent = `✓ Descargado a tu carpeta de Descargas como "${nombreSugerido}".`;
+                }
+                status.className = 'muted ok';
+            } catch (e) {
+                if (e.name !== 'AbortError') {  // el usuario canceló el diálogo -- no es un error
+                    status.textContent = `No se pudo guardar el PDF: ${esc(e.message)}`;
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        }
+
+        async function load() {
+            try {
+                const r = await fetch(DATA_URL, { cache: 'no-store' });
+                if (!r.ok) throw Error(`HTTP ${r.status}`);
+                DATA = await r.json();
+                CADENAS = [...new Set(DATA.productos.map(p => p.cadena))].filter(c => c !== CLIENTE).sort();
+                SELECCION = new Set(CADENAS);
+                document.documentElement.style.setProperty('--primary', metaFor(CLIENTE).color);
+                $('date').textContent = `Datos al: ${DATA.fecha_actualizacion || 'sin fecha'}`;
+                $('cliente-nombre').textContent = CLIENTE;
+                $('competidores-nombres').textContent = CADENAS.join(', ');
+                actualizar();
+                $('status').style.display = 'none';
+                $('table-wrap').style.display = 'block';
+            } catch (e) {
+                $('status').innerHTML = `No se pudieron cargar los datos: ${esc(e.message)}`;
+            }
+        }
+
+        // ---- Pestañas ----
+        function activarTab(nombre) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === nombre));
+            document.querySelectorAll('.tab-panel').forEach(p => p.hidden = p.dataset.tab !== nombre);
+        }
+        document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => activarTab(b.dataset.tab));
+
+        // ---- Histórico por SKU -- buscador independiente de los filtros de ----
+        // ---- arriba (categoría / competidores elegidos): siempre busca sobre ----
+        // ---- todos los productos con match confirmado, y al graficar usa TODAS ----
+        // ---- las cadenas trackeadas para ese producto, no solo las tildadas. ----
+        let skuSeleccionado = null;
+
+        function renderSkuSuggestions(texto) {
+            const box = $('sku-suggestions');
+            if (!texto || texto.trim().length < 2) { box.hidden = true; box.innerHTML = ''; return; }
+            const encontrados = TODAS_COMPARACIONES.filter(c => norm(c.nombre).includes(norm(texto))).slice(0, 8);
+            if (!encontrados.length) {
+                box.innerHTML = `<div style="padding:12px 14px" class="muted">Sin resultados para "${esc(texto)}".</div>`;
+                box.hidden = false;
+                return;
+            }
+            box.innerHTML = encontrados.map(c => `<button type="button" data-clave="${esc(c.clave)}"><img src="${esc(imgUrl(c.imagen, 72))}" onerror="this.style.display='none'" loading="lazy" decoding="async"><span class="sk-name">${esc(c.nombre)}</span><span class="sk-cat-tag">${esc(c.categoria)}</span></button>`).join('');
+            box.hidden = false;
+            box.querySelectorAll('button[data-clave]').forEach(b => b.onclick = () => seleccionarSku(b.dataset.clave));
+        }
+
+        function seleccionarSku(clave) {
+            skuSeleccionado = clave;
+            $('sku-suggestions').hidden = true;
+            $('sku-search').value = '';
+            renderHistoricoSku();
+        }
+
+        function renderHistoricoSku() {
+            const el = $('sku-detail');
+            if (!skuSeleccionado) return;
+            const filas = DATA.productos.filter(p => p.producto_clave === skuSeleccionado);
+            if (!filas.length) {
+                el.innerHTML = `<p class="state">No encontramos ese producto en los datos actuales.</p>`;
+                skuSeleccionado = null;
+                return;
+            }
+            const ref = filas.find(p => p.imagen) || filas[0];
+
+            // Snapshot de precio actual por cadena -- Farmacorp primero, el
+            // resto alfabético.
+            const chipsPrecio = [...filas]
+                .sort((a, b) => (a.cadena === CLIENTE ? -1 : b.cadena === CLIENTE ? 1 : a.cadena.localeCompare(b.cadena)))
+                .map(p => `<div class="sku-price-chip" style="border-color:${metaFor(p.cadena).color}55">${chainInitials(p.cadena, 18)}<span>${esc(p.cadena)}</span><strong>${money(p.precio_oferta)}</strong></div>`)
+                .join('');
+
+            // Histórico por cadena -- TODAS las que trackean este producto,
+            // sin importar la selección de "Comparar contra" de arriba.
+            const porCadena = {};
+            filas.forEach(p => {
+                const hist = historialDe(p);
+                if (hist.length) porCadena[p.cadena] = hist.slice().sort((a, b) => a.fecha.localeCompare(b.fecha));
+            });
+            const fechas = [...new Set(Object.values(porCadena).flat().map(h => h.fecha))].sort();
+
+            let graficoHtml;
+            if (fechas.length < 2) {
+                graficoHtml = `<p class="state">Todavía no hay suficiente histórico para este producto (se necesitan al menos 2 corridas en días distintos).</p>`;
+            } else {
+                const W = 1100, H = 290, pad = { l: 70, r: 20, t: 20, b: 40 };
+                const todos = Object.values(porCadena).flat().map(h => h.precio);
+                const lo = Math.min(...todos), hi = Math.max(...todos), span = (hi - lo) || 1;
+                const x = f => pad.l + fechas.indexOf(f) * (W - pad.l - pad.r) / (fechas.length - 1);
+                const y = v => pad.t + (hi - v) * (H - pad.t - pad.b) / span;
+                let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
+                for (let i = 0; i < 5; i++) {
+                    const yy = pad.t + i * (H - pad.t - pad.b) / 4;
+                    svg += `<line x1="${pad.l}" y1="${yy}" x2="${W - pad.r}" y2="${yy}" stroke="#E7EAF3"/>`;
+                    svg += `<text x="${pad.l - 10}" y="${yy + 4}" font-size="11" fill="#6B7280" text-anchor="end">${money(hi - i * span / 4)}</text>`;
+                }
+                const anchoDisp = (document.querySelector('#sku-detail .chart-wrap') || {}).clientWidth || window.innerWidth;
+                const pasoFechas = anchoDisp < 420 ? Math.ceil(fechas.length / 4) : anchoDisp < 700 ? Math.ceil(fechas.length / 6) : 1;
+                fechas.forEach((f, i) => {
+                    if (i % pasoFechas !== 0 && i !== fechas.length - 1) return;
+                    svg += `<text x="${x(f)}" y="${H - 12}" font-size="11" fill="#6B7280" text-anchor="middle">${f.slice(5)}</text>`;
+                });
+                const mostrarEtiquetaFija = fechas.length <= 6;
+                Object.entries(porCadena).forEach(([cadena, hist], i) => {
+                    const color = metaFor(cadena).color;
+                    const pts = hist.map(h => `${x(h.fecha)},${y(h.precio)}`);
+                    if (pts.length >= 2) svg += `<polyline fill="none" stroke="${color}" stroke-width="3" points="${pts.join(' ')}"/>`;
+                    hist.forEach(h => {
+                        const cx = x(h.fecha), cy = y(h.precio);
+                        svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="${color}" data-fecha="${esc(h.fecha)}" data-precio="${esc(money(h.precio))}" data-serie="${esc(cadena)}"></circle>`;
+                        if (mostrarEtiquetaFija) svg += `<text class="point-label" x="${cx}" y="${cy + (i % 2 ? 20 : -12)}" text-anchor="middle" fill="${color}">${money(h.precio)}</text>`;
+                    });
+                });
+                svg += '</svg>';
+                svg += '<div class="chart-tooltip" id="sku-tooltip"></div>';
+                graficoHtml = `<div class="chart-wrap">${svg}</div>
+                    <div class="legend">${Object.keys(porCadena).map(c => `<span><i class="dot" style="background:${metaFor(c).color}"></i>${esc(c)}</span>`).join('')}</div>`;
+            }
+
+            el.innerHTML = `
+                <div class="sku-snapshot">
+                    <img src="${esc(imgUrl(ref.imagen, 160))}" onerror="this.style.display='none'" loading="lazy" decoding="async">
+                    <div>
+                        <div class="sk-title">${esc(ref.nombre)}</div>
+                        <div class="sk-cat">${esc(ref.categoria || ref.subcategoria || 'Sin categoría')}</div>
+                    </div>
+                </div>
+                <div class="sku-price-row">${chipsPrecio}</div>
+                ${graficoHtml}`;
+            if (fechas.length >= 2) wireTooltip(el);
+        }
+
+        $('sku-search').oninput = e => renderSkuSuggestions(e.target.value);
+        document.addEventListener('click', e => { if (!e.target.closest('.sku-picker')) $('sku-suggestions').hidden = true; });
+
+        $('search').oninput = e => { query = e.target.value; paginaTabla = TABLA_PAGE_SIZE; renderTabla(); };
+        $('cat-global').onchange = e => {
+            catGlobal = e.target.value;
+            paginaTabla = TABLA_PAGE_SIZE;
+            aplicarFiltroCategoria();
+            renderMetricas();
+            renderTendencia();
+            renderTop5();
+            renderComparacionPorCadena();
+            renderCategorias();
+            renderAlertas();
+            renderTabla();
+        };
+        $('sort').onchange = e => { sortMode = e.target.value; paginaTabla = TABLA_PAGE_SIZE; renderTabla(); };
+        $('umbral').onchange = e => { umbral = +e.target.value; renderAlertas(); };
+
+        load();
+    </script>
+</body>
+
+</html>
