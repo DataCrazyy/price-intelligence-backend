@@ -23,3 +23,4 @@ _fix_config.py
 etl/precios_export.json
 etl/precios*.json
 data/precios*.json
+price_intel_backup.dump
