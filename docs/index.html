@@ -17,12 +17,43 @@
             --primary: #6D5DFC;
             --soft: #F1F0FF;
             --bg: #F7F8FC;
+            --card: #fff;
             --text: #151923;
             --muted: #6B7280;
             --border: #E7EAF3;
             --green: #15803D;
             --red: #DC2626;
             --shadow: 0 20px 40px rgba(109, 93, 252, .08)
+        }
+
+        :root[data-theme="dark"] {
+            --soft: #241F45;
+            --bg: #0F1117;
+            --card: #191B24;
+            --text: #EDEEF5;
+            --muted: #9BA0B4;
+            --border: #2B2E3B;
+            --shadow: 0 20px 40px rgba(0, 0, 0, .35)
+        }
+
+        body {
+            transition: background-color .2s, color .2s
+        }
+
+        header,
+        .toolbar,
+        .table-wrap,
+        .card,
+        .team-card,
+        .contact-card,
+        .view-btn,
+        .history-btn,
+        .select,
+        .search,
+        .suggestions,
+        .modal-card,
+        .more-btn {
+            transition: background-color .2s, border-color .2s, color .2s
         }
 
         * {
@@ -51,7 +82,7 @@
 
         header {
             height: 80px;
-            background: #fff;
+            background: var(--card);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
@@ -63,6 +94,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px
         }
 
         .logo {
@@ -107,6 +144,41 @@
             color: var(--primary);
             font-size: 13px;
             font-weight: 700
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary)
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px
+        }
+
+        .theme-toggle .icon-moon {
+            display: none
+        }
+
+        :root[data-theme="dark"] .theme-toggle .icon-sun {
+            display: none
+        }
+
+        :root[data-theme="dark"] .theme-toggle .icon-moon {
+            display: block
         }
 
         .announce {
@@ -193,7 +265,7 @@
         .card,
         .team-card,
         .contact-card {
-            background: #fff;
+            background: var(--card);
             border: 1px solid var(--border);
             box-shadow: var(--shadow)
         }
@@ -258,7 +330,7 @@
         .view-btn,
         .history-btn {
             border: 1px solid var(--border);
-            background: #fff;
+            background: var(--card);
             color: var(--muted);
             border-radius: 13px;
             padding: 11px 14px;
@@ -288,7 +360,9 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 0 18px;
-            outline: none
+            outline: none;
+            background: var(--card);
+            color: var(--text)
         }
 
         .chip {
@@ -312,7 +386,7 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 0 16px;
-            background: #fff;
+            background: var(--card);
             font-weight: 600;
             outline: none;
             cursor: pointer;
@@ -342,7 +416,7 @@
             top: calc(100% + 8px);
             left: 0;
             right: 0;
-            background: #fff;
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: 16px;
             box-shadow: var(--shadow);
@@ -603,7 +677,7 @@
 
         .modal-card {
             width: min(940px, 100%);
-            background: #fff;
+            background: var(--card);
             border-radius: 26px;
             padding: 28px
         }
@@ -704,7 +778,7 @@
 
         .more-btn {
             border: 1px solid var(--border);
-            background: #fff;
+            background: var(--card);
             color: var(--text);
             font-weight: 700;
             padding: 15px 28px;
@@ -1045,7 +1119,13 @@
                     <div class="logo-sub">Santa Cruz · Bolivia</div>
                 </div>
             </div>
-            <div class="nav-chip" id="date">Cargando datos...</div>
+            <div class="nav-right">
+                <div class="nav-chip" id="date">Cargando datos...</div>
+                <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar tema">
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+                </button>
+            </div>
         </div>
     </header>
     <div class="announce">
@@ -1225,9 +1305,22 @@
                 return `https://images.weserv.nl/?url=${encodeURIComponent(u.href.replace(/^https?:\/\//i, ''))}&w=${ancho}&q=75&output=webp`;
             } catch (e) { return url }
         } function key(p) { return String(p.producto_clave || p.sku_global || norm(p.nombre)) } function sale(p) { return Number.isFinite(+p.precio_oferta) && Number.isFinite(+p.precio_regular) && +p.precio_oferta < +p.precio_regular } function pct(p) { return sale(p) ? (+p.precio_regular - +p.precio_oferta) / +p.precio_regular * 100 : 0 } function history(p) { let a = Array.isArray(p.historial) ? p.historial.map(h => ({ fecha: h.fecha, cadena: h.cadena || p.cadena, precio: +(h.precio_oferta ?? h.precio) })) : []; if (DATA.fecha_actualizacion) a.push({ fecha: DATA.fecha_actualizacion, cadena: p.cadena, precio: +p.precio_oferta }); return a.filter(x => x.fecha && x.cadena && Number.isFinite(x.precio)) } function groups(list = PRODUCTS) { const m = new Map; list.forEach(p => { const k = key(p); if (!m.has(k)) m.set(k, []); m.get(k).push(p) }); return [...m.values()] }
+        (function () {
+            try {
+                const saved = localStorage.getItem('theme');
+                const preferido = saved || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                if (preferido === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+            } catch (e) { }
+        })();
+        function aplicarTema(modo) {
+            document.documentElement.setAttribute('data-theme', modo);
+            try { localStorage.setItem('theme', modo) } catch (e) { }
+            const btn = $('theme-toggle');
+            if (btn) btn.setAttribute('aria-label', modo === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+        }
         async function load() { try { const r = await fetch(DATA_URL, { cache: 'no-store' }); if (!r.ok) throw Error(`HTTP ${r.status}`); DATA = await r.json(); PRODUCTS = DATA.productos.map((p, i) => ({ ...p, _i: i, cadena: p.cadena || 'Sin cadena' })); setup(); render(); $('status').style.display = 'none' } catch (e) { $('status').innerHTML = `No se pudieron cargar los datos: ${esc(e.message)}` } }
         function setup() { const gs = groups(), catCount = {}; PRODUCTS.forEach(p => { const m = CategoriasMacro.macroCategoria(p.subcategoria); catCount[m] = (catCount[m] || 0) + 1 }); const cats = Object.keys(catCount).sort((a, b) => catCount[b] - catCount[a]); const prices = PRODUCTS.map(p => +p.precio_oferta).filter(Number.isFinite), offers = PRODUCTS.filter(sale), best = [...offers].sort((a, b) => pct(b) - pct(a))[0]; $('total').textContent = gs.length.toLocaleString('es-BO'); $('cats-info').textContent = `${cats.length} categorías monitoreadas`; $('average').textContent = money(prices.reduce((a, b) => a + b, 0) / (prices.length || 1)); $('promos').textContent = offers.length; $('share').textContent = `${(offers.length / (PRODUCTS.length || 1) * 100).toFixed(1)}% de registros actuales`; $('discount').textContent = best ? `${pct(best).toFixed(1)}%` : '0%'; $('best').textContent = best?.nombre || 'Sin promociones'; $('summary').textContent = `Actualmente monitoreamos ${gs.length} productos únicos en ${[...new Set(PRODUCTS.map(p => p.cadena))].length} cadena(s). Seguimos trabajando en nuevas comparaciones, más cadenas y mejoras.`; $('source').textContent = DATA.fuente || ''; $('date').textContent = `Actualizado: ${DATA.fecha_actualizacion || 'Sin fecha'}`; $('footer').textContent = `${DATA.fuente || 'Made By Prometeo Tech'} · ${DATA.fecha_actualizacion || 'Sin fecha'}`; $('cats').innerHTML = ['Todos', ...cats, 'Ofertas'].map(c => `<button class="chip ${c === 'Todos' ? 'active' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`).join(' '); document.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { category = b.dataset.cat; visibleCount = PAGE_SIZE; document.querySelectorAll('[data-cat]').forEach(x => x.classList.toggle('active', x === b)); render() }); const cs = [...new Set(PRODUCTS.map(p => p.cadena))].sort(); $('chain').innerHTML = '<option value="Todos">Todas las cadenas</option>' + cs.map(c => `<option>${esc(c)}</option>`).join('') }
-        function filtered() { let a = [...PRODUCTS]; if (category === 'Ofertas') a = a.filter(sale); else if (category !== 'Todos') a = a.filter(p => CategoriasMacro.macroCategoria(p.subcategoria) === category); if (chain !== 'Todos') a = a.filter(p => p.cadena === chain); if (query) a = a.filter(p => norm(`${p.nombre} ${p.subcategoria} ${p.cadena}`).includes(norm(query))); let g = groups(a); const min = x => Math.min(...x.map(p => +p.precio_oferta)); let cmp = null; if (sortMode === 'price-asc') cmp = (a, b) => min(a) - min(b); if (sortMode === 'price-desc') cmp = (a, b) => min(b) - min(a); if (sortMode === 'discount') cmp = (a, b) => Math.max(...b.map(pct)) - Math.max(...a.map(pct)); if (sortMode === 'name') cmp = (a, b) => a[0].nombre.localeCompare(b[0].nombre, 'es'); g.sort((a, b) => { const ma = a.length > 1 ? 1 : 0, mb = b.length > 1 ? 1 : 0; if (ma !== mb) return mb - ma; return cmp ? cmp(a, b) : 0 }); return g }
+        function filtered() { let a = [...PRODUCTS]; if (category === 'Ofertas') a = a.filter(sale); else if (category !== 'Todos') a = a.filter(p => CategoriasMacro.macroCategoria(p.subcategoria) === category); if (chain !== 'Todos') a = a.filter(p => p.cadena === chain); if (query) a = a.filter(p => norm(`${p.nombre} ${p.subcategoria} ${p.cadena}`).includes(norm(query))); let g = groups(a); const min = x => Math.min(...x.map(p => +p.precio_oferta)); let cmp = null; if (sortMode === 'price-asc') cmp = (a, b) => min(a) - min(b); if (sortMode === 'price-desc') cmp = (a, b) => min(b) - min(a); if (sortMode === 'discount') cmp = (a, b) => Math.max(...b.map(pct)) - Math.max(...a.map(pct)); if (sortMode === 'name') cmp = (a, b) => a[0].nombre.localeCompare(b[0].nombre, 'es'); g.sort((a, b) => { if (b.length !== a.length) return b.length - a.length; return cmp ? cmp(a, b) : 0 }); return g }
         function renderSuggestions(texto) { const box = $('suggestions'); if (!texto || texto.trim().length < 2) { box.hidden = true; box.innerHTML = ''; return } const gs = groups().filter(g => norm(`${g[0].nombre} ${g[0].subcategoria} ${g[0].cadena}`).includes(norm(texto))).slice(0, 8); if (!gs.length) { box.innerHTML = `<div style="padding:12px 14px" class="muted">Sin resultados para "${esc(texto)}".</div>`; box.hidden = false; return } box.innerHTML = gs.map(g => { const b = g[0]; return `<button type="button" data-key="${esc(key(b))}"><img src="${esc(imgUrl(b.imagen, 72))}" onerror="this.style.display='none'" loading="lazy" decoding="async"><span class="sg-name">${esc(b.nombre)}</span><span class="sg-tag">${esc(b.subcategoria)}${g.length > 1 ? ' · ' + g.length + ' cadenas' : ''}</span></button>` }).join(''); box.hidden = false; box.querySelectorAll('button[data-key]').forEach(btn => btn.onclick = () => selectSuggestion(btn.dataset.key)) }
         function selectSuggestion(k) { const g = groups().find(x => key(x[0]) === k); if (!g) return; query = g[0].nombre; $('search').value = query; $('suggestions').hidden = true; visibleCount = PAGE_SIZE; render(); document.getElementById('grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
         function render() { const all = filtered(), gs = all.slice(0, visibleCount); $('count').textContent = `${all.length} productos únicos`; $('grid').innerHTML = gs.map(g => { const b = g[0], best = [...g].sort((a, b) => a.precio_oferta - b.precio_oferta)[0]; return `<article class="card"><div class="img"><img src="${esc(imgUrl(b.imagen, 440))}" alt="${esc(b.nombre)}" loading="lazy" decoding="async" onerror="this.style.display='none'"></div><div class="info"><span class="category">${esc(b.subcategoria)}</span><h3 class="title">${esc(b.nombre)}</h3><div class="best-price"><div><span class="muted">Mejor precio actual</span><br><strong>${money(best.precio_oferta)}</strong></div><span class="muted">${esc(best.cadena)}</span></div><div class="chain-list">${g.sort((a, b) => a.cadena.localeCompare(b.cadena)).map(p => `<a class="chain-link" href="${esc(p.url || '#')}" target="_blank" rel="noopener"><strong>${esc(p.cadena)}</strong><span>${sale(p) ? `<i class="offer">OFERTA -${pct(p).toFixed(1)}%</i> ` : ''}<b class="chain-price">${money(p.precio_oferta)}</b></span></a>`).join('')}</div><button class="history-btn history-wide" onclick="openHistory('${esc(key(b))}')">Ver histórico de precios</button></div></article>` }).join(''); renderTable(gs); $('more').innerHTML = all.length > visibleCount ? `<button class="more-btn" onclick="loadMore()">Mostrar más productos (${all.length - visibleCount} restantes)</button>` : '' }
@@ -1236,7 +1329,7 @@
         function renderTable(gs) { const cs = [...new Set(PRODUCTS.map(p => p.cadena))].sort(); $('thead').innerHTML = `<tr><th>Producto</th><th>Categoría</th><th>Mínimo histórico</th><th>Máximo histórico</th>${cs.map(c => `<th>${esc(c)}<br><small>Precio actual</small></th>`).join('')}<th>Histórico</th></tr>`; $('tbody').innerHTML = gs.map(g => { const b = g[0], r = historicRange(g); return `<tr><td><div class="table-product"><img src="${esc(imgUrl(b.imagen, 96))}" loading="lazy" decoding="async"><strong>${esc(b.nombre)}</strong></div></td><td>${esc(b.subcategoria)}</td><td class="min">${money(r.min)}</td><td class="max">${money(r.max)}</td>${cs.map(c => { const p = g.find(x => x.cadena === c); return `<td class="price-cell ${p && sale(p) ? 'sale' : ''}">${p ? money(p.precio_oferta) : '—'} ${p && sale(p) ? `<span class="offer">OFERTA -${pct(p).toFixed(1)}%</span>` : ''}</td>` }).join('')}<td><button class="history-btn" onclick="openHistory('${esc(key(b))}')">Ver gráfica</button></td></tr>` }).join('') }
         function openHistory(k) { const g = groups().find(x => key(x[0]) === k), rows = g.flatMap(history), dates = [...new Set(rows.map(x => x.fecha))].sort(), prices = rows.map(x => x.precio), by = {}; $('modal-title').textContent = g[0].nombre; rows.forEach(x => (by[x.cadena] ??= []).push(x)); if (dates.length < 2) { $('chart').innerHTML = '<div class="state">Aún no hay suficiente histórico.</div>'; $('legend').innerHTML = ''; $('modal').classList.add('open'); return } const colors = ['#6D5DFC', '#16A34A', '#F59E0B', '#DC2626'], W = 850, H = 290, p = { l: 64, r: 20, t: 20, b: 45 }, lo = Math.min(...prices), hi = Math.max(...prices), span = hi - lo || 1, x = d => p.l + dates.indexOf(d) * (W - p.l - p.r) / (dates.length - 1), y = v => p.t + (hi - v) * (H - p.t - p.b) / span; let svg = `<svg viewBox="0 0 ${W} ${H}">`; for (let i = 0; i < 5; i++) { const yy = p.t + i * (H - p.t - p.b) / 4; svg += `<line x1="${p.l}" y1="${yy}" x2="${W - p.r}" y2="${yy}" stroke="#E7EAF3"/>`; svg += `<text x="${p.l - 10}" y="${yy + 4}" font-size="11" fill="#6B7280" text-anchor="end">${money(hi - i * span / 4)}</text>` } const anchoDisp = (document.querySelector('.chart') || {}).clientWidth || window.innerWidth, pasoFechas = anchoDisp < 420 ? Math.ceil(dates.length / 4) : anchoDisp < 700 ? Math.ceil(dates.length / 6) : 1; dates.forEach((d, i) => { if (i % pasoFechas !== 0 && i !== dates.length - 1) return; svg += `<text x="${x(d)}" y="${H - 14}" font-size="11" fill="#6B7280" text-anchor="middle">${d.slice(5)}</text>` }); const mostrarEtiquetaFija = dates.length <= 6; Object.entries(by).forEach(([c, a], i) => { a.sort((u, v) => u.fecha.localeCompare(v.fecha)); svg += `<polyline fill="none" stroke="${colors[i % 4]}" stroke-width="3" points="${a.map(z => `${x(z.fecha)},${y(z.precio)}`).join(' ')}"/>`; a.forEach((z, j) => { const cx = x(z.fecha), cy = y(z.precio); svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="${colors[i % 4]}" data-fecha="${esc(z.fecha)}" data-precio="${esc(money(z.precio))}" data-serie="${esc(c)}"></circle>`; if (mostrarEtiquetaFija) svg += `<text class="point-label" x="${cx}" y="${cy + (i % 2 ? 20 : -10)}" text-anchor="middle" fill="${colors[i % 4]}">${money(z.precio)}</text>` }) }); svg += '</svg>'; svg += '<div class="chart-tooltip" id="chart-tooltip"></div>'; $('chart').innerHTML = svg; $('legend').innerHTML = Object.keys(by).map((c, i) => `<span><i class="dot" style="background:${colors[i % 4]}"></i>${esc(c)}</span>`).join(''); wireTooltip($('chart')); $('modal').classList.add('open') }
         function wireTooltip(contenedor) { const tip = contenedor.querySelector('.chart-tooltip'); if (!tip) return; contenedor.querySelectorAll('circle[data-precio]').forEach(c => { const mostrar = e => { const rect = contenedor.getBoundingClientRect(); const evt = e.touches ? e.touches[0] : e; tip.style.left = `${evt.clientX - rect.left}px`; tip.style.top = `${evt.clientY - rect.top}px`; tip.innerHTML = `${esc(c.dataset.serie)}<br>${esc(c.dataset.fecha)} · ${esc(c.dataset.precio)}`; tip.classList.add('show') }; c.addEventListener('mouseenter', mostrar); c.addEventListener('mousemove', mostrar); c.addEventListener('mouseleave', () => tip.classList.remove('show')); c.addEventListener('touchstart', e => { mostrar(e); e.preventDefault() }, { passive: false }) }); contenedor.addEventListener('touchend', () => tip.classList.remove('show')) }
-        document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => { document.querySelectorAll('[data-view]').forEach(x => x.classList.toggle('active', x === b)); $('grid').classList.toggle('hidden', b.dataset.view === 'table'); $('table').classList.toggle('active', b.dataset.view === 'table') }); $('search').oninput = e => { query = e.target.value; visibleCount = PAGE_SIZE; renderSuggestions(query); render() }; $('search').addEventListener('keydown', e => { if (e.key === 'Escape') $('suggestions').hidden = true }); document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) $('suggestions').hidden = true }); $('chain').onchange = e => { chain = e.target.value; visibleCount = PAGE_SIZE; render() }; $('sort').onchange = e => { sortMode = e.target.value; visibleCount = PAGE_SIZE; render() }; $('close').onclick = () => $('modal').classList.remove('open'); $('modal').onclick = e => { if (e.target.id === 'modal') $('modal').classList.remove('open') }; load();
+        document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => { document.querySelectorAll('[data-view]').forEach(x => x.classList.toggle('active', x === b)); $('grid').classList.toggle('hidden', b.dataset.view === 'table'); $('table').classList.toggle('active', b.dataset.view === 'table') }); $('search').oninput = e => { query = e.target.value; visibleCount = PAGE_SIZE; renderSuggestions(query); render() }; $('search').addEventListener('keydown', e => { if (e.key === 'Escape') $('suggestions').hidden = true }); document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) $('suggestions').hidden = true }); $('chain').onchange = e => { chain = e.target.value; visibleCount = PAGE_SIZE; render() }; $('sort').onchange = e => { sortMode = e.target.value; visibleCount = PAGE_SIZE; render() }; $('close').onclick = () => $('modal').classList.remove('open'); $('modal').onclick = e => { if (e.target.id === 'modal') $('modal').classList.remove('open') }; $('theme-toggle').onclick = () => aplicarTema(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); aplicarTema(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'); load();
     </script>
 </body>
 
