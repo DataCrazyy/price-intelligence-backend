@@ -68,9 +68,21 @@ def extraer_sucursal(url: str) -> str:
     return slug.replace("-", " ").title()
 
 
-def extraer_categoria(url: str) -> str:
-    m = re.search(r"/categoria/([^/?]+)", url)
-    return m.group(1) if m else "categoria"
+def extraer_categoria(url: str) -> tuple[str, str]:
+    """Categoría y subcategoría desde el path de la URL.
+
+    Replica la lógica del script standalone (parse_url_metadata): todo
+    lo que viene después de '/categoria/' se separa por '/' -- el primer
+    segmento es la categoría, el segundo (si existe) es la subcategoría.
+    Antes esta función solo miraba el primer segmento y la subcategoría
+    nunca se completaba; por eso a veces "la categoría salía mal" -- en
+    URLs de dos niveles (ej. /categoria/lacteos-y-derivados/leches) el
+    dato útil real estaba en el segundo segmento.
+    """
+    partes = url.split("/categoria/")[-1].split("/")
+    categoria = partes[0] if partes and partes[0] else "categoria"
+    subcategoria = partes[1] if len(partes) > 1 and partes[1] else ""
+    return categoria, subcategoria
 
 
 def scrapear(url: str, headed: bool = False) -> list[dict]:
@@ -157,7 +169,7 @@ def scrapear(url: str, headed: bool = False) -> list[dict]:
     return productos
 
 
-def productos_a_filas(productos: list[dict], categoria: str, cadena: str = "Hipermaxi") -> list[dict]:
+def productos_a_filas(productos: list[dict], categoria: str, cadena: str = "Hipermaxi", subcategoria: str = "") -> list[dict]:
     filas = []
     for p in productos:
         try:
@@ -171,7 +183,7 @@ def productos_a_filas(productos: list[dict], categoria: str, cadena: str = "Hipe
             "CADENA": cadena,
             "COD_ARTICULO": p["codigo"],
             "Categoria": categoria.replace("-", " ").title(),
-            "Subcategoria": "",
+            "Subcategoria": subcategoria.replace("-", " ").title() if subcategoria else "",
             "Ciudad": "Santa Cruz",
             "Sucursal": p["sucursal"],
             "URL": p["url"] if str(p["url"]).startswith("http") else f"https://hipermaxi.com{p['url']}",
@@ -185,9 +197,11 @@ def ejecutar(request: ScrapeRequest) -> ScrapeResult:
     scraper_chavez.ejecutar(), aunque por dentro esto abre un Chromium
     headless con Playwright en vez de pegarle a un JSON. request.url es
     la URL de categoría de Hipermaxi."""
-    categoria = extraer_categoria(request.url)
+    categoria, subcategoria = extraer_categoria(request.url)
     productos_raw = scrapear(request.url)
-    filas = productos_a_filas(productos_raw, request.categoria_default or categoria, request.cadena)
+    filas = productos_a_filas(
+        productos_raw, request.categoria_default or categoria, request.cadena, subcategoria
+    )
 
     productos, errores = [], []
     for f in filas:
@@ -212,9 +226,9 @@ def main():
                      help="Abre el navegador visible (no headless) para ver qué está pasando en vivo -- útil solo para depurar")
     args = ap.parse_args()
 
-    categoria = extraer_categoria(args.url)
+    categoria, subcategoria = extraer_categoria(args.url)
     productos = scrapear(args.url, headed=args.headed)
-    filas = productos_a_filas(productos, categoria)
+    filas = productos_a_filas(productos, categoria, subcategoria=subcategoria)
     if not filas:
         print("No se encontraron productos. Revisa la URL o si Hipermaxi cambió su estructura.")
         sys.exit(1)
