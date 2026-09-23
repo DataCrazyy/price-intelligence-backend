@@ -71,10 +71,13 @@ class ProductoScrapeado(BaseModel):
 class ScrapeResult(BaseModel):
     """Lo que devuelve CUALQUIER scraper, sin importar si por dentro usa
     Playwright o el JSON de Shopify -- este es el 'contrato de agente
-    único' del blueprint. errores: filas que no pasaron la validación
-    (se saltean, no tumban todo el scrape)."""
+    único' del blueprint. errores: resumen corto en
+    texto (para el log). raw_data: TODAS las filas scrapeadas, validadas
+    o no, con las columnas 'Observado' (Y/N) y 'Motivo' agregadas -- este
+    es el que se archiva completo en scrapes_raw/, para no perder nada."""
     cadena: str
-    fuente: str  # "shopify_json" | "playwright"
+    fuente: str
     productos: list[ProductoScrapeado]
     scrapeado_en: datetime = Field(default_factory=datetime.now)
     errores: list[str] = Field(default_factory=list)
+    raw_data: list[dict] = Field(default_factory=list)

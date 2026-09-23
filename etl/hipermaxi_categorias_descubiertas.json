@@ -1,0 +1,747 @@
+[
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Aderezos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/aderezos"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Basicos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/basicos"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Cafe Y Sucedaneos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/cafe-y-sucedaneos"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Chocolates Y Caramelos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/chocolates-y-caramelos"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Comidas En Conserva",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/comidas-en-conserva"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Condimentos Y Legumbres",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/condimentos-y-legumbres"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Dieteticos Y Saludables",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/dieteticos-y-saludables"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Frutas En Conserva",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/frutas-en-conserva"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Galletas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/galletas"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Golosinas Varias",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/golosinas-varias"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Mascotas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/mascotas"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Mermel Mieles",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/mermel-mieles"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Nutricion Infantil",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/nutricion-infantil"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Productos Americanos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/productos-americanos"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Productos Importados",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/productos-importados"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Reposteria",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/reposteria"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Salsas Y Extracto De Tomate",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/salsas-y-extracto-de-tomate"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Snack",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/snack"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Temporada",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/temporada"
+  },
+  {
+    "categoria": "Abarrotes",
+    "subcategoria": "Verduras En Conserva",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/abarrotes/verduras-en-conserva"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Aguas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/aguas"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Bebidas Usa",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/bebidas-usa"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Bebidas Varias",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/bebidas-varias"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Cervezas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/cervezas"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Cigarrillos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/cigarrillos"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Energizantes",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/energizantes"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Gaseosas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/gaseosas"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Hielos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/hielos"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Isotonicos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/isotonicos"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Jugos Nectar",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/jugos-nectar"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Licores",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/licores"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Maltas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/maltas"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Refrescos En Polvo",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/refrescos-en-polvo"
+  },
+  {
+    "categoria": "Bebidas",
+    "subcategoria": "Vinos Y Champagne",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bebidas/vinos-y-champagne"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Carne De Pollo",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/carnes/carne-de-pollo"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Carne De Res",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/carnes/carne-de-res"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Carnes Al Vacio Externas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/carnes/carnes-al-vacio-externas"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Carnes Procesadas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/carnes/carnes-procesadas"
+  },
+  {
+    "categoria": "Congelados",
+    "subcategoria": "Carnes Congeladas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/congelados/carnes-congeladas"
+  },
+  {
+    "categoria": "Congelados",
+    "subcategoria": "Helados Cassattas Y Picoleses",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/congelados/helados-cassattas-y-picoleses"
+  },
+  {
+    "categoria": "Congelados",
+    "subcategoria": "Masas Y Comidas Congeladas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/congelados/masas-y-comidas-congeladas"
+  },
+  {
+    "categoria": "Congelados",
+    "subcategoria": "Pulpas Y Frutas Congeladas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/congelados/pulpas-y-frutas-congeladas"
+  },
+  {
+    "categoria": "Fiambres",
+    "subcategoria": "Fiambres Externos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/fiambres/fiambres-externos"
+  },
+  {
+    "categoria": "Fiambres",
+    "subcategoria": "Fiambres Hipermaxi",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/fiambres/fiambres-hipermaxi"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Crema De Leche",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/crema-de-leche"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Dulces De Leche Y Manjares",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/dulces-de-leche-y-manjares"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Huevos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/huevos"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Leches",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/leches"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Mantequillas Y Margarinas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/mantequillas-y-margarinas"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Postres",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/postres"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Quesos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/quesos"
+  },
+  {
+    "categoria": "Lacteos Y Derivados",
+    "subcategoria": "Yogures",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/lacteos-y-derivados/yogures"
+  },
+  {
+    "categoria": "Panaderia",
+    "subcategoria": "Panaderia Especialidades Hipermaxi",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/panaderia/panaderia-especialidades-hipermaxi"
+  },
+  {
+    "categoria": "Panaderia",
+    "subcategoria": "Panaderia Externa",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/panaderia/panaderia-externa"
+  },
+  {
+    "categoria": "Panaderia",
+    "subcategoria": "Panaderia Hipermaxi",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/panaderia/panaderia-hipermaxi"
+  },
+  {
+    "categoria": "Pasteleria Y Masas Tipicas",
+    "subcategoria": "Masas Tipicas Externas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/pasteleria-y-masas-tipicas/masas-tipicas-externas"
+  },
+  {
+    "categoria": "Pasteleria Y Masas Tipicas",
+    "subcategoria": "Pasteleria Externa",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/pasteleria-y-masas-tipicas/pasteleria-externa"
+  },
+  {
+    "categoria": "Pasteleria Y Masas Tipicas",
+    "subcategoria": "Pasteleria Hipermaxi",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/pasteleria-y-masas-tipicas/pasteleria-hipermaxi"
+  },
+  {
+    "categoria": "Cudados Otc",
+    "subcategoria": "Oct Salas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cudados-otc/oct-salas"
+  },
+  {
+    "categoria": "Cudados Otc",
+    "subcategoria": "Otc",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cudados-otc/otc"
+  },
+  {
+    "categoria": "Cuidado Del Bebe",
+    "subcategoria": "Kids",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-bebe/kids"
+  },
+  {
+    "categoria": "Cuidado Del Bebe",
+    "subcategoria": "Panales",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-bebe/panales"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Accesorios Del Hogar",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/accesorios-del-hogar"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Insecticidas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/insecticidas"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Limpieza De Banos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/limpieza-de-banos"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Limpieza De Cocina",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/limpieza-de-cocina"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Limpieza De La Ropa",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/limpieza-de-la-ropa"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Limpieza De Living Y Ropero",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/limpieza-de-living-y-ropero"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Limpieza De Zapatos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/limpieza-de-zapatos"
+  },
+  {
+    "categoria": "Cuidado Del Hogar",
+    "subcategoria": "Productos Americanos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-del-hogar/productos-americanos"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-personal/cuidado-bucal"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado De La Piel",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-personal/cuidado-de-la-piel"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Del Adulto",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-personal/cuidado-del-adulto"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Del Cabello",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-personal/cuidado-del-cabello"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Familiar",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/cuidado-personal/cuidado-familiar"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Articulos De Bebe",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/articulos-de-bebe"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Articulos De Cocina",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/articulos-de-cocina"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Automotriz",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/automotriz"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Bano General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/bano-general"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Bijouteriacuidado Personal",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/bijouteriacuidado-personal"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Bioseguridad",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/bioseguridad"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Bolsoscarterasmaletas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/bolsoscarterasmaletas"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Camping General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/camping-general"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Churrasqueria",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/churrasqueria"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Cotillon",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/cotillon"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Electrodomestico Cuidado Personal",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/electrodomestico-cuidado-personal"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Electrodomesticolinea Blanca Hogar",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/electrodomesticolinea-blanca-hogar"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Ferreteria",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/ferreteria"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Jardineria General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/jardineria-general"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Libreria",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/libreria"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Living Y Dormitorio",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/living-y-dormitorio"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Mascotas General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/mascotas-general"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Menaje Metalico",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/menaje-metalico"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Menaje Plastico",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/menaje-plastico"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Menaje Porcelanaceramica",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/menaje-porcelanaceramica"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Menaje Vidriocristal",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/menaje-vidriocristal"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Regalosadornos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/regalosadornos"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Telefonia Y Accesorios",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/telefonia-y-accesorios"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Temporada Carnaval",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/temporada-carnaval"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Temporada Verano",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/temporada-verano"
+  },
+  {
+    "categoria": "Bazar",
+    "subcategoria": "Temporadas Restantes",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar/temporadas-restantes"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Automotriz",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/automotriz"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Bano General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/bano-general"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Bijouteriacuidado Personal",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/bijouteriacuidado-personal"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Bolsoscarterasmaletas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/bolsoscarterasmaletas"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Camping General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/camping-general"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Cocina General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/cocina-general"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Cotillon",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/cotillon"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Electrodomesticolinea Blanca Hogar",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/electrodomesticolinea-blanca-hogar"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Ferreteria",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/ferreteria"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Jardineria General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/jardineria-general"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Libreria",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/libreria"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Living Y Dormitorio",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/living-y-dormitorio"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Mascotas General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/mascotas-general"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Menaje Melamina",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/menaje-melamina"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Menaje Plastico",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/menaje-plastico"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Menaje Porcelanaceramica",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/menaje-porcelanaceramica"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Menaje Vidriocristal",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/menaje-vidriocristal"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Muebleria General",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/muebleria-general"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Regalosadornos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/regalosadornos"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Telefonia Y Accesorios",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/telefonia-y-accesorios"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Temporada Halloween",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/temporada-halloween"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Temporada Restantes",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/temporada-restantes"
+  },
+  {
+    "categoria": "Bazar Importacion",
+    "subcategoria": "Temporada Verano",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/bazar-importacion/temporada-verano"
+  },
+  {
+    "categoria": "Jugueteria",
+    "subcategoria": "Jugueteria Didacticatemporada",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria/jugueteria-didacticatemporada"
+  },
+  {
+    "categoria": "Jugueteria",
+    "subcategoria": "Jugueteria Marcas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria/jugueteria-marcas"
+  },
+  {
+    "categoria": "Jugueteria",
+    "subcategoria": "Jugueteria Ninabebe",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria/jugueteria-ninabebe"
+  },
+  {
+    "categoria": "Jugueteria",
+    "subcategoria": "Jugueteria Ninobebe",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria/jugueteria-ninobebe"
+  },
+  {
+    "categoria": "Jugueteria Importacion",
+    "subcategoria": "Jugueteria Didacticatemporada",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria-importacion/jugueteria-didacticatemporada"
+  },
+  {
+    "categoria": "Jugueteria Importacion",
+    "subcategoria": "Jugueteria Marcas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria-importacion/jugueteria-marcas"
+  },
+  {
+    "categoria": "Jugueteria Importacion",
+    "subcategoria": "Jugueteria Ninabebe",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria-importacion/jugueteria-ninabebe"
+  },
+  {
+    "categoria": "Jugueteria Importacion",
+    "subcategoria": "Jugueteria Ninobebe",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/jugueteria-importacion/jugueteria-ninobebe"
+  },
+  {
+    "categoria": "Textiles Y Zapatos",
+    "subcategoria": "Ropa Bebe 0 24",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/textiles-y-zapatos/ropa-bebe-0-24"
+  },
+  {
+    "categoria": "Textiles Y Zapatos",
+    "subcategoria": "Ropa Pvarones Y Ninos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/textiles-y-zapatos/ropa-pvarones-y-ninos"
+  },
+  {
+    "categoria": "Textiles Y Zapatos",
+    "subcategoria": "Toallas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/textiles-y-zapatos/toallas"
+  },
+  {
+    "categoria": "Textiles Y Zapatos",
+    "subcategoria": "Zapato Pvarones Y Ninos",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/textiles-y-zapatos/zapato-pvarones-y-ninos"
+  },
+  {
+    "categoria": "Textiles Y Zapatos",
+    "subcategoria": "Zapatos Pdamas Y Ninas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/textiles-y-zapatos/zapatos-pdamas-y-ninas"
+  },
+  {
+    "categoria": "Farmacia Otc",
+    "subcategoria": "Sistema Respiratorio",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/farmacia-otc/sistema-respiratorio"
+  },
+  {
+    "categoria": "Farmacia Otc",
+    "subcategoria": "Varios",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/farmacia-otc/varios"
+  },
+  {
+    "categoria": "Frutas Y Verduras",
+    "subcategoria": "Frutas",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/frutas-y-verduras/frutas"
+  },
+  {
+    "categoria": "Frutas Y Verduras",
+    "subcategoria": "Gourmet",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/frutas-y-verduras/gourmet"
+  },
+  {
+    "categoria": "Frutas Y Verduras",
+    "subcategoria": "Ofertas Especiales",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/frutas-y-verduras/ofertas-especiales"
+  },
+  {
+    "categoria": "Frutas Y Verduras",
+    "subcategoria": "Temporada",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/frutas-y-verduras/temporada"
+  },
+  {
+    "categoria": "Frutas Y Verduras",
+    "subcategoria": "Verduras",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/frutas-y-verduras/verduras"
+  },
+  {
+    "categoria": "Granos Y Hortalizas",
+    "subcategoria": "Derivados Hipermaxi",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/granos-y-hortalizas/derivados-hipermaxi"
+  },
+  {
+    "categoria": "Granos Y Hortalizas",
+    "subcategoria": "Fraccionados Hipermaxi",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/granos-y-hortalizas/fraccionados-hipermaxi"
+  },
+  {
+    "categoria": "Granos Y Hortalizas",
+    "subcategoria": "Hortalizas Delifresh",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/granos-y-hortalizas/hortalizas-delifresh"
+  },
+  {
+    "categoria": "Granos Y Hortalizas",
+    "subcategoria": "Postres Delifresh",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/granos-y-hortalizas/postres-delifresh"
+  },
+  {
+    "categoria": "Granos Y Hortalizas",
+    "subcategoria": "Sandwiches Delifresh",
+    "url": "https://www.hipermaxi.com/santa-cruz/hipermaxi-equipetrol/categoria/granos-y-hortalizas/sandwiches-delifresh"
+  }
+]

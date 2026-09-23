@@ -69,13 +69,20 @@ def _registrar_ruta_fallida(cadena: str, etiqueta: str, url: str, error: str):
 
 
 def _archivar(resultado, carpeta_hoy: Path, sufijo: str):
-    """Guarda una copia .xlsx del resultado ya validado, solo para
-    auditoría (scrapes_raw/) -- Postgres se carga directo desde el
-    ScrapeResult, esto es un respaldo, no el camino de carga."""
-    if not resultado.productos:
+    """Guarda TODO lo scrapeado en un único .xlsx -- validado y
+    observado, con columnas Observado (Y/N) y Motivo. Postgres sigue
+    cargándose solo desde resultado.productos (los validados); esto es
+    el respaldo completo para auditoría.
+
+    Fallback: si el scraper todavía no arma 'raw_data' (migración en
+    curso -- scraper_shopify.py/scraper_chavez.py por ahora), usa
+    resultado.productos como antes, para no perder el respaldo mientras
+    se termina de migrar cada scraper."""
+    datos = resultado.raw_data or [p.model_dump() for p in resultado.productos]
+    if not datos:
         return
     out_path = carpeta_hoy / f"{resultado.cadena.lower().replace(' ', '-')}_{sufijo}.xlsx"
-    pd.DataFrame([p.model_dump() for p in resultado.productos]).to_excel(out_path, index=False)
+    pd.DataFrame(datos).to_excel(out_path, index=False)
     return out_path
 
 
