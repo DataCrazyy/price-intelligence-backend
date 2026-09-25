@@ -1,0 +1,332 @@
+[
+    {
+        "categoria": "Lo Nuestro Nos Une",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/lo-nuestro-nos-une/119"
+    },
+    {
+        "categoria": "Mundo Bebé",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/mundo-bebe/120"
+    },
+    {
+        "categoria": "Fluidex",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/fluidex/121"
+    },
+    {
+        "categoria": "Exclusivo Online",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/exclusivo-online/122"
+    },
+    {
+        "categoria": "Estación Primavera",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/estacion-primavera/117"
+    },
+    {
+        "categoria": "Ofertas Del Mes",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/ofertas-del-mes/114"
+    },
+    {
+        "categoria": "Lunes de Chavez",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/lunes-de-chavez/118"
+    },
+    {
+        "categoria": "Chavez Plus",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/chavez-plus/116"
+    },
+    {
+        "categoria": "Canasta Del Ahorro y Bienestar",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/canasta-del-ahorro-y-bienestar/113"
+    },
+    {
+        "categoria": "Productos Garantizados",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/productos-garantizados/115"
+    },
+    {
+        "categoria": "Hecho En Bolivia",
+        "subcategoria": null,
+        "url": "config_cadenas.json/ca/hecho-en-bolivia/123"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Alivio Del Dolor",
+        "url": "config_cadenas.json/ca/medicamentos/alivio-del-dolor/109/10901"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Antiinfecciosos",
+        "url": "config_cadenas.json/ca/medicamentos/antiinfecciosos/109/10902"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Antiparasitarios",
+        "url": "config_cadenas.json/ca/medicamentos/antiparasitarios/109/10903"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Cardiovascular",
+        "url": "config_cadenas.json/ca/medicamentos/cardiovascular/109/10904"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Dermatológicos",
+        "url": "config_cadenas.json/ca/medicamentos/dermatologicos/109/10905"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Formadores De Sangre",
+        "url": "config_cadenas.json/ca/medicamentos/formadores-de-sangre/109/10906"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Hormonas",
+        "url": "config_cadenas.json/ca/medicamentos/hormonas/109/10907"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Neurología",
+        "url": "config_cadenas.json/ca/medicamentos/neurologia/109/10908"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Oncológicos",
+        "url": "config_cadenas.json/ca/medicamentos/oncologicos/109/10909"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Óticos Y Oftálmicos",
+        "url": "config_cadenas.json/ca/medicamentos/oticos-y-oftalmicos/109/10910"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Salud Digestiva",
+        "url": "config_cadenas.json/ca/medicamentos/salud-digestiva/109/10911"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Salud Femenina",
+        "url": "config_cadenas.json/ca/medicamentos/salud-femenina/109/10912"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Sistema Respiratorio Y Alergias",
+        "url": "config_cadenas.json/ca/medicamentos/sistema-respiratorio-y-alergias/109/10913"
+    },
+    {
+        "categoria": "Medicamentos",
+        "subcategoria": "Urológicos",
+        "url": "config_cadenas.json/ca/medicamentos/urologicos/109/10914"
+    },
+    {
+        "categoria": "Belleza",
+        "subcategoria": "Accesorios De Belleza",
+        "url": "config_cadenas.json/ca/belleza/accesorios-de-belleza/102/10201"
+    },
+    {
+        "categoria": "Belleza",
+        "subcategoria": "Coloración Capilar",
+        "url": "config_cadenas.json/ca/belleza/coloracion-capilar/102/10202"
+    },
+    {
+        "categoria": "Belleza",
+        "subcategoria": "Cosméticos",
+        "url": "config_cadenas.json/ca/belleza/cosmeticos/102/10203"
+    },
+    {
+        "categoria": "Belleza",
+        "subcategoria": "Perfumes Y Fragancias",
+        "url": "config_cadenas.json/ca/belleza/perfumes-y-fragancias/102/10204"
+    },
+    {
+        "categoria": "Alimentos Y Bebidas",
+        "subcategoria": "Alimentos",
+        "url": "config_cadenas.json/ca/alimentos-y-bebidas/alimentos/101/10101"
+    },
+    {
+        "categoria": "Alimentos Y Bebidas",
+        "subcategoria": "Bebidas",
+        "url": "config_cadenas.json/ca/alimentos-y-bebidas/bebidas/101/10102"
+    },
+    {
+        "categoria": "Cuidado De La Piel",
+        "subcategoria": "Corporal",
+        "url": "config_cadenas.json/ca/cuidado-de-la-piel/corporal/103/10301"
+    },
+    {
+        "categoria": "Cuidado De La Piel",
+        "subcategoria": "Facial",
+        "url": "config_cadenas.json/ca/cuidado-de-la-piel/facial/103/10302"
+    },
+    {
+        "categoria": "Cuidado De La Piel",
+        "subcategoria": "Solar",
+        "url": "config_cadenas.json/ca/cuidado-de-la-piel/solar/103/10303"
+    },
+    {
+        "categoria": "Cuidado E Higiene",
+        "subcategoria": "Cuidado Capilar",
+        "url": "config_cadenas.json/ca/cuidado-e-higiene/cuidado-capilar/104/10401"
+    },
+    {
+        "categoria": "Cuidado E Higiene",
+        "subcategoria": "Higiene Adulto Mayor",
+        "url": "config_cadenas.json/ca/cuidado-e-higiene/higiene-adulto-mayor/104/10402"
+    },
+    {
+        "categoria": "Cuidado E Higiene",
+        "subcategoria": "Higiene Bucal",
+        "url": "config_cadenas.json/ca/cuidado-e-higiene/higiene-bucal/104/10403"
+    },
+    {
+        "categoria": "Cuidado E Higiene",
+        "subcategoria": "Higiene Femenina",
+        "url": "config_cadenas.json/ca/cuidado-e-higiene/higiene-femenina/104/10404"
+    },
+    {
+        "categoria": "Cuidado E Higiene",
+        "subcategoria": "Higiene Personal",
+        "url": "config_cadenas.json/ca/cuidado-e-higiene/higiene-personal/104/10405"
+    },
+    {
+        "categoria": "Cuidado E Higiene",
+        "subcategoria": "Repelentes",
+        "url": "config_cadenas.json/ca/cuidado-e-higiene/repelentes/104/10406"
+    },
+    {
+        "categoria": "Estacionales",
+        "subcategoria": "Accesorios Y Eléctricos",
+        "url": "config_cadenas.json/ca/estacionales/accesorios-y-electricos/105/10501"
+    },
+    {
+        "categoria": "Estacionales",
+        "subcategoria": "Accesorios Y Juguetes",
+        "url": "config_cadenas.json/ca/estacionales/accesorios-y-juguetes/105/10502"
+    },
+    {
+        "categoria": "Estacionales",
+        "subcategoria": "Carnaval",
+        "url": "config_cadenas.json/ca/estacionales/carnaval/105/10504"
+    },
+    {
+        "categoria": "Estacionales",
+        "subcategoria": "Navidad",
+        "url": "config_cadenas.json/ca/estacionales/navidad/105/10506"
+    },
+    {
+        "categoria": "Estacionales",
+        "subcategoria": "Escolar",
+        "url": "config_cadenas.json/ca/estacionales/escolar/105/10507"
+    },
+    {
+        "categoria": "Hogar Y Conveniencia",
+        "subcategoria": "Accesorios De Moda",
+        "url": "config_cadenas.json/ca/hogar-y-conveniencia/accesorios-de-moda/106/10601"
+    },
+    {
+        "categoria": "Hogar Y Conveniencia",
+        "subcategoria": "Artículos Familiares",
+        "url": "config_cadenas.json/ca/hogar-y-conveniencia/articulos-familiares/106/10602"
+    },
+    {
+        "categoria": "Hogar Y Conveniencia",
+        "subcategoria": "Cultura y Entretenimiento",
+        "url": "config_cadenas.json/ca/hogar-y-conveniencia/cultura-y-entretenimiento/106/10604"
+    },
+    {
+        "categoria": "Insumos Médicos",
+        "subcategoria": "Equipos De Diagnóstico",
+        "url": "config_cadenas.json/ca/insumos-medicos/equipos-de-diagnostico/107/10701"
+    },
+    {
+        "categoria": "Insumos Médicos",
+        "subcategoria": "Insumos Hospitalarios",
+        "url": "config_cadenas.json/ca/insumos-medicos/insumos-hospitalarios/107/10702"
+    },
+    {
+        "categoria": "Insumos Médicos",
+        "subcategoria": "Primeros Auxilios",
+        "url": "config_cadenas.json/ca/insumos-medicos/primeros-auxilios/107/10703"
+    },
+    {
+        "categoria": "Mamás Y Bebés",
+        "subcategoria": "Accesorios De Bebé",
+        "url": "config_cadenas.json/ca/mamas-y-bebes/accesorios-de-bebe/108/10801"
+    },
+    {
+        "categoria": "Mamás Y Bebés",
+        "subcategoria": "Cuidado Materno",
+        "url": "config_cadenas.json/ca/mamas-y-bebes/cuidado-materno/108/10802"
+    },
+    {
+        "categoria": "Mamás Y Bebés",
+        "subcategoria": "Higiene Del Bebé",
+        "url": "config_cadenas.json/ca/mamas-y-bebes/higiene-del-bebe/108/10803"
+    },
+    {
+        "categoria": "Mamás Y Bebés",
+        "subcategoria": "Juguetes y Atención Temprana",
+        "url": "config_cadenas.json/ca/mamas-y-bebes/juguetes-y-atencion-temprana/108/10804"
+    },
+    {
+        "categoria": "Mamás Y Bebés",
+        "subcategoria": "Lactancia",
+        "url": "config_cadenas.json/ca/mamas-y-bebes/lactancia/108/10805"
+    },
+    {
+        "categoria": "Mamás Y Bebés",
+        "subcategoria": "Nutrición Infantil",
+        "url": "config_cadenas.json/ca/mamas-y-bebes/nutricion-infantil/108/10806"
+    },
+    {
+        "categoria": "Mamás Y Bebés",
+        "subcategoria": "Pañales",
+        "url": "config_cadenas.json/ca/mamas-y-bebes/panales/108/10807"
+    },
+    {
+        "categoria": "Nutrición Saludable",
+        "subcategoria": "Endulzantes",
+        "url": "config_cadenas.json/ca/nutricion-saludable/endulzantes/110/11001"
+    },
+    {
+        "categoria": "Nutrición Saludable",
+        "subcategoria": "Funcionales",
+        "url": "config_cadenas.json/ca/nutricion-saludable/funcionales/110/11002"
+    },
+    {
+        "categoria": "Nutrición Saludable",
+        "subcategoria": "Nutrición Deportiva",
+        "url": "config_cadenas.json/ca/nutricion-saludable/nutricion-deportiva/110/11003"
+    },
+    {
+        "categoria": "Nutrición Saludable",
+        "subcategoria": "Snacks Saludables",
+        "url": "config_cadenas.json/ca/nutricion-saludable/snacks-saludables/110/11004"
+    },
+    {
+        "categoria": "Salud Sexual",
+        "subcategoria": "Accesorios Sexules",
+        "url": "config_cadenas.json/ca/salud-sexual/accesorios-sexules/111/11101"
+    },
+    {
+        "categoria": "Salud Sexual",
+        "subcategoria": "Preservativos",
+        "url": "config_cadenas.json/ca/salud-sexual/preservativos/111/11102"
+    },
+    {
+        "categoria": "Suplementos Y Vitaminas",
+        "subcategoria": "Suplementos",
+        "url": "config_cadenas.json/ca/suplementos-y-vitaminas/suplementos/112/11201"
+    },
+    {
+        "categoria": "Suplementos Y Vitaminas",
+        "subcategoria": "Vitaminas",
+        "url": "config_cadenas.json/ca/suplementos-y-vitaminas/vitaminas/112/11202"
+    }
+]

@@ -1,0 +1,2542 @@
+[
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "The Beauty Edit",
+    "url": "https://farmacorp.com/collections/the-beauty-edit"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Cuidado Infantil 70% Off",
+    "url": "https://farmacorp.com/collections/outlet-on-cuidado"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Coquetas",
+    "url": "https://farmacorp.com/collections/coquetas"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Dulce Septiembre",
+    "url": "https://farmacorp.com/collections/dulce-septiembre"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Revista de Ofertas",
+    "url": "https://farmacorp.com/collections/revista-de-ofertas"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Bielenda Beauty",
+    "url": "https://farmacorp.com/collections/bielenda-beauty"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Rostro",
+    "url": "https://farmacorp.com/collections/belleza-facial"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Ojos",
+    "url": "https://farmacorp.com/collections/mirada-perfecta"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Labios",
+    "url": "https://farmacorp.com/collections/labios-perfectos"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Manicura",
+    "url": "https://farmacorp.com/collections/unas"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Skincare",
+    "url": "https://farmacorp.com/collections/skincare-coreano"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Accesorios de Belleza",
+    "url": "https://farmacorp.com/collections/accesorios-beauty"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Tintes",
+    "url": "https://farmacorp.com/collections/coloracion-capilar"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Electro Belleza",
+    "url": "https://farmacorp.com/collections/babyliss"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado Capilar",
+    "url": "https://farmacorp.com/collections/cuidado-del-cabello"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://farmacorp.com/collections/cuidado-bucal"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado e Higiene",
+    "url": "https://farmacorp.com/collections/cuidado-e-higiene-corporal"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado Femenino",
+    "url": "https://farmacorp.com/collections/cuidado-femenino"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Adulto Mayor",
+    "url": "https://farmacorp.com/collections/adulto-mayor"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Cuidados del Bebé",
+    "url": "https://farmacorp.com/collections/cuidados-del-bebe"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Leches y Fórmulas",
+    "url": "https://farmacorp.com/collections/leches-y-formulas"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Pañales y Toallitas Húmedas",
+    "url": "https://farmacorp.com/collections/panales-y-toallas-humedas"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Mamaderas, Chupetes y Tetinas",
+    "url": "https://farmacorp.com/collections/mamaderas-chupetes-y-tetinas"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Accesorios para Bebé",
+    "url": "https://farmacorp.com/collections/accesorios-para-bebe"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Cuidados de la Mamá",
+    "url": "https://farmacorp.com/collections/cuidados-de-la-mama"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Nutrición Infantil",
+    "url": "https://farmacorp.com/collections/nutricion-infantil"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Detergentes y Jabones",
+    "url": "https://farmacorp.com/collections/detergentes-y-jabones"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Papel Higiénico",
+    "url": "https://farmacorp.com/collections/papel-higienico"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Lavavajillas y Desengrasantes",
+    "url": "https://farmacorp.com/collections/lavavajillas-y-desengrasantes"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Ambientadores y Desinfectantes",
+    "url": "https://farmacorp.com/collections/ambientadores-y-desinfectantes"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Accesorios de Limpieza",
+    "url": "https://farmacorp.com/collections/accesorios-de-limpieza"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Cocina",
+    "url": "https://farmacorp.com/collections/cocina"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Electro Hogar",
+    "url": "https://farmacorp.com/collections/electro-hogar"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Mascotas",
+    "url": "https://farmacorp.com/collections/mascotas"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Decoración y Otros",
+    "url": "https://farmacorp.com/collections/decoracion-y-otros"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Librería",
+    "url": "https://farmacorp.com/collections/libreria"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Belleza y Cosmética",
+    "url": "https://farmacorp.com/collections/belleza-y-cosmetica"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Aftersun",
+    "url": "https://farmacorp.com/collections/aftersun"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Astra",
+    "url": "https://farmacorp.com/collections/astra"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Batiste Dry",
+    "url": "https://farmacorp.com/collections/batiste-dry"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Biofemenine",
+    "url": "https://farmacorp.com/collections/biofemenine"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Conair",
+    "url": "https://farmacorp.com/collections/conair"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Ecotools",
+    "url": "https://farmacorp.com/collections/ecotools"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Geske",
+    "url": "https://farmacorp.com/collections/geske"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "I Love",
+    "url": "https://farmacorp.com/collections/i-love"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Qvs/Truyu",
+    "url": "https://farmacorp.com/collections/qvs-truyu"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Real Techniques",
+    "url": "https://farmacorp.com/collections/real-techniques"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Scunci",
+    "url": "https://farmacorp.com/collections/scunci"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Sun Pro",
+    "url": "https://farmacorp.com/collections/sunpro"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Infantil",
+    "url": "https://farmacorp.com/collections/infantil"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Arrurrú Naturals",
+    "url": "https://farmacorp.com/collections/arrurru-naturals"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Baby Vale",
+    "url": "https://farmacorp.com/collections/baby-vale"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Nutrición y Bienestar",
+    "url": "https://farmacorp.com/collections/nutricion-y-bienestar"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Advanced Sport Nutrition",
+    "url": "https://farmacorp.com/collections/advanced-sport-nutrition"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Atlhetica Nutrition",
+    "url": "https://farmacorp.com/collections/atlhetica-nutrition"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "GNC",
+    "url": "https://farmacorp.com/collections/gnc"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Live",
+    "url": "https://farmacorp.com/collections/live"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Natures Bounty",
+    "url": "https://farmacorp.com/collections/natures-bounty"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Salud",
+    "url": "https://farmacorp.com/collections/salud"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Amaria",
+    "url": "https://farmacorp.com/collections/amaria"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Farmacorp",
+    "url": "https://farmacorp.com/collections/farmacorp"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Lipoless",
+    "url": "https://farmacorp.com/collections/lipoless"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Trojan",
+    "url": "https://farmacorp.com/collections/trojan"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Alimentos",
+    "url": "https://farmacorp.com/collections/alimentos"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Aloe Vera Drink",
+    "url": "https://farmacorp.com/collections/aloe-vera-drink"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Amarket",
+    "url": "https://farmacorp.com/collections/amarket"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Cocina y Menaje",
+    "url": "https://farmacorp.com/collections/cocina-y-menaje"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Brinox",
+    "url": "https://farmacorp.com/collections/brinox"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Coza",
+    "url": "https://farmacorp.com/collections/coza"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "OU",
+    "url": "https://farmacorp.com/collections/ou"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Sanremo",
+    "url": "https://farmacorp.com/collections/sanremo"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Decoración",
+    "url": "https://farmacorp.com/collections/decoracion-y-otros"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Concepts Life",
+    "url": "https://farmacorp.com/collections/concepts-life"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Merletto",
+    "url": "https://farmacorp.com/collections/merletto"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Santini",
+    "url": "https://farmacorp.com/collections/santini"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Pet Lovers",
+    "url": "https://farmacorp.com/collections/pet-lovers"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Conairpet",
+    "url": "https://farmacorp.com/collections/conairpet"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Furacaopet",
+    "url": "https://farmacorp.com/collections/furacaopet"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Aftersun",
+    "url": "https://farmacorp.com/collections/aftersun"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Astra",
+    "url": "https://farmacorp.com/collections/astra"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Batiste Dry",
+    "url": "https://farmacorp.com/collections/batiste-dry"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Biofemenine",
+    "url": "https://farmacorp.com/collections/biofemenine"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Conair",
+    "url": "https://farmacorp.com/collections/conair"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Ecotools",
+    "url": "https://farmacorp.com/collections/ecotools"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Geske",
+    "url": "https://farmacorp.com/collections/geske"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "I Love",
+    "url": "https://farmacorp.com/collections/i-love"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Qvs/Truyu",
+    "url": "https://farmacorp.com/collections/qvs-truyu"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Real Techniques",
+    "url": "https://farmacorp.com/collections/real-techniques"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Scunci",
+    "url": "https://farmacorp.com/collections/scunci"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Sun Pro",
+    "url": "https://farmacorp.com/collections/sunpro"
+  },
+  {
+    "categoria": "Infantil",
+    "subcategoria": "Arrurrú Naturals",
+    "url": "https://farmacorp.com/collections/arrurru-naturals"
+  },
+  {
+    "categoria": "Infantil",
+    "subcategoria": "Baby Vale",
+    "url": "https://farmacorp.com/collections/baby-vale"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Advanced Sport Nutrition",
+    "url": "https://farmacorp.com/collections/advanced-sport-nutrition"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Atlhetica Nutrition",
+    "url": "https://farmacorp.com/collections/atlhetica-nutrition"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "GNC",
+    "url": "https://farmacorp.com/collections/gnc"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Live",
+    "url": "https://farmacorp.com/collections/live"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Natures Bounty",
+    "url": "https://farmacorp.com/collections/natures-bounty"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Amaria",
+    "url": "https://farmacorp.com/collections/amaria"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Farmacorp",
+    "url": "https://farmacorp.com/collections/farmacorp"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Lipoless",
+    "url": "https://farmacorp.com/collections/lipoless"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Trojan",
+    "url": "https://farmacorp.com/collections/trojan"
+  },
+  {
+    "categoria": "Alimentos",
+    "subcategoria": "Aloe Vera Drink",
+    "url": "https://farmacorp.com/collections/aloe-vera-drink"
+  },
+  {
+    "categoria": "Alimentos",
+    "subcategoria": "Amarket",
+    "url": "https://farmacorp.com/collections/amarket"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Brinox",
+    "url": "https://farmacorp.com/collections/brinox"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Coza",
+    "url": "https://farmacorp.com/collections/coza"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "OU",
+    "url": "https://farmacorp.com/collections/ou"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Sanremo",
+    "url": "https://farmacorp.com/collections/sanremo"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Concepts Life",
+    "url": "https://farmacorp.com/collections/concepts-life"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Merletto",
+    "url": "https://farmacorp.com/collections/merletto"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Santini",
+    "url": "https://farmacorp.com/collections/santini"
+  },
+  {
+    "categoria": "Pet Lovers",
+    "subcategoria": "Conairpet",
+    "url": "https://farmacorp.com/collections/conairpet"
+  },
+  {
+    "categoria": "Pet Lovers",
+    "subcategoria": "Furacaopet",
+    "url": "https://farmacorp.com/collections/furacaopet"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Alivio del Dolor",
+    "url": "https://farmacorp.com/collections/alivio-del-dolor-1"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Botiquín y Primeros Auxilios",
+    "url": "https://farmacorp.com/collections/primeros-auxilios-1"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado Digestivo",
+    "url": "https://farmacorp.com/collections/cuidado-digestivo"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado Respiratorio",
+    "url": "https://farmacorp.com/collections/cuidado-respiratorio"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado Cardiovascular",
+    "url": "https://farmacorp.com/collections/cuidado-cardiovascular"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Salud Femenina",
+    "url": "https://farmacorp.com/collections/salud-femenina"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Salud Sexual",
+    "url": "https://farmacorp.com/collections/salud-sexual"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Dispositivos y Accesorios Médicos",
+    "url": "https://farmacorp.com/collections/dispositivos-y-accesorios-medicos"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Sueros",
+    "url": "https://farmacorp.com/collections/sueros"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado de los Sentidos",
+    "url": "https://farmacorp.com/collections/cuidado-de-los-sentidos"
+  },
+  {
+    "categoria": "Suplementos y nutrición",
+    "subcategoria": "Snacks Saludables",
+    "url": "https://farmacorp.com/collections/snacks-saludables"
+  },
+  {
+    "categoria": "Suplementos y nutrición",
+    "subcategoria": "Proteínas y Creatinas",
+    "url": "https://farmacorp.com/collections/proteinas-y-creatinas"
+  },
+  {
+    "categoria": "Suplementos y nutrición",
+    "subcategoria": "Vitaminas y Suplementos",
+    "url": "https://farmacorp.com/collections/vitaminas-y-suplementos"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Panadería y Horneados",
+    "url": "https://farmacorp.com/collections/panaderia-y-horneados"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Leches",
+    "url": "https://farmacorp.com/collections/leches"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Yogurt",
+    "url": "https://farmacorp.com/collections/yogurt"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Café, Té y Chocolatadas",
+    "url": "https://farmacorp.com/collections/cafe-te-y-chocolatadas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Cereales y Avenas",
+    "url": "https://farmacorp.com/collections/cereales-y-avenas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Arroz, Fideos y Legumbres",
+    "url": "https://farmacorp.com/collections/arroz-fideos-y-legumbres"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Aceites y Vinagres",
+    "url": "https://farmacorp.com/collections/aceites-y-vinagres"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Mermeladas y Untables",
+    "url": "https://farmacorp.com/collections/mermeladas-y-untables"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Mantequillas y Margarinas",
+    "url": "https://farmacorp.com/collections/mantequillas-y-margarinas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Sopas, Salsas y Aderezos",
+    "url": "https://farmacorp.com/collections/sopas-salsas-y-aderezos"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Azúcar y Edulcorantes",
+    "url": "https://farmacorp.com/collections/azucar-y-edulcorantes"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Aguas",
+    "url": "https://farmacorp.com/collections/aguas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Isotónicos y Energizantes",
+    "url": "https://farmacorp.com/collections/isotonicos-y-energizantes"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Gaseosas",
+    "url": "https://farmacorp.com/collections/gaseosas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Jugos",
+    "url": "https://farmacorp.com/collections/jugos"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Chocolates, Chicles y Golosinas",
+    "url": "https://farmacorp.com/collections/chocolates-chicles-y-golosinas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Snacks y Piqueos",
+    "url": "https://farmacorp.com/collections/snacks-y-piqueos"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Alimentos",
+    "url": "https://farmacorp.com/collections/alimentos"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Aloe Vera Drink",
+    "url": "https://farmacorp.com/collections/aloe-vera-drink"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Amarket",
+    "url": "https://farmacorp.com/collections/amarket"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Belleza",
+    "url": "https://farmacorp.com/collections/belleza-y-cosmetica"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Aftersun",
+    "url": "https://farmacorp.com/collections/aftersun"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Astra",
+    "url": "https://farmacorp.com/collections/astra"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Batiste Dry",
+    "url": "https://farmacorp.com/collections/batiste-dry"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Biofemenine",
+    "url": "https://farmacorp.com/collections/biofemenine"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Conair",
+    "url": "https://farmacorp.com/collections/conair"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Ecotools",
+    "url": "https://farmacorp.com/collections/ecotools"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Geske",
+    "url": "https://farmacorp.com/collections/geske"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "I Love",
+    "url": "https://farmacorp.com/collections/i-love"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Qvs/Truyu",
+    "url": "https://farmacorp.com/collections/qvs-truyu"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Real Techniques",
+    "url": "https://farmacorp.com/collections/real-techniques"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Scunci",
+    "url": "https://farmacorp.com/collections/scunci"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Sun Pro",
+    "url": "https://farmacorp.com/collections/sunpro"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Cocina y Menaje",
+    "url": "https://farmacorp.com/collections/cocina-y-menaje"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Brinox",
+    "url": "https://farmacorp.com/collections/brinox"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Coza",
+    "url": "https://farmacorp.com/collections/coza"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "OU",
+    "url": "https://farmacorp.com/collections/ou"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Sanremo",
+    "url": "https://farmacorp.com/collections/sanremo"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Decoración",
+    "url": "https://farmacorp.com/collections/decoracion-y-otros"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Concepts Life",
+    "url": "https://farmacorp.com/collections/concepts-life"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Merletto",
+    "url": "https://farmacorp.com/collections/merletto"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Santini",
+    "url": "https://farmacorp.com/collections/santini"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Infantil",
+    "url": "https://farmacorp.com/collections/infantil"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Arrurrú Naturals",
+    "url": "https://farmacorp.com/collections/arrurru-naturals"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Baby Vale",
+    "url": "https://farmacorp.com/collections/baby-vale"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Nutrición y Bienestar",
+    "url": "https://farmacorp.com/collections/nutricion-y-bienestar"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Advanced Sport Nutrition",
+    "url": "https://farmacorp.com/collections/advanced-sport-nutrition"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Atlhetica Nutrition",
+    "url": "https://farmacorp.com/collections/atlhetica-nutrition"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "GNC",
+    "url": "https://farmacorp.com/collections/gnc"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Live",
+    "url": "https://farmacorp.com/collections/live"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Natures Bounty",
+    "url": "https://farmacorp.com/collections/natures-bounty"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Pet Lovers",
+    "url": "https://farmacorp.com/collections/pet-lovers"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Conairpet",
+    "url": "https://farmacorp.com/collections/conairpet"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Furacaopet",
+    "url": "https://farmacorp.com/collections/furacaopet"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Salud",
+    "url": "https://farmacorp.com/collections/salud"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Amaria",
+    "url": "https://farmacorp.com/collections/amaria"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Farmacorp",
+    "url": "https://farmacorp.com/collections/farmacorp"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Lipoless",
+    "url": "https://farmacorp.com/collections/lipoless"
+  },
+  {
+    "categoria": "Conoce Nuestras Marcas",
+    "subcategoria": "Trojan",
+    "url": "https://farmacorp.com/collections/trojan"
+  },
+  {
+    "categoria": "Alimentos",
+    "subcategoria": "Aloe Vera Drink",
+    "url": "https://farmacorp.com/collections/aloe-vera-drink"
+  },
+  {
+    "categoria": "Alimentos",
+    "subcategoria": "Amarket",
+    "url": "https://farmacorp.com/collections/amarket"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Aftersun",
+    "url": "https://farmacorp.com/collections/aftersun"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Astra",
+    "url": "https://farmacorp.com/collections/astra"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Batiste Dry",
+    "url": "https://farmacorp.com/collections/batiste-dry"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Biofemenine",
+    "url": "https://farmacorp.com/collections/biofemenine"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Conair",
+    "url": "https://farmacorp.com/collections/conair"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Ecotools",
+    "url": "https://farmacorp.com/collections/ecotools"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Geske",
+    "url": "https://farmacorp.com/collections/geske"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "I Love",
+    "url": "https://farmacorp.com/collections/i-love"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Qvs/Truyu",
+    "url": "https://farmacorp.com/collections/qvs-truyu"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Real Techniques",
+    "url": "https://farmacorp.com/collections/real-techniques"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Scunci",
+    "url": "https://farmacorp.com/collections/scunci"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Sun Pro",
+    "url": "https://farmacorp.com/collections/sunpro"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Brinox",
+    "url": "https://farmacorp.com/collections/brinox"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Coza",
+    "url": "https://farmacorp.com/collections/coza"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "OU",
+    "url": "https://farmacorp.com/collections/ou"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Sanremo",
+    "url": "https://farmacorp.com/collections/sanremo"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Concepts Life",
+    "url": "https://farmacorp.com/collections/concepts-life"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Merletto",
+    "url": "https://farmacorp.com/collections/merletto"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Santini",
+    "url": "https://farmacorp.com/collections/santini"
+  },
+  {
+    "categoria": "Infantil",
+    "subcategoria": "Arrurrú Naturals",
+    "url": "https://farmacorp.com/collections/arrurru-naturals"
+  },
+  {
+    "categoria": "Infantil",
+    "subcategoria": "Baby Vale",
+    "url": "https://farmacorp.com/collections/baby-vale"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Advanced Sport Nutrition",
+    "url": "https://farmacorp.com/collections/advanced-sport-nutrition"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Atlhetica Nutrition",
+    "url": "https://farmacorp.com/collections/atlhetica-nutrition"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "GNC",
+    "url": "https://farmacorp.com/collections/gnc"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Live",
+    "url": "https://farmacorp.com/collections/live"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Natures Bounty",
+    "url": "https://farmacorp.com/collections/natures-bounty"
+  },
+  {
+    "categoria": "Pet Lovers",
+    "subcategoria": "Conairpet",
+    "url": "https://farmacorp.com/collections/conairpet"
+  },
+  {
+    "categoria": "Pet Lovers",
+    "subcategoria": "Furacaopet",
+    "url": "https://farmacorp.com/collections/furacaopet"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Amaria",
+    "url": "https://farmacorp.com/collections/amaria"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Farmacorp",
+    "url": "https://farmacorp.com/collections/farmacorp"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Lipoless",
+    "url": "https://farmacorp.com/collections/lipoless"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Trojan",
+    "url": "https://farmacorp.com/collections/trojan"
+  },
+  {
+    "categoria": "Salud y medicamentos",
+    "subcategoria": "Alivio del Dolor",
+    "url": "https://farmacorp.com/collections/alivio-del-dolor-1"
+  },
+  {
+    "categoria": "Salud y medicamentos",
+    "subcategoria": "Botiquín",
+    "url": "https://farmacorp.com/collections/primeros-auxilios-1"
+  },
+  {
+    "categoria": "Salud y medicamentos",
+    "subcategoria": "Cuidado Digestivo",
+    "url": "https://farmacorp.com/collections/cuidado-digestivo"
+  },
+  {
+    "categoria": "Salud y medicamentos",
+    "subcategoria": "Cuidado Respiratiorio",
+    "url": "https://farmacorp.com/collections/cuidado-respiratorio"
+  },
+  {
+    "categoria": "Salud y medicamentos",
+    "subcategoria": "Cuidado Cardiovascular",
+    "url": "https://farmacorp.com/collections/cuidado-cardiovascular"
+  },
+  {
+    "categoria": "Salud y medicamentos",
+    "subcategoria": "Salud Femenina",
+    "url": "https://farmacorp.com/collections/salud-femenina"
+  },
+  {
+    "categoria": "Salud y medicamentos",
+    "subcategoria": "Salud Sexual",
+    "url": "https://farmacorp.com/collections/salud-sexual"
+  },
+  {
+    "categoria": "Mamá y Bebé",
+    "subcategoria": "Cuidados del bebé",
+    "url": "https://farmacorp.com/collections/cuidados-del-bebe"
+  },
+  {
+    "categoria": "Mamá y Bebé",
+    "subcategoria": "Leches y Fórmulas",
+    "url": "https://farmacorp.com/collections/leches-y-formulas"
+  },
+  {
+    "categoria": "Mamá y Bebé",
+    "subcategoria": "Pañales y Toallitas Húmedas",
+    "url": "https://farmacorp.com/collections/panales-y-toallas-humedas"
+  },
+  {
+    "categoria": "Mamá y Bebé",
+    "subcategoria": "Mamaderas, Chupetes y Tetinas",
+    "url": "https://farmacorp.com/collections/mamaderas-chupetes-y-tetinas"
+  },
+  {
+    "categoria": "Mamá y Bebé",
+    "subcategoria": "Accesorios para Bebé",
+    "url": "https://farmacorp.com/collections/accesorios-para-bebe"
+  },
+  {
+    "categoria": "Mamá y Bebé",
+    "subcategoria": "Cuidados de la Mamá",
+    "url": "https://farmacorp.com/collections/cuidados-de-la-mama"
+  },
+  {
+    "categoria": "Mamá y Bebé",
+    "subcategoria": "Nutrición Infantil",
+    "url": "https://farmacorp.com/collections/nutricion-infantil"
+  },
+  {
+    "categoria": "Suplementos y Vitaminas",
+    "subcategoria": "Snacks Saludables",
+    "url": "https://farmacorp.com/collections/snacks-saludables"
+  },
+  {
+    "categoria": "Suplementos y Vitaminas",
+    "subcategoria": "Proteínas y Creatinas",
+    "url": "https://farmacorp.com/collections/proteinas-y-creatinas"
+  },
+  {
+    "categoria": "Suplementos y Vitaminas",
+    "subcategoria": "Vitaminas y Suplementos",
+    "url": "https://farmacorp.com/collections/vitaminas-y-suplementos"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Rostro",
+    "url": "https://farmacorp.com/collections/belleza-facial"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Ojos",
+    "url": "https://farmacorp.com/collections/mirada-perfecta"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Labios",
+    "url": "https://farmacorp.com/collections/labios-perfectos"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Manicura",
+    "url": "https://farmacorp.com/collections/manicura"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Skincare",
+    "url": "https://farmacorp.com/collections/skincare-coreano"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Accesorios de Belleza",
+    "url": "https://farmacorp.com/collections/accesorios-beauty"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Tintes",
+    "url": "https://farmacorp.com/collections/coloracion-capilar"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Capilar",
+    "url": "https://farmacorp.com/collections/cuidado-del-cabello"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://farmacorp.com/collections/cuidado-bucal"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Femenino",
+    "url": "https://farmacorp.com/collections/cuidado-femenino"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Masculino",
+    "url": "https://farmacorp.com/collections/cuidado-masculino"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Adulto Mayor",
+    "url": "https://farmacorp.com/collections/adulto-mayor"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Ofertas",
+    "url": "https://farmacorp.com/collections/ofertas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "The Beauty Edit",
+    "url": "https://farmacorp.com/collections/the-beauty-edit"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado Infantil 70% Off",
+    "url": "https://farmacorp.com/collections/outlet-on-cuidado"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Coquetas",
+    "url": "https://farmacorp.com/collections/coquetas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Dulce Septiembre",
+    "url": "https://farmacorp.com/collections/dulce-septiembre"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Revista de Ofertas",
+    "url": "https://farmacorp.com/collections/revista-de-ofertas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Bielenda Beauty",
+    "url": "https://farmacorp.com/collections/bielenda-beauty"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Lo nuevo",
+    "url": "https://farmacorp.com/collections/lo-nuevo"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Belleza",
+    "url": "https://farmacorp.com/collections/beauty"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Rostro",
+    "url": "https://farmacorp.com/collections/belleza-facial"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Ojos",
+    "url": "https://farmacorp.com/collections/mirada-perfecta"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Labios",
+    "url": "https://farmacorp.com/collections/labios-perfectos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Manicura",
+    "url": "https://farmacorp.com/collections/unas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Skincare",
+    "url": "https://farmacorp.com/collections/skincare-coreano"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Accesorios de Belleza",
+    "url": "https://farmacorp.com/collections/accesorios-beauty"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Tintes",
+    "url": "https://farmacorp.com/collections/coloracion-capilar"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Electro Belleza",
+    "url": "https://farmacorp.com/collections/babyliss"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado personal",
+    "url": "https://farmacorp.com/collections/self-care"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado Capilar",
+    "url": "https://farmacorp.com/collections/cuidado-del-cabello"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://farmacorp.com/collections/cuidado-bucal"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado e Higiene",
+    "url": "https://farmacorp.com/collections/cuidado-e-higiene-corporal"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado Femenino",
+    "url": "https://farmacorp.com/collections/cuidado-femenino"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Adulto Mayor",
+    "url": "https://farmacorp.com/collections/adulto-mayor"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Mamá y bebé",
+    "url": "https://farmacorp.com/collections/mama-bebe"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidados del Bebé",
+    "url": "https://farmacorp.com/collections/cuidados-del-bebe"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Leches y Fórmulas",
+    "url": "https://farmacorp.com/collections/leches-y-formulas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Pañales y Toallitas Húmedas",
+    "url": "https://farmacorp.com/collections/panales-y-toallas-humedas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Mamaderas, Chupetes y Tetinas",
+    "url": "https://farmacorp.com/collections/mamaderas-chupetes-y-tetinas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Accesorios para Bebé",
+    "url": "https://farmacorp.com/collections/accesorios-para-bebe"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidados de la Mamá",
+    "url": "https://farmacorp.com/collections/cuidados-de-la-mama"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Nutrición Infantil",
+    "url": "https://farmacorp.com/collections/nutricion-infantil"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Hogar",
+    "url": "https://farmacorp.com/collections/hogar"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Detergentes y Jabones",
+    "url": "https://farmacorp.com/collections/detergentes-y-jabones"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Papel Higiénico",
+    "url": "https://farmacorp.com/collections/papel-higienico"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Lavavajillas y Desengrasantes",
+    "url": "https://farmacorp.com/collections/lavavajillas-y-desengrasantes"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Ambientadores y Desinfectantes",
+    "url": "https://farmacorp.com/collections/ambientadores-y-desinfectantes"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Accesorios de Limpieza",
+    "url": "https://farmacorp.com/collections/accesorios-de-limpieza"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cocina",
+    "url": "https://farmacorp.com/collections/cocina"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Electro Hogar",
+    "url": "https://farmacorp.com/collections/electro-hogar"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Mascotas",
+    "url": "https://farmacorp.com/collections/mascotas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Decoración y Otros",
+    "url": "https://farmacorp.com/collections/decoracion-y-otros"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Librería",
+    "url": "https://farmacorp.com/collections/libreria"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Nuestras Marcas",
+    "url": "https://farmacorp.com/collections/nuestras-marcas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Belleza y Cosmética",
+    "url": "https://farmacorp.com/collections/belleza-y-cosmetica"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Aftersun",
+    "url": "https://farmacorp.com/collections/aftersun"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Astra",
+    "url": "https://farmacorp.com/collections/astra"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Batiste Dry",
+    "url": "https://farmacorp.com/collections/batiste-dry"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Biofemenine",
+    "url": "https://farmacorp.com/collections/biofemenine"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Conair",
+    "url": "https://farmacorp.com/collections/conair"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Ecotools",
+    "url": "https://farmacorp.com/collections/ecotools"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Geske",
+    "url": "https://farmacorp.com/collections/geske"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "I Love",
+    "url": "https://farmacorp.com/collections/i-love"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Qvs/Truyu",
+    "url": "https://farmacorp.com/collections/qvs-truyu"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Real Techniques",
+    "url": "https://farmacorp.com/collections/real-techniques"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Scunci",
+    "url": "https://farmacorp.com/collections/scunci"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Sun Pro",
+    "url": "https://farmacorp.com/collections/sunpro"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Infantil",
+    "url": "https://farmacorp.com/collections/infantil"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Arrurrú Naturals",
+    "url": "https://farmacorp.com/collections/arrurru-naturals"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Baby Vale",
+    "url": "https://farmacorp.com/collections/baby-vale"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Nutrición y Bienestar",
+    "url": "https://farmacorp.com/collections/nutricion-y-bienestar"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Advanced Sport Nutrition",
+    "url": "https://farmacorp.com/collections/advanced-sport-nutrition"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Atlhetica Nutrition",
+    "url": "https://farmacorp.com/collections/atlhetica-nutrition"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "GNC",
+    "url": "https://farmacorp.com/collections/gnc"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Live",
+    "url": "https://farmacorp.com/collections/live"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Natures Bounty",
+    "url": "https://farmacorp.com/collections/natures-bounty"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Salud",
+    "url": "https://farmacorp.com/collections/salud"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Amaria",
+    "url": "https://farmacorp.com/collections/amaria"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Farmacorp",
+    "url": "https://farmacorp.com/collections/farmacorp"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Lipoless",
+    "url": "https://farmacorp.com/collections/lipoless"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Trojan",
+    "url": "https://farmacorp.com/collections/trojan"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Alimentos",
+    "url": "https://farmacorp.com/collections/alimentos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Aloe Vera Drink",
+    "url": "https://farmacorp.com/collections/aloe-vera-drink"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Amarket",
+    "url": "https://farmacorp.com/collections/amarket"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cocina y Menaje",
+    "url": "https://farmacorp.com/collections/cocina-y-menaje"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Brinox",
+    "url": "https://farmacorp.com/collections/brinox"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Coza",
+    "url": "https://farmacorp.com/collections/coza"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "OU",
+    "url": "https://farmacorp.com/collections/ou"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Sanremo",
+    "url": "https://farmacorp.com/collections/sanremo"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Decoración",
+    "url": "https://farmacorp.com/collections/decoracion-y-otros"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Concepts Life",
+    "url": "https://farmacorp.com/collections/concepts-life"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Merletto",
+    "url": "https://farmacorp.com/collections/merletto"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Santini",
+    "url": "https://farmacorp.com/collections/santini"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Pet Lovers",
+    "url": "https://farmacorp.com/collections/pet-lovers"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Conairpet",
+    "url": "https://farmacorp.com/collections/conairpet"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Furacaopet",
+    "url": "https://farmacorp.com/collections/furacaopet"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Salud y Medicamentos",
+    "url": "https://farmacorp.com/collections/medicamentos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Alivio del Dolor",
+    "url": "https://farmacorp.com/collections/alivio-del-dolor-1"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Botiquín y Primeros Auxilios",
+    "url": "https://farmacorp.com/collections/primeros-auxilios-1"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado Digestivo",
+    "url": "https://farmacorp.com/collections/cuidado-digestivo"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado Respiratorio",
+    "url": "https://farmacorp.com/collections/cuidado-respiratorio"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado Cardiovascular",
+    "url": "https://farmacorp.com/collections/cuidado-cardiovascular"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Salud Femenina",
+    "url": "https://farmacorp.com/collections/salud-femenina"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Salud Sexual",
+    "url": "https://farmacorp.com/collections/salud-sexual"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Dispositivos y Accesorios Médicos",
+    "url": "https://farmacorp.com/collections/dispositivos-y-accesorios-medicos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Sueros",
+    "url": "https://farmacorp.com/collections/sueros"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cuidado de los Sentidos",
+    "url": "https://farmacorp.com/collections/cuidado-de-los-sentidos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Suplementos y nutrición",
+    "url": "https://farmacorp.com/collections/vitaminas-suplementos-y-minerales"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Snacks Saludables",
+    "url": "https://farmacorp.com/collections/snacks-saludables"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Proteínas y Creatinas",
+    "url": "https://farmacorp.com/collections/proteinas-y-creatinas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Vitaminas y Suplementos",
+    "url": "https://farmacorp.com/collections/vitaminas-y-suplementos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Supermercado",
+    "url": "https://farmacorp.com/collections/supermercado"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Panadería y Horneados",
+    "url": "https://farmacorp.com/collections/panaderia-y-horneados"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Leches",
+    "url": "https://farmacorp.com/collections/leches"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Yogurt",
+    "url": "https://farmacorp.com/collections/yogurt"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Café, Té y Chocolatadas",
+    "url": "https://farmacorp.com/collections/cafe-te-y-chocolatadas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Cereales y Avenas",
+    "url": "https://farmacorp.com/collections/cereales-y-avenas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Arroz, Fideos y Legumbres",
+    "url": "https://farmacorp.com/collections/arroz-fideos-y-legumbres"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Aceites y Vinagres",
+    "url": "https://farmacorp.com/collections/aceites-y-vinagres"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Mermeladas y Untables",
+    "url": "https://farmacorp.com/collections/mermeladas-y-untables"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Mantequillas y Margarinas",
+    "url": "https://farmacorp.com/collections/mantequillas-y-margarinas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Sopas, Salsas y Aderezos",
+    "url": "https://farmacorp.com/collections/sopas-salsas-y-aderezos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Azúcar y Edulcorantes",
+    "url": "https://farmacorp.com/collections/azucar-y-edulcorantes"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Aguas",
+    "url": "https://farmacorp.com/collections/aguas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Isotónicos y Energizantes",
+    "url": "https://farmacorp.com/collections/isotonicos-y-energizantes"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Gaseosas",
+    "url": "https://farmacorp.com/collections/gaseosas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Jugos",
+    "url": "https://farmacorp.com/collections/jugos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Chocolates, Chicles y Golosinas",
+    "url": "https://farmacorp.com/collections/chocolates-chicles-y-golosinas"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Snacks y Piqueos",
+    "url": "https://farmacorp.com/collections/snacks-y-piqueos"
+  },
+  {
+    "categoria": "Categorias",
+    "subcategoria": "Blogs",
+    "url": "https://farmacorp.com/blogs/news"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "The Beauty Edit",
+    "url": "https://farmacorp.com/collections/the-beauty-edit"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Cuidado Infantil 70% Off",
+    "url": "https://farmacorp.com/collections/outlet-on-cuidado"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Coquetas",
+    "url": "https://farmacorp.com/collections/coquetas"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Dulce Septiembre",
+    "url": "https://farmacorp.com/collections/dulce-septiembre"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Revista de Ofertas",
+    "url": "https://farmacorp.com/collections/revista-de-ofertas"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Bielenda Beauty",
+    "url": "https://farmacorp.com/collections/bielenda-beauty"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Rostro",
+    "url": "https://farmacorp.com/collections/belleza-facial"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Ojos",
+    "url": "https://farmacorp.com/collections/mirada-perfecta"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Labios",
+    "url": "https://farmacorp.com/collections/labios-perfectos"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Manicura",
+    "url": "https://farmacorp.com/collections/unas"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Skincare",
+    "url": "https://farmacorp.com/collections/skincare-coreano"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Accesorios de Belleza",
+    "url": "https://farmacorp.com/collections/accesorios-beauty"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Tintes",
+    "url": "https://farmacorp.com/collections/coloracion-capilar"
+  },
+  {
+    "categoria": "Belleza",
+    "subcategoria": "Electro Belleza",
+    "url": "https://farmacorp.com/collections/babyliss"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado Capilar",
+    "url": "https://farmacorp.com/collections/cuidado-del-cabello"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://farmacorp.com/collections/cuidado-bucal"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado e Higiene",
+    "url": "https://farmacorp.com/collections/cuidado-e-higiene-corporal"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Cuidado Femenino",
+    "url": "https://farmacorp.com/collections/cuidado-femenino"
+  },
+  {
+    "categoria": "Cuidado personal",
+    "subcategoria": "Adulto Mayor",
+    "url": "https://farmacorp.com/collections/adulto-mayor"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Cuidados del Bebé",
+    "url": "https://farmacorp.com/collections/cuidados-del-bebe"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Leches y Fórmulas",
+    "url": "https://farmacorp.com/collections/leches-y-formulas"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Pañales y Toallitas Húmedas",
+    "url": "https://farmacorp.com/collections/panales-y-toallas-humedas"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Mamaderas, Chupetes y Tetinas",
+    "url": "https://farmacorp.com/collections/mamaderas-chupetes-y-tetinas"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Accesorios para Bebé",
+    "url": "https://farmacorp.com/collections/accesorios-para-bebe"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Cuidados de la Mamá",
+    "url": "https://farmacorp.com/collections/cuidados-de-la-mama"
+  },
+  {
+    "categoria": "Mamá y bebé",
+    "subcategoria": "Nutrición Infantil",
+    "url": "https://farmacorp.com/collections/nutricion-infantil"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Detergentes y Jabones",
+    "url": "https://farmacorp.com/collections/detergentes-y-jabones"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Papel Higiénico",
+    "url": "https://farmacorp.com/collections/papel-higienico"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Lavavajillas y Desengrasantes",
+    "url": "https://farmacorp.com/collections/lavavajillas-y-desengrasantes"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Ambientadores y Desinfectantes",
+    "url": "https://farmacorp.com/collections/ambientadores-y-desinfectantes"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Accesorios de Limpieza",
+    "url": "https://farmacorp.com/collections/accesorios-de-limpieza"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Cocina",
+    "url": "https://farmacorp.com/collections/cocina"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Electro Hogar",
+    "url": "https://farmacorp.com/collections/electro-hogar"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Mascotas",
+    "url": "https://farmacorp.com/collections/mascotas"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Decoración y Otros",
+    "url": "https://farmacorp.com/collections/decoracion-y-otros"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Librería",
+    "url": "https://farmacorp.com/collections/libreria"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Belleza y Cosmética",
+    "url": "https://farmacorp.com/collections/belleza-y-cosmetica"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Aftersun",
+    "url": "https://farmacorp.com/collections/aftersun"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Astra",
+    "url": "https://farmacorp.com/collections/astra"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Batiste Dry",
+    "url": "https://farmacorp.com/collections/batiste-dry"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Biofemenine",
+    "url": "https://farmacorp.com/collections/biofemenine"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Conair",
+    "url": "https://farmacorp.com/collections/conair"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Ecotools",
+    "url": "https://farmacorp.com/collections/ecotools"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Geske",
+    "url": "https://farmacorp.com/collections/geske"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "I Love",
+    "url": "https://farmacorp.com/collections/i-love"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Qvs/Truyu",
+    "url": "https://farmacorp.com/collections/qvs-truyu"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Real Techniques",
+    "url": "https://farmacorp.com/collections/real-techniques"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Scunci",
+    "url": "https://farmacorp.com/collections/scunci"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Sun Pro",
+    "url": "https://farmacorp.com/collections/sunpro"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Infantil",
+    "url": "https://farmacorp.com/collections/infantil"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Arrurrú Naturals",
+    "url": "https://farmacorp.com/collections/arrurru-naturals"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Baby Vale",
+    "url": "https://farmacorp.com/collections/baby-vale"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Nutrición y Bienestar",
+    "url": "https://farmacorp.com/collections/nutricion-y-bienestar"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Advanced Sport Nutrition",
+    "url": "https://farmacorp.com/collections/advanced-sport-nutrition"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Atlhetica Nutrition",
+    "url": "https://farmacorp.com/collections/atlhetica-nutrition"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "GNC",
+    "url": "https://farmacorp.com/collections/gnc"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Live",
+    "url": "https://farmacorp.com/collections/live"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Natures Bounty",
+    "url": "https://farmacorp.com/collections/natures-bounty"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Salud",
+    "url": "https://farmacorp.com/collections/salud"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Amaria",
+    "url": "https://farmacorp.com/collections/amaria"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Farmacorp",
+    "url": "https://farmacorp.com/collections/farmacorp"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Lipoless",
+    "url": "https://farmacorp.com/collections/lipoless"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Trojan",
+    "url": "https://farmacorp.com/collections/trojan"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Alimentos",
+    "url": "https://farmacorp.com/collections/alimentos"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Aloe Vera Drink",
+    "url": "https://farmacorp.com/collections/aloe-vera-drink"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Amarket",
+    "url": "https://farmacorp.com/collections/amarket"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Cocina y Menaje",
+    "url": "https://farmacorp.com/collections/cocina-y-menaje"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Brinox",
+    "url": "https://farmacorp.com/collections/brinox"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Coza",
+    "url": "https://farmacorp.com/collections/coza"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "OU",
+    "url": "https://farmacorp.com/collections/ou"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Sanremo",
+    "url": "https://farmacorp.com/collections/sanremo"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Decoración",
+    "url": "https://farmacorp.com/collections/decoracion-y-otros"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Concepts Life",
+    "url": "https://farmacorp.com/collections/concepts-life"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Merletto",
+    "url": "https://farmacorp.com/collections/merletto"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Santini",
+    "url": "https://farmacorp.com/collections/santini"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Pet Lovers",
+    "url": "https://farmacorp.com/collections/pet-lovers"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Conairpet",
+    "url": "https://farmacorp.com/collections/conairpet"
+  },
+  {
+    "categoria": "Nuestras Marcas",
+    "subcategoria": "Furacaopet",
+    "url": "https://farmacorp.com/collections/furacaopet"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Aftersun",
+    "url": "https://farmacorp.com/collections/aftersun"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Astra",
+    "url": "https://farmacorp.com/collections/astra"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Batiste Dry",
+    "url": "https://farmacorp.com/collections/batiste-dry"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Biofemenine",
+    "url": "https://farmacorp.com/collections/biofemenine"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Conair",
+    "url": "https://farmacorp.com/collections/conair"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Ecotools",
+    "url": "https://farmacorp.com/collections/ecotools"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Geske",
+    "url": "https://farmacorp.com/collections/geske"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "I Love",
+    "url": "https://farmacorp.com/collections/i-love"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Qvs/Truyu",
+    "url": "https://farmacorp.com/collections/qvs-truyu"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Real Techniques",
+    "url": "https://farmacorp.com/collections/real-techniques"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Scunci",
+    "url": "https://farmacorp.com/collections/scunci"
+  },
+  {
+    "categoria": "Belleza y Cosmética",
+    "subcategoria": "Sun Pro",
+    "url": "https://farmacorp.com/collections/sunpro"
+  },
+  {
+    "categoria": "Infantil",
+    "subcategoria": "Arrurrú Naturals",
+    "url": "https://farmacorp.com/collections/arrurru-naturals"
+  },
+  {
+    "categoria": "Infantil",
+    "subcategoria": "Baby Vale",
+    "url": "https://farmacorp.com/collections/baby-vale"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Advanced Sport Nutrition",
+    "url": "https://farmacorp.com/collections/advanced-sport-nutrition"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Atlhetica Nutrition",
+    "url": "https://farmacorp.com/collections/atlhetica-nutrition"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "GNC",
+    "url": "https://farmacorp.com/collections/gnc"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Live",
+    "url": "https://farmacorp.com/collections/live"
+  },
+  {
+    "categoria": "Nutrición y Bienestar",
+    "subcategoria": "Natures Bounty",
+    "url": "https://farmacorp.com/collections/natures-bounty"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Amaria",
+    "url": "https://farmacorp.com/collections/amaria"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Farmacorp",
+    "url": "https://farmacorp.com/collections/farmacorp"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Lipoless",
+    "url": "https://farmacorp.com/collections/lipoless"
+  },
+  {
+    "categoria": "Salud",
+    "subcategoria": "Trojan",
+    "url": "https://farmacorp.com/collections/trojan"
+  },
+  {
+    "categoria": "Alimentos",
+    "subcategoria": "Aloe Vera Drink",
+    "url": "https://farmacorp.com/collections/aloe-vera-drink"
+  },
+  {
+    "categoria": "Alimentos",
+    "subcategoria": "Amarket",
+    "url": "https://farmacorp.com/collections/amarket"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Brinox",
+    "url": "https://farmacorp.com/collections/brinox"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Coza",
+    "url": "https://farmacorp.com/collections/coza"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "OU",
+    "url": "https://farmacorp.com/collections/ou"
+  },
+  {
+    "categoria": "Cocina y Menaje",
+    "subcategoria": "Sanremo",
+    "url": "https://farmacorp.com/collections/sanremo"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Concepts Life",
+    "url": "https://farmacorp.com/collections/concepts-life"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Merletto",
+    "url": "https://farmacorp.com/collections/merletto"
+  },
+  {
+    "categoria": "Decoración",
+    "subcategoria": "Santini",
+    "url": "https://farmacorp.com/collections/santini"
+  },
+  {
+    "categoria": "Pet Lovers",
+    "subcategoria": "Conairpet",
+    "url": "https://farmacorp.com/collections/conairpet"
+  },
+  {
+    "categoria": "Pet Lovers",
+    "subcategoria": "Furacaopet",
+    "url": "https://farmacorp.com/collections/furacaopet"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Alivio del Dolor",
+    "url": "https://farmacorp.com/collections/alivio-del-dolor-1"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Botiquín y Primeros Auxilios",
+    "url": "https://farmacorp.com/collections/primeros-auxilios-1"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado Digestivo",
+    "url": "https://farmacorp.com/collections/cuidado-digestivo"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado Respiratorio",
+    "url": "https://farmacorp.com/collections/cuidado-respiratorio"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado Cardiovascular",
+    "url": "https://farmacorp.com/collections/cuidado-cardiovascular"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Salud Femenina",
+    "url": "https://farmacorp.com/collections/salud-femenina"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Salud Sexual",
+    "url": "https://farmacorp.com/collections/salud-sexual"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Dispositivos y Accesorios Médicos",
+    "url": "https://farmacorp.com/collections/dispositivos-y-accesorios-medicos"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Sueros",
+    "url": "https://farmacorp.com/collections/sueros"
+  },
+  {
+    "categoria": "Salud y Medicamentos",
+    "subcategoria": "Cuidado de los Sentidos",
+    "url": "https://farmacorp.com/collections/cuidado-de-los-sentidos"
+  },
+  {
+    "categoria": "Suplementos y nutrición",
+    "subcategoria": "Snacks Saludables",
+    "url": "https://farmacorp.com/collections/snacks-saludables"
+  },
+  {
+    "categoria": "Suplementos y nutrición",
+    "subcategoria": "Proteínas y Creatinas",
+    "url": "https://farmacorp.com/collections/proteinas-y-creatinas"
+  },
+  {
+    "categoria": "Suplementos y nutrición",
+    "subcategoria": "Vitaminas y Suplementos",
+    "url": "https://farmacorp.com/collections/vitaminas-y-suplementos"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Panadería y Horneados",
+    "url": "https://farmacorp.com/collections/panaderia-y-horneados"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Leches",
+    "url": "https://farmacorp.com/collections/leches"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Yogurt",
+    "url": "https://farmacorp.com/collections/yogurt"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Café, Té y Chocolatadas",
+    "url": "https://farmacorp.com/collections/cafe-te-y-chocolatadas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Cereales y Avenas",
+    "url": "https://farmacorp.com/collections/cereales-y-avenas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Arroz, Fideos y Legumbres",
+    "url": "https://farmacorp.com/collections/arroz-fideos-y-legumbres"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Aceites y Vinagres",
+    "url": "https://farmacorp.com/collections/aceites-y-vinagres"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Mermeladas y Untables",
+    "url": "https://farmacorp.com/collections/mermeladas-y-untables"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Mantequillas y Margarinas",
+    "url": "https://farmacorp.com/collections/mantequillas-y-margarinas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Sopas, Salsas y Aderezos",
+    "url": "https://farmacorp.com/collections/sopas-salsas-y-aderezos"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Azúcar y Edulcorantes",
+    "url": "https://farmacorp.com/collections/azucar-y-edulcorantes"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Aguas",
+    "url": "https://farmacorp.com/collections/aguas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Isotónicos y Energizantes",
+    "url": "https://farmacorp.com/collections/isotonicos-y-energizantes"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Gaseosas",
+    "url": "https://farmacorp.com/collections/gaseosas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Jugos",
+    "url": "https://farmacorp.com/collections/jugos"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Chocolates, Chicles y Golosinas",
+    "url": "https://farmacorp.com/collections/chocolates-chicles-y-golosinas"
+  },
+  {
+    "categoria": "Supermercado",
+    "subcategoria": "Snacks y Piqueos",
+    "url": "https://farmacorp.com/collections/snacks-y-piqueos"
+  }
+]

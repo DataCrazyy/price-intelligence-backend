@@ -121,18 +121,34 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
 
         sitio_base = chain_cfg["sitio_base"]
         colecciones = chain_cfg["colecciones"]
+        
         if colecciones == "todas":
             log(f"Descubriendo categorías de {cadena} ({sitio_base}) ...")
             descubiertas = scraper_shopify.listar_colecciones(sitio_base)
-            colecciones = [c["handle"] for c in descubiertas if c["productos"] > 0]
+            colecciones = [{"categoria": c.get("categoria", "General"), "subcategoria": c["titulo"], "handle": c["handle"]} for c in descubiertas if c["productos"] > 0]
             log(f"  {len(colecciones)} categorías con productos encontradas")
 
-        for handle_coleccion in colecciones:
+        for col in colecciones:
+            # Compatibilidad: maneja diccionarios estructurados o strings directos
+            if isinstance(col, dict):
+                handle_coleccion = col["handle"]
+                cat_def = col.get("categoria") or None
+                subcat_def = col.get("subcategoria") or None
+            else:
+                handle_coleccion = col
+                cat_def = handle_coleccion.replace("-", " ").title()
+                subcat_def = None
+
             url_coleccion = f"{sitio_base}/collections/{handle_coleccion}"
             etiqueta = f"{cadena}/{handle_coleccion}"
             log(f"Scrapeando {etiqueta} ...")
-            categoria_default = handle_coleccion.replace("-", " ").title()
-            request = ScrapeRequest(cadena=cadena, url=url_coleccion, categoria_default=categoria_default)
+            
+            request = ScrapeRequest(
+                cadena=cadena, 
+                url=url_coleccion, 
+                categoria_default=cat_def,
+                subcategoria_default=subcat_def
+            )
 
             resultado = _con_reintentos(cadena, etiqueta, lambda: scraper_shopify.ejecutar(request))
             if isinstance(resultado, tuple):  # falló definitivo -> (None, error)
@@ -202,7 +218,7 @@ if __name__ == "__main__":
     ap.add_argument("--solo", help="Correr solo esta cadena (ej: Fidalga)")
     ap.add_argument("--sin-export", action="store_true", help="No regenerar data/precios.json")
     ap.add_argument("--max-llm", type=int, default=None,
-                     help="Tope de consultas NUEVAS al LLM en el matchear() de esta corrida "
+                      help="Tope de consultas NUEVAS al LLM en el matchear() de esta corrida "
                           "(default: env MATCH_LLM_MAX_POR_CORRIDA, o 50)")
     args = ap.parse_args()
     correr(args.solo, hacer_export=not args.sin_export, max_llm=args.max_llm)

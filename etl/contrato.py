@@ -35,6 +35,7 @@ class ScrapeRequest(BaseModel):
     cadena: str
     url: str
     categoria_default: Optional[str] = None  # fallback si el sitio no trae categoría propia
+    subcategoria_default: Optional[str] = None  # subcategoría real, sacada del menú de navegación del sitio (ver scraper_shopify.descubrir_categorias_shopify)
     ciudad: str = "Santa Cruz"
 
 

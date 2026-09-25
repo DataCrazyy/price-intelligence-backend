@@ -1,0 +1,1262 @@
+[
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Dulce Septiembre",
+    "url": "https://www.amarket.com.bo/collections/dulce-septiembre"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Súper Ofertas",
+    "url": "https://www.amarket.com.bo/collections/ofertas-del-mes"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Más Cuidado, Más Ahorro",
+    "url": "https://www.amarket.com.bo/collections/mas-cuidado-mas-ahorro"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Fideos y Pastas",
+    "url": "https://www.amarket.com.bo/collections/fideos-y-pastas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Arroz Legumbres y Semillas",
+    "url": "https://www.amarket.com.bo/collections/arroz-legumbres-y-granos"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Salsas Sazonadores y Aderezos",
+    "url": "https://www.amarket.com.bo/collections/salsas-sazonadores-y-aderezos"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Azúcares y Edulcorantes",
+    "url": "https://www.amarket.com.bo/collections/azucares-y-edulcorantes"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Mermeladas, Mieles y Untables",
+    "url": "https://www.amarket.com.bo/collections/mermeladas-mieles-y-untables"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Cereales, Avenas y Granolas",
+    "url": "https://www.amarket.com.bo/collections/cereales-y-granolas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Atún y Sardinas",
+    "url": "https://www.amarket.com.bo/collections/atun-y-sardinas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Enlatados y Envasados",
+    "url": "https://www.amarket.com.bo/collections/enlatados-y-envasados"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Harinas",
+    "url": "https://www.amarket.com.bo/collections/harinas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Aceites y Vinagre",
+    "url": "https://www.amarket.com.bo/collections/aceites-y-vinagre"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Condimentos y Especias",
+    "url": "https://www.amarket.com.bo/collections/condimentos-y-especias"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Sopas, Caldos y Puré",
+    "url": "https://www.amarket.com.bo/collections/sopas-caldos-y-pure"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Café Té y Chocolateados",
+    "url": "https://www.amarket.com.bo/collections/cafe-te-y-chocolate"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Comidas Preparadas",
+    "url": "https://www.amarket.com.bo/collections/comidas-preparadas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Carbón",
+    "url": "https://www.amarket.com.bo/collections/carbon"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Leches",
+    "url": "https://www.amarket.com.bo/collections/leches"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Quesos",
+    "url": "https://www.amarket.com.bo/collections/quesos"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Huevos",
+    "url": "https://www.amarket.com.bo/collections/huevos"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Yogurt",
+    "url": "https://www.amarket.com.bo/collections/yogurt"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Mantequilla y Margarinas",
+    "url": "https://www.amarket.com.bo/collections/mantequilla-y-margarinas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Aguas",
+    "url": "https://www.amarket.com.bo/collections/agua"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Jugos",
+    "url": "https://www.amarket.com.bo/collections/jugos"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Cervezas",
+    "url": "https://www.amarket.com.bo/collections/cervezas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Gaseosas",
+    "url": "https://www.amarket.com.bo/collections/gaseosas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Vinos y Espumantes",
+    "url": "https://www.amarket.com.bo/collections/vinos-y-espumantes"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Licores",
+    "url": "https://www.amarket.com.bo/collections/licores"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Otras Bebidas",
+    "url": "https://www.amarket.com.bo/collections/otras-bebidas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Energizantes e Isotónicos",
+    "url": "https://www.amarket.com.bo/collections/energizantes-e-isotonicos"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Hielo",
+    "url": "https://www.amarket.com.bo/collections/hielo"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Cigarrillos y Vapes",
+    "url": "https://www.amarket.com.bo/collections/cigarrilos-y-vapes"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Res",
+    "url": "https://www.amarket.com.bo/collections/res"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Pollo",
+    "url": "https://www.amarket.com.bo/collections/pollo"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Hamburguesas",
+    "url": "https://www.amarket.com.bo/collections/hamburguesas"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Fiambres y Embutidos",
+    "url": "https://www.amarket.com.bo/collections/fiambres-y-embutidos"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Cerdo",
+    "url": "https://www.amarket.com.bo/collections/cerdo"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Pescados",
+    "url": "https://www.amarket.com.bo/collections/atun-y-sardinas"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Chocolates",
+    "url": "https://www.amarket.com.bo/collections/chocolates"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Caramelos y Golosinas",
+    "url": "https://www.amarket.com.bo/collections/chicles-caramelos-y-golosinas"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Helados",
+    "url": "https://www.amarket.com.bo/collections/helados"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Galletas",
+    "url": "https://www.amarket.com.bo/collections/galletas-1"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Saladitos",
+    "url": "https://www.amarket.com.bo/collections/saladitos"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Snacks Saludables",
+    "url": "https://www.amarket.com.bo/collections/snacks-saludables"
+  },
+  {
+    "categoria": "Frutas y Verduras",
+    "subcategoria": "Frutas",
+    "url": "https://www.amarket.com.bo/collections/frutas"
+  },
+  {
+    "categoria": "Frutas y Verduras",
+    "subcategoria": "Verduras",
+    "url": "https://www.amarket.com.bo/collections/verduras"
+  },
+  {
+    "categoria": "Frutas y Verduras",
+    "subcategoria": "Frutos Secos y Semillas",
+    "url": "https://www.amarket.com.bo/collections/frutos-secos-y-semillas"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Panadería",
+    "url": "https://www.amarket.com.bo/collections/panaderia"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Pan Molde y Otros",
+    "url": "https://www.amarket.com.bo/collections/pan-molde-y-otros"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Queques y Panetones",
+    "url": "https://www.amarket.com.bo/collections/queques-y-panetones"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Horneados",
+    "url": "https://www.amarket.com.bo/collections/horneados"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Repostería",
+    "url": "https://www.amarket.com.bo/collections/reposteria"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Higiene",
+    "url": "https://www.amarket.com.bo/collections/higiene"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Corporal",
+    "url": "https://www.amarket.com.bo/collections/cuidado-corporal"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://www.amarket.com.bo/collections/cuidado-bucal"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Capilar",
+    "url": "https://www.amarket.com.bo/collections/cuidado-capilar"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Skincare",
+    "url": "https://www.amarket.com.bo/collections/skincare"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Farmacia",
+    "url": "https://www.amarket.com.bo/collections/farmacia"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Mamá y Bebé",
+    "url": "https://www.amarket.com.bo/collections/mama-y-bebe"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Belleza",
+    "url": "https://www.amarket.com.bo/collections/belleza"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Bienestar y Deportes",
+    "url": "https://www.amarket.com.bo/collections/bienestar-y-deportes"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Jabones, Detergentes y Suavizantes",
+    "url": "https://www.amarket.com.bo/collections/jabones-detergentes-y-suavizantes"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Desinfectantes y Lavandina",
+    "url": "https://www.amarket.com.bo/collections/desinfectantes-y-lavandina"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Lavavajillas y Desengrasantes",
+    "url": "https://www.amarket.com.bo/collections/lavavajillas-y-desengrasantes"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Ambientadores e Insecticidas",
+    "url": "https://www.amarket.com.bo/collections/ambientadores-e-insecticidas"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Papel Higiénico",
+    "url": "https://www.amarket.com.bo/collections/papel-higienico"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Servilletas y Toallas de Cocina",
+    "url": "https://www.amarket.com.bo/collections/servilletas-y-toallas-de-cocina"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Artículos y Productos de Limpieza",
+    "url": "https://www.amarket.com.bo/collections/articulos-y-productos-de-limpieza"
+  },
+  {
+    "categoria": "Mascotas",
+    "subcategoria": "Accesorios para Mascotas",
+    "url": "https://www.amarket.com.bo/collections/accesorios-para-mascotas"
+  },
+  {
+    "categoria": "Mascotas",
+    "subcategoria": "Alimentos para Mascotas",
+    "url": "https://www.amarket.com.bo/collections/alimentos-para-mascotas"
+  },
+  {
+    "categoria": "Mascotas",
+    "subcategoria": "Snacks y Húmedos",
+    "url": "https://www.amarket.com.bo/collections/snacks-y-humedos"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Electro Hogar",
+    "url": "https://www.amarket.com.bo/collections/electro-hogar"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Electrónicos y Computación",
+    "url": "https://www.amarket.com.bo/collections/electronicos-y-computacion"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Escolar y Librería",
+    "url": "https://www.amarket.com.bo/collections/escolar-y-libreria"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Regalos y Juguetes",
+    "url": "https://www.amarket.com.bo/collections/regalos-y-juguetes"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Herramientas y Otros Accesorios",
+    "url": "https://www.amarket.com.bo/collections/herramientas-y-otros-accesorios"
+  },
+  {
+    "categoria": "Menaje de Cocina",
+    "subcategoria": "Menaje de Cocina",
+    "url": "https://www.amarket.com.bo/collections/menaje-de-cocina"
+  },
+  {
+    "categoria": "Menaje de Cocina",
+    "subcategoria": "Plásticos y Similares",
+    "url": "https://www.amarket.com.bo/collections/plasticos-y-similares"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Ofertas",
+    "url": "https://www.amarket.com.bo/collections/ofertas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Dulce Septiembre",
+    "url": "https://www.amarket.com.bo/collections/dulce-septiembre"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Súper Ofertas",
+    "url": "https://www.amarket.com.bo/collections/ofertas-del-mes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Más Cuidado, Más Ahorro",
+    "url": "https://www.amarket.com.bo/collections/mas-cuidado-mas-ahorro"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Lo Nuevo",
+    "url": "https://www.amarket.com.bo/collections/lo-nuevo"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Abarrotes y Despensa",
+    "url": "https://www.amarket.com.bo/collections/despensa"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Fideos y Pastas",
+    "url": "https://www.amarket.com.bo/collections/fideos-y-pastas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Arroz Legumbres y Semillas",
+    "url": "https://www.amarket.com.bo/collections/arroz-legumbres-y-granos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Salsas Sazonadores y Aderezos",
+    "url": "https://www.amarket.com.bo/collections/salsas-sazonadores-y-aderezos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Azúcares y Edulcorantes",
+    "url": "https://www.amarket.com.bo/collections/azucares-y-edulcorantes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Mermeladas, Mieles y Untables",
+    "url": "https://www.amarket.com.bo/collections/mermeladas-mieles-y-untables"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cereales, Avenas y Granolas",
+    "url": "https://www.amarket.com.bo/collections/cereales-y-granolas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Atún y Sardinas",
+    "url": "https://www.amarket.com.bo/collections/atun-y-sardinas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Enlatados y Envasados",
+    "url": "https://www.amarket.com.bo/collections/enlatados-y-envasados"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Harinas",
+    "url": "https://www.amarket.com.bo/collections/harinas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Aceites y Vinagre",
+    "url": "https://www.amarket.com.bo/collections/aceites-y-vinagre"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Condimentos y Especias",
+    "url": "https://www.amarket.com.bo/collections/condimentos-y-especias"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Sopas, Caldos y Puré",
+    "url": "https://www.amarket.com.bo/collections/sopas-caldos-y-pure"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Café Té y Chocolateados",
+    "url": "https://www.amarket.com.bo/collections/cafe-te-y-chocolate"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Comidas Preparadas",
+    "url": "https://www.amarket.com.bo/collections/comidas-preparadas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Carbón",
+    "url": "https://www.amarket.com.bo/collections/carbon"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Lácteos y Derivados",
+    "url": "https://www.amarket.com.bo/collections/lacteos-y-derivados"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Leches",
+    "url": "https://www.amarket.com.bo/collections/leches"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Quesos",
+    "url": "https://www.amarket.com.bo/collections/quesos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Huevos",
+    "url": "https://www.amarket.com.bo/collections/huevos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Yogurt",
+    "url": "https://www.amarket.com.bo/collections/yogurt"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Mantequilla y Margarinas",
+    "url": "https://www.amarket.com.bo/collections/mantequilla-y-margarinas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Bebidas y Licores",
+    "url": "https://www.amarket.com.bo/collections/bebidas-y-licores"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Aguas",
+    "url": "https://www.amarket.com.bo/collections/agua"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Jugos",
+    "url": "https://www.amarket.com.bo/collections/jugos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cervezas",
+    "url": "https://www.amarket.com.bo/collections/cervezas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Gaseosas",
+    "url": "https://www.amarket.com.bo/collections/gaseosas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Vinos y Espumantes",
+    "url": "https://www.amarket.com.bo/collections/vinos-y-espumantes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Licores",
+    "url": "https://www.amarket.com.bo/collections/licores"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Otras Bebidas",
+    "url": "https://www.amarket.com.bo/collections/otras-bebidas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Energizantes e Isotónicos",
+    "url": "https://www.amarket.com.bo/collections/energizantes-e-isotonicos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Hielo",
+    "url": "https://www.amarket.com.bo/collections/hielo"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cigarrillos y Vapes",
+    "url": "https://www.amarket.com.bo/collections/cigarrilos-y-vapes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Carnes",
+    "url": "https://www.amarket.com.bo/collections/carnicos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Res",
+    "url": "https://www.amarket.com.bo/collections/res"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Pollo",
+    "url": "https://www.amarket.com.bo/collections/pollo"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Hamburguesas",
+    "url": "https://www.amarket.com.bo/collections/hamburguesas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Fiambres y Embutidos",
+    "url": "https://www.amarket.com.bo/collections/fiambres-y-embutidos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cerdo",
+    "url": "https://www.amarket.com.bo/collections/cerdo"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Pescados",
+    "url": "https://www.amarket.com.bo/collections/atun-y-sardinas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Snack y confiterías",
+    "url": "https://www.amarket.com.bo/collections/snack-y-confiterias"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Chocolates",
+    "url": "https://www.amarket.com.bo/collections/chocolates"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Caramelos y Golosinas",
+    "url": "https://www.amarket.com.bo/collections/chicles-caramelos-y-golosinas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Helados",
+    "url": "https://www.amarket.com.bo/collections/helados"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Galletas",
+    "url": "https://www.amarket.com.bo/collections/galletas-1"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Saladitos",
+    "url": "https://www.amarket.com.bo/collections/saladitos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Snacks Saludables",
+    "url": "https://www.amarket.com.bo/collections/snacks-saludables"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Frutas y Verduras",
+    "url": "https://www.amarket.com.bo/collections/frutas-y-verduras"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Frutas",
+    "url": "https://www.amarket.com.bo/collections/frutas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Verduras",
+    "url": "https://www.amarket.com.bo/collections/verduras"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Frutos Secos y Semillas",
+    "url": "https://www.amarket.com.bo/collections/frutos-secos-y-semillas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Panadería",
+    "url": "https://www.amarket.com.bo/collections/panaderia"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Panadería",
+    "url": "https://www.amarket.com.bo/collections/panaderia"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Pan Molde y Otros",
+    "url": "https://www.amarket.com.bo/collections/pan-molde-y-otros"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Queques y Panetones",
+    "url": "https://www.amarket.com.bo/collections/queques-y-panetones"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Horneados",
+    "url": "https://www.amarket.com.bo/collections/horneados"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Repostería",
+    "url": "https://www.amarket.com.bo/collections/reposteria"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cuidado Personal",
+    "url": "https://www.amarket.com.bo/collections/cuidado-personal"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Higiene",
+    "url": "https://www.amarket.com.bo/collections/higiene"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cuidado Corporal",
+    "url": "https://www.amarket.com.bo/collections/cuidado-corporal"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://www.amarket.com.bo/collections/cuidado-bucal"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Cuidado Capilar",
+    "url": "https://www.amarket.com.bo/collections/cuidado-capilar"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Skincare",
+    "url": "https://www.amarket.com.bo/collections/skincare"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Salud  y Bienestar",
+    "url": "https://www.amarket.com.bo/collections/salud-y-bienestar"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Farmacia",
+    "url": "https://www.amarket.com.bo/collections/farmacia"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Mamá y Bebé",
+    "url": "https://www.amarket.com.bo/collections/mama-y-bebe"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Belleza",
+    "url": "https://www.amarket.com.bo/collections/belleza"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Bienestar y Deportes",
+    "url": "https://www.amarket.com.bo/collections/bienestar-y-deportes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Limpieza",
+    "url": "https://www.amarket.com.bo/collections/limpieza"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Jabones, Detergentes y Suavizantes",
+    "url": "https://www.amarket.com.bo/collections/jabones-detergentes-y-suavizantes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Desinfectantes y Lavandina",
+    "url": "https://www.amarket.com.bo/collections/desinfectantes-y-lavandina"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Lavavajillas y Desengrasantes",
+    "url": "https://www.amarket.com.bo/collections/lavavajillas-y-desengrasantes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Ambientadores e Insecticidas",
+    "url": "https://www.amarket.com.bo/collections/ambientadores-e-insecticidas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Papel Higiénico",
+    "url": "https://www.amarket.com.bo/collections/papel-higienico"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Servilletas y Toallas de Cocina",
+    "url": "https://www.amarket.com.bo/collections/servilletas-y-toallas-de-cocina"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Artículos y Productos de Limpieza",
+    "url": "https://www.amarket.com.bo/collections/articulos-y-productos-de-limpieza"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Mascotas",
+    "url": "https://www.amarket.com.bo/collections/mascotas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Accesorios para Mascotas",
+    "url": "https://www.amarket.com.bo/collections/accesorios-para-mascotas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Alimentos para Mascotas",
+    "url": "https://www.amarket.com.bo/collections/alimentos-para-mascotas"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Snacks y Húmedos",
+    "url": "https://www.amarket.com.bo/collections/snacks-y-humedos"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Hogar",
+    "url": "https://www.amarket.com.bo/collections/hogar"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Electro Hogar",
+    "url": "https://www.amarket.com.bo/collections/electro-hogar"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Electrónicos y Computación",
+    "url": "https://www.amarket.com.bo/collections/electronicos-y-computacion"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Escolar y Librería",
+    "url": "https://www.amarket.com.bo/collections/escolar-y-libreria"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Regalos y Juguetes",
+    "url": "https://www.amarket.com.bo/collections/regalos-y-juguetes"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Herramientas y Otros Accesorios",
+    "url": "https://www.amarket.com.bo/collections/herramientas-y-otros-accesorios"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Menaje de Cocina",
+    "url": "https://www.amarket.com.bo/collections/menaje-y-cocina"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Menaje de Cocina",
+    "url": "https://www.amarket.com.bo/collections/menaje-de-cocina"
+  },
+  {
+    "categoria": "Categorías",
+    "subcategoria": "Plásticos y Similares",
+    "url": "https://www.amarket.com.bo/collections/plasticos-y-similares"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Dulce Septiembre",
+    "url": "https://www.amarket.com.bo/collections/dulce-septiembre"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Súper Ofertas",
+    "url": "https://www.amarket.com.bo/collections/ofertas-del-mes"
+  },
+  {
+    "categoria": "Ofertas",
+    "subcategoria": "Más Cuidado, Más Ahorro",
+    "url": "https://www.amarket.com.bo/collections/mas-cuidado-mas-ahorro"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Fideos y Pastas",
+    "url": "https://www.amarket.com.bo/collections/fideos-y-pastas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Arroz Legumbres y Semillas",
+    "url": "https://www.amarket.com.bo/collections/arroz-legumbres-y-granos"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Salsas Sazonadores y Aderezos",
+    "url": "https://www.amarket.com.bo/collections/salsas-sazonadores-y-aderezos"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Azúcares y Edulcorantes",
+    "url": "https://www.amarket.com.bo/collections/azucares-y-edulcorantes"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Mermeladas, Mieles y Untables",
+    "url": "https://www.amarket.com.bo/collections/mermeladas-mieles-y-untables"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Cereales, Avenas y Granolas",
+    "url": "https://www.amarket.com.bo/collections/cereales-y-granolas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Atún y Sardinas",
+    "url": "https://www.amarket.com.bo/collections/atun-y-sardinas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Enlatados y Envasados",
+    "url": "https://www.amarket.com.bo/collections/enlatados-y-envasados"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Harinas",
+    "url": "https://www.amarket.com.bo/collections/harinas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Aceites y Vinagre",
+    "url": "https://www.amarket.com.bo/collections/aceites-y-vinagre"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Condimentos y Especias",
+    "url": "https://www.amarket.com.bo/collections/condimentos-y-especias"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Sopas, Caldos y Puré",
+    "url": "https://www.amarket.com.bo/collections/sopas-caldos-y-pure"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Café Té y Chocolateados",
+    "url": "https://www.amarket.com.bo/collections/cafe-te-y-chocolate"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Comidas Preparadas",
+    "url": "https://www.amarket.com.bo/collections/comidas-preparadas"
+  },
+  {
+    "categoria": "Abarrotes y Despensa",
+    "subcategoria": "Carbón",
+    "url": "https://www.amarket.com.bo/collections/carbon"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Leches",
+    "url": "https://www.amarket.com.bo/collections/leches"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Quesos",
+    "url": "https://www.amarket.com.bo/collections/quesos"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Huevos",
+    "url": "https://www.amarket.com.bo/collections/huevos"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Yogurt",
+    "url": "https://www.amarket.com.bo/collections/yogurt"
+  },
+  {
+    "categoria": "Lácteos y Derivados",
+    "subcategoria": "Mantequilla y Margarinas",
+    "url": "https://www.amarket.com.bo/collections/mantequilla-y-margarinas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Aguas",
+    "url": "https://www.amarket.com.bo/collections/agua"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Jugos",
+    "url": "https://www.amarket.com.bo/collections/jugos"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Cervezas",
+    "url": "https://www.amarket.com.bo/collections/cervezas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Gaseosas",
+    "url": "https://www.amarket.com.bo/collections/gaseosas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Vinos y Espumantes",
+    "url": "https://www.amarket.com.bo/collections/vinos-y-espumantes"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Licores",
+    "url": "https://www.amarket.com.bo/collections/licores"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Otras Bebidas",
+    "url": "https://www.amarket.com.bo/collections/otras-bebidas"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Energizantes e Isotónicos",
+    "url": "https://www.amarket.com.bo/collections/energizantes-e-isotonicos"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Hielo",
+    "url": "https://www.amarket.com.bo/collections/hielo"
+  },
+  {
+    "categoria": "Bebidas y Licores",
+    "subcategoria": "Cigarrillos y Vapes",
+    "url": "https://www.amarket.com.bo/collections/cigarrilos-y-vapes"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Res",
+    "url": "https://www.amarket.com.bo/collections/res"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Pollo",
+    "url": "https://www.amarket.com.bo/collections/pollo"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Hamburguesas",
+    "url": "https://www.amarket.com.bo/collections/hamburguesas"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Fiambres y Embutidos",
+    "url": "https://www.amarket.com.bo/collections/fiambres-y-embutidos"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Cerdo",
+    "url": "https://www.amarket.com.bo/collections/cerdo"
+  },
+  {
+    "categoria": "Carnes",
+    "subcategoria": "Pescados",
+    "url": "https://www.amarket.com.bo/collections/atun-y-sardinas"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Chocolates",
+    "url": "https://www.amarket.com.bo/collections/chocolates"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Caramelos y Golosinas",
+    "url": "https://www.amarket.com.bo/collections/chicles-caramelos-y-golosinas"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Helados",
+    "url": "https://www.amarket.com.bo/collections/helados"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Galletas",
+    "url": "https://www.amarket.com.bo/collections/galletas-1"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Saladitos",
+    "url": "https://www.amarket.com.bo/collections/saladitos"
+  },
+  {
+    "categoria": "Snack y confiterías",
+    "subcategoria": "Snacks Saludables",
+    "url": "https://www.amarket.com.bo/collections/snacks-saludables"
+  },
+  {
+    "categoria": "Frutas y Verduras",
+    "subcategoria": "Frutas",
+    "url": "https://www.amarket.com.bo/collections/frutas"
+  },
+  {
+    "categoria": "Frutas y Verduras",
+    "subcategoria": "Verduras",
+    "url": "https://www.amarket.com.bo/collections/verduras"
+  },
+  {
+    "categoria": "Frutas y Verduras",
+    "subcategoria": "Frutos Secos y Semillas",
+    "url": "https://www.amarket.com.bo/collections/frutos-secos-y-semillas"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Panadería",
+    "url": "https://www.amarket.com.bo/collections/panaderia"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Pan Molde y Otros",
+    "url": "https://www.amarket.com.bo/collections/pan-molde-y-otros"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Queques y Panetones",
+    "url": "https://www.amarket.com.bo/collections/queques-y-panetones"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Horneados",
+    "url": "https://www.amarket.com.bo/collections/horneados"
+  },
+  {
+    "categoria": "Panadería",
+    "subcategoria": "Repostería",
+    "url": "https://www.amarket.com.bo/collections/reposteria"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Higiene",
+    "url": "https://www.amarket.com.bo/collections/higiene"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Corporal",
+    "url": "https://www.amarket.com.bo/collections/cuidado-corporal"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Bucal",
+    "url": "https://www.amarket.com.bo/collections/cuidado-bucal"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Cuidado Capilar",
+    "url": "https://www.amarket.com.bo/collections/cuidado-capilar"
+  },
+  {
+    "categoria": "Cuidado Personal",
+    "subcategoria": "Skincare",
+    "url": "https://www.amarket.com.bo/collections/skincare"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Farmacia",
+    "url": "https://www.amarket.com.bo/collections/farmacia"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Mamá y Bebé",
+    "url": "https://www.amarket.com.bo/collections/mama-y-bebe"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Belleza",
+    "url": "https://www.amarket.com.bo/collections/belleza"
+  },
+  {
+    "categoria": "Salud  y Bienestar",
+    "subcategoria": "Bienestar y Deportes",
+    "url": "https://www.amarket.com.bo/collections/bienestar-y-deportes"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Jabones, Detergentes y Suavizantes",
+    "url": "https://www.amarket.com.bo/collections/jabones-detergentes-y-suavizantes"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Desinfectantes y Lavandina",
+    "url": "https://www.amarket.com.bo/collections/desinfectantes-y-lavandina"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Lavavajillas y Desengrasantes",
+    "url": "https://www.amarket.com.bo/collections/lavavajillas-y-desengrasantes"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Ambientadores e Insecticidas",
+    "url": "https://www.amarket.com.bo/collections/ambientadores-e-insecticidas"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Papel Higiénico",
+    "url": "https://www.amarket.com.bo/collections/papel-higienico"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Servilletas y Toallas de Cocina",
+    "url": "https://www.amarket.com.bo/collections/servilletas-y-toallas-de-cocina"
+  },
+  {
+    "categoria": "Limpieza",
+    "subcategoria": "Artículos y Productos de Limpieza",
+    "url": "https://www.amarket.com.bo/collections/articulos-y-productos-de-limpieza"
+  },
+  {
+    "categoria": "Mascotas",
+    "subcategoria": "Accesorios para Mascotas",
+    "url": "https://www.amarket.com.bo/collections/accesorios-para-mascotas"
+  },
+  {
+    "categoria": "Mascotas",
+    "subcategoria": "Alimentos para Mascotas",
+    "url": "https://www.amarket.com.bo/collections/alimentos-para-mascotas"
+  },
+  {
+    "categoria": "Mascotas",
+    "subcategoria": "Snacks y Húmedos",
+    "url": "https://www.amarket.com.bo/collections/snacks-y-humedos"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Electro Hogar",
+    "url": "https://www.amarket.com.bo/collections/electro-hogar"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Electrónicos y Computación",
+    "url": "https://www.amarket.com.bo/collections/electronicos-y-computacion"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Escolar y Librería",
+    "url": "https://www.amarket.com.bo/collections/escolar-y-libreria"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Regalos y Juguetes",
+    "url": "https://www.amarket.com.bo/collections/regalos-y-juguetes"
+  },
+  {
+    "categoria": "Hogar",
+    "subcategoria": "Herramientas y Otros Accesorios",
+    "url": "https://www.amarket.com.bo/collections/herramientas-y-otros-accesorios"
+  },
+  {
+    "categoria": "Menaje de Cocina",
+    "subcategoria": "Menaje de Cocina",
+    "url": "https://www.amarket.com.bo/collections/menaje-de-cocina"
+  },
+  {
+    "categoria": "Menaje de Cocina",
+    "subcategoria": "Plásticos y Similares",
+    "url": "https://www.amarket.com.bo/collections/plasticos-y-similares"
+  }
+]
