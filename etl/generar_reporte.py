@@ -143,7 +143,15 @@ def calcular_resumen(filas, cadenas_incluidas):
     gap_prom = sum(f["gap"] for f in filas) / total
 
     ordenados = sorted(filas, key=lambda f: f["gap"])
-    n_each = min(4, total // 2) or (1 if total == 1 else 0)
+    # Con total==1 el fallback de abajo (ordenados[:1] segun el signo del
+    # gap) es el que decide en CUAL de las dos listas va el unico producto
+    # -- pero antes `n_each` daba 1 (no 0) para total==1 por el `or`, asi
+    # que el `if n_each` de abajo tomaba SIEMPRE la primera rama
+    # (ordenados[:n_each]) para AMBAS listas, sin mirar el gap: el mismo
+    # producto terminaba repetido como tarjeta de "ventaja" Y de "riesgo"
+    # a la vez, aunque solo aplicara a una de las dos. total//2 ya da 0
+    # para total==1 sin necesitar el `or`.
+    n_each = min(4, total // 2)
     top_ventaja = ordenados[:n_each] if n_each else (ordenados[:1] if total == 1 and ordenados[0]["gap"] <= 0 else [])
     top_riesgo = list(reversed(ordenados[total - n_each:])) if n_each else (ordenados[:1] if total == 1 and ordenados[0]["gap"] > 0 else [])
 
