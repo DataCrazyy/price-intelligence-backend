@@ -214,13 +214,21 @@ def productos_a_filas(
         img = p["images"][0]["src"] if p.get("images") else ""
 
         product_type = (p.get("product_type") or "").strip()
-        
+        # Shopify siempre trae "vendor" en el JSON del producto -- es el
+        # fabricante/marca real, no una lista chica hardcodeada. Antes se
+        # descartaba por completo y etl.py solo podia reconocer marca via
+        # BRANDS (8 marcas de formula infantil) -- para cualquier otra
+        # categoria (limpieza, bebidas, cuidado personal...) el matching
+        # no tenia ninguna marca real para comparar.
+        marca = (p.get("vendor") or "").strip()
+
         # Asignación corregida y robusta:
         categoria = categoria_default or product_type or "Sin categoria"
         subcategoria = subcategoria_default if subcategoria_default else ""
 
         filas.append({
             "Articulo": p.get("title", "").strip(),
+            "Marca": marca,
             "Precio_Oferta": precio_oferta,
             "Precio_Regular": precio_regular,
             "CADENA": cadena,
@@ -256,6 +264,7 @@ def ejecutar(request: ScrapeRequest) -> ScrapeResult:
                 cadena=f["CADENA"], codigo_articulo=f["COD_ARTICULO"], categoria=f["Categoria"],
                 subcategoria=f["Subcategoria"] or None, ciudad=f["Ciudad"] or request.ciudad,
                 sucursal=f["Sucursal"] or None, url=f["URL"], imagen=f["Imagen"] or None,
+                marca=f.get("Marca") or None,
             ))
             fila["Observado"] = "N"
             fila["Motivo"] = ""

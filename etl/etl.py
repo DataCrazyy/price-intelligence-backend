@@ -661,7 +661,12 @@ def cargar_resultado(resultado, pais: str = "BO", etiqueta: str = None) -> dict:
         try:
             categoria = canonicalizar_categoria(p.categoria)
             subcategoria = canonicalizar_categoria(p.subcategoria) or categoria
-            marca = extract_brand(normalize(p.nombre))
+            # p.marca viene del scraper (ej. "vendor" de Shopify) cuando
+            # el sitio la provee -- marca real, cubre CUALQUIER categoria.
+            # extract_brand() (BRANDS, 8 marcas de formula infantil) es
+            # solo el respaldo para scrapers que todavia no la mandan
+            # (Hipermaxi/Chavez, sitios sin navegador -- Playwright).
+            marca = p.marca or extract_brand(normalize(p.nombre))
             sucursal_id = get_or_create_sucursal(cur, cadena_id, p.sucursal, p.ciudad) if p.sucursal else None
             codigo_cadena = p.codigo_articulo.strip()
 
@@ -887,7 +892,11 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
     candidatos = cur.fetchall()
     for r in candidatos:
         r["_norm"] = normalize(r["nombre"])
-        r["_brand"] = r["marca"] or extract_brand(r["_norm"])
+        # normalize() (misma funcion que ya usa "_norm") evita que dos
+        # vendors iguales con distinta mayuscula/acento entre tiendas Shopify
+        # ("Colgate" vs "COLGATE" vs "Cólgate") se lean como marcas DISTINTAS
+        # y _score() rechace un match legitimo solo por eso.
+        r["_brand"] = normalize(r["marca"]) if r["marca"] else extract_brand(r["_norm"])
         r["_size"] = extract_size_grams(r["_norm"])
         r["_stage_num"], r["_stage_word"] = extract_stage(
             r["_norm"], _es_formula_infantil(r["_brand"], r["categoria"], r["subcategoria"])

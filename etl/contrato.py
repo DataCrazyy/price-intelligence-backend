@@ -53,6 +53,15 @@ class ProductoScrapeado(BaseModel):
     sucursal: Optional[str] = None
     url: Optional[str] = None
     imagen: Optional[str] = None
+    # Marca real del producto, cuando el scraper la puede sacar del sitio
+    # (ej. el campo "vendor" de Shopify, que Fidalga/Amarket/Farmacorp
+    # siempre traen). None si el scraper no la provee -- etl.py cae al
+    # diccionario BRANDS como respaldo en ese caso. Antes SOLO existia
+    # ese respaldo (8 marcas de formula infantil hardcodeadas), asi que
+    # el "safety net" de _score() que evita fusionar productos de marcas
+    # distintas quedaba practicamente apagado para cualquier categoria
+    # que no fuera leche/formula infantil.
+    marca: Optional[str] = None
 
     @field_validator("precio_oferta", "precio_regular")
     @classmethod
