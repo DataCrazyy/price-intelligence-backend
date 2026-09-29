@@ -53,6 +53,28 @@ app = Flask(__name__)
 
 # Estado del último run, en memoria (simple a propósito: un solo usuario, un solo proceso)
 estado = {"corriendo": False, "log": []}
+# El servidor de Flask puede atender requests concurrentes (threaded=True,
+# o varios workers) -- SIN este lock, dos requests a /api/correr casi
+# simultaneas podian las dos leer estado["corriendo"] == False (el "if"
+# de cada endpoint), las dos pasar el chequeo, y las dos lanzar un
+# threading.Thread con run_all.py: dos scrapes completos corriendo a la
+# vez, pisandose entre si en Postgres/archivos. estado["corriendo"] se
+# seteaba recien DENTRO del thread nuevo (correr_comando), demasiado
+# tarde para cerrar esa ventana.
+_estado_lock = threading.Lock()
+
+
+def intentar_iniciar_corrida() -> bool:
+    """Chequea 'no hay corrida en curso' y marca 'ahora si la hay' como
+    UNA sola operacion atomica bajo lock -- devuelve True si este
+    caller gano el turno, False si ya habia una corriendo. Nunca hay
+    una ventana entre el chequeo y el marcado donde otra request pueda
+    colarse."""
+    with _estado_lock:
+        if estado["corriendo"]:
+            return False
+        estado["corriendo"] = True
+        return True
 
 
 def cargar_config() -> dict:
@@ -74,8 +96,7 @@ def correr_comando(cmd: list[str]):
     subproceso y va agregando su output al log en vivo. Subproceso (no
     import directo) para que un error de un sitio no tumbe el panel
     entero."""
-    estado["corriendo"] = True
-    estado["log"] = []
+    estado["log"] = []  # estado["corriendo"] ya lo puso en True intentar_iniciar_corrida()
     try:
         log(f"Ejecutando: {' '.join(cmd)}")
         proc = subprocess.Popen(
@@ -125,7 +146,7 @@ def api_guardar_colecciones():
 
 @app.route("/api/correr", methods=["POST"])
 def api_correr():
-    if estado["corriendo"]:
+    if not intentar_iniciar_corrida():
         return jsonify({"error": "ya hay una corrida en curso"}), 409
     data = request.get_json(silent=True) or {}
     cadenas = data.get("cadenas")  # None = todas
@@ -146,7 +167,7 @@ def api_matching_correr():
     """Corre SOLO etl.py matchear (sin re-scrapear nada) -- para cuando
     solo hace falta procesar el backlog de matching con un límite de LLM
     distinto, sin esperar un scraping completo de nuevo."""
-    if estado["corriendo"]:
+    if not intentar_iniciar_corrida():
         return jsonify({"error": "ya hay una corrida en curso"}), 409
     data = request.get_json(silent=True) or {}
     max_llm = data.get("max_llm")
@@ -155,6 +176,7 @@ def api_matching_correr():
         try:
             cmd += ["--max-llm", str(int(max_llm))]
         except (TypeError, ValueError):
+            estado["corriendo"] = False  # no se llego a lanzar el thread -- liberar el turno
             return jsonify({"error": "max_llm tiene que ser un número"}), 400
     threading.Thread(target=correr_comando, args=(cmd,), daemon=True).start()
     return jsonify({"ok": True})
@@ -248,11 +270,12 @@ def api_reintentar():
     corre esa cadena de punta a punta de nuevo (rápido para Shopify, que
     descubre categorías solo; para Hipermaxi/Chavez recorre todas sus
     URLs configuradas)."""
-    if estado["corriendo"]:
+    if not intentar_iniciar_corrida():
         return jsonify({"error": "ya hay una corrida en curso"}), 409
     data = request.get_json(silent=True) or {}
     cadena = data.get("cadena")
     if not cadena:
+        estado["corriendo"] = False  # no se llego a lanzar el thread -- liberar el turno
         return jsonify({"error": "falta cadena"}), 400
     cmd = [sys.executable, "run_all.py", "--solo", cadena]
     threading.Thread(target=correr_comando, args=(cmd,), daemon=True).start()
