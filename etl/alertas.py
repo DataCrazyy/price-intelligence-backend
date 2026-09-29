@@ -55,7 +55,15 @@ CONDICIONES = ("sube", "baja", "cualquier_cambio")
 def obtener_precio_actual(conn, producto_clave: str, cadena: str):
     """Precio vigente (tabla `precios`) de ese producto en ESA cadena
     puntual -- None si esa cadena todavía no matcheó ese producto, o dejó
-    de trackearlo."""
+    de trackearlo.
+
+    `l.activo = TRUE` es necesario: un producto puede tener MAS de un
+    listado en la misma cadena a lo largo del tiempo (el codigo_cadena
+    cambia, el listado viejo queda con activo=false y se crea uno
+    nuevo), y sin este filtro un fetchone() sin ORDER BY podia devolver
+    el precio del listado descontinuado en vez del vigente -- una
+    alerta se dispararia comparando contra un dato obsoleto que ya no
+    corresponde a nada que el sitio de la cadena muestre hoy."""
     cur = conn.cursor()
     cur.execute(
         """
@@ -64,7 +72,7 @@ def obtener_precio_actual(conn, producto_clave: str, cadena: str):
         JOIN listados l  ON l.id = p.listado_id
         JOIN productos pr ON pr.id = l.producto_id
         JOIN cadenas c   ON c.id = l.cadena_id
-        WHERE pr.producto_clave = %s AND c.nombre = %s
+        WHERE pr.producto_clave = %s AND c.nombre = %s AND l.activo = TRUE
         """,
         (producto_clave, cadena),
     )
