@@ -365,13 +365,23 @@ def insert_historial_si_cambio(cur, listado_id: str, fecha: date, precio_regular
     con 365 filas idénticas al año por producto."""
     precio_regular, precio_oferta = _validar_precios(precio_regular, precio_oferta)
     cur.execute(
-        "SELECT precio_oferta FROM historial_precios WHERE listado_id = %s "
+        "SELECT precio_regular, precio_oferta FROM historial_precios WHERE listado_id = %s "
         "ORDER BY fecha DESC LIMIT 1",
         (listado_id,),
     )
     ultimo = cur.fetchone()
-    if ultimo is not None and float(ultimo[0]) == float(precio_oferta):
-        return  # sin cambios, no duplicar
+    # Antes esto solo comparaba precio_oferta -- si el precio de LISTA
+    # subia o bajaba pero la oferta activa se mantenia igual (o si el
+    # producto no tiene oferta y solo cambia su precio_regular), no se
+    # escribia fila nueva: ese cambio de precio_regular se perdia del
+    # historico por completo, sin dejar rastro. Ahora un cambio en
+    # CUALQUIERA de los dos precios cuenta como cambio real.
+    if (
+        ultimo is not None
+        and float(ultimo[0]) == float(precio_regular)
+        and float(ultimo[1]) == float(precio_oferta)
+    ):
+        return  # sin cambios en ningun precio, no duplicar
     cur.execute(
         """
         INSERT INTO historial_precios (listado_id, fecha, precio_regular, precio_oferta, agente_run_id)
