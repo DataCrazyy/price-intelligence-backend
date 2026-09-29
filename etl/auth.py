@@ -53,6 +53,19 @@ def requerir_api_key(x_api_key: str = Header(..., alias="X-API-Key")) -> dict:
         if row["expira_en"] and row["expira_en"] < datetime.now(timezone.utc):
             raise HTTPException(401, "API key expirada")
 
+        # Advisory lock por api_key_id -- SIN esto, el SELECT count(*) de
+        # abajo y el INSERT mas adelante son dos pasos separados (check
+        # luego act): dos requests concurrentes de la MISMA key pueden
+        # correr el SELECT casi al mismo tiempo, ver ambas "usados < limite"
+        # ANTES de que cualquiera de las dos llegue a insertar, e insertar
+        # las dos -- el rate limit queda superado bajo carga concurrente,
+        # exactamente el caso que este chequeo deberia evitar. El lock se
+        # toma con hashtext(api_key_id) como clave: bloquea otras requests
+        # de la MISMA key hasta que esta transaccion termine (commit o
+        # rollback, ver pg_advisory_xact_lock), pero no afecta a otras
+        # keys -- se serializa solo lo que hace falta serializar.
+        cur.execute("SELECT pg_advisory_xact_lock(42, hashtext(%s))", (str(row["api_key_id"]),))
+
         cur.execute(
             "SELECT count(*) AS n FROM api_key_uso "
             "WHERE api_key_id = %s AND solicitado_en > now() - interval '1 hour'",
