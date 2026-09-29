@@ -116,7 +116,41 @@ def extract_size_grams(name_norm: str):
     return None
 
 
-def extract_stage(name_norm: str):
+CATEGORIA_FORMULA_INFANTIL = "Leches y Formulas"
+
+
+def _es_formula_infantil(brand: str, categoria: str, subcategoria: str) -> bool:
+    """True solo si el producto es plausiblemente formula/leche infantil --
+    ver extract_stage() para por que esto importa."""
+    if brand and brand in BRANDS:
+        return True
+    return categoria == CATEGORIA_FORMULA_INFANTIL or subcategoria == CATEGORIA_FORMULA_INFANTIL
+
+
+def extract_stage(name_norm: str, es_formula_infantil: bool = True):
+    """'Etapa' del producto (Nan 1, Nan 2, Nan AR, ...) -- SOLO tiene
+    sentido para formula/leche infantil, donde un numero o palabra suelta
+    (1/2/3, AR, PRE, LF, COMFORT...) es una variante real que hace que dos
+    productos NO deban fusionarse aunque el resto del texto matchee.
+
+    Antes esto se calculaba para TODOS los productos de TODAS las
+    categorias por igual: \b([123])\b matchea cualquier digito 1/2/3
+    suelto en el nombre (un pack "x 2", una talla "2", un combo "3"...),
+    y STAGE_WORDS tiene palabras como "PRE" o "AR" que tambien aparecen
+    sueltas fuera de formula infantil. El resultado se usaba en _score()
+    como una penalizacion de -35 puntos (`stage_bonus`) cuando la
+    'variante' no coincidia -- productos de categorias sin ninguna
+    relacion con leche infantil (bebidas, limpieza, lo que sea) podian
+    perder un match real, o ganar uno falso, por una coincidencia de
+    digito/palabra que no tenia nada que ver con una etapa de formula.
+
+    `es_formula_infantil` (default True para no romper otros callers
+    que ya filtran antes de llamar) apaga la deteccion por completo
+    fuera de esa categoria, devolviendo (None, None) -- exactamente lo
+    mismo que "sin variante detectada", que _score() ya interpreta como
+    "no penalizar por esto"."""
+    if not es_formula_infantil:
+        return None, None
     m = re.search(r"\b([123])\b", name_norm)
     stage_num = m.group(1) if m else None
     stage_word = None
@@ -845,7 +879,9 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
         r["_norm"] = normalize(r["nombre"])
         r["_brand"] = r["marca"] or extract_brand(r["_norm"])
         r["_size"] = extract_size_grams(r["_norm"])
-        r["_stage_num"], r["_stage_word"] = extract_stage(r["_norm"])
+        r["_stage_num"], r["_stage_word"] = extract_stage(
+            r["_norm"], _es_formula_infantil(r["_brand"], r["categoria"], r["subcategoria"])
+        )
         r["_precio"] = float(r["precio_oferta"]) if r["precio_oferta"] else None
 
     # Bucketing por categoría -- ANTES de esto, matchear() comparaba TODOS
