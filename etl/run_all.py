@@ -89,18 +89,35 @@ def _archivar(resultado, carpeta_hoy: Path, sufijo: str):
 def _con_reintentos(cadena: str, etiqueta: str, fn):
     """Corre fn() con reintentos y backoff -- misma lógica de siempre,
     ahora envolviendo una llamada directa a ejecutar() en vez de un
-    subprocess. Devuelve el resultado o None si falló definitivo."""
+    subprocess. Devuelve el ScrapeResult, o (None, error) si falló
+    definitivo tras MAX_INTENTOS.
+
+    Antes, si fn() devolvía None SIN tirar excepción (un scraper con un
+    bug que hace 'return' en vez de 'raise' ante un error), ese None se
+    devolvía tal cual como si fuera un ScrapeResult exitoso -- el
+    caller hace `resultado.productos` sin chequear, y como None no es
+    una tupla, no entraba al branch de "falló definitivo": crasheaba
+    todo run_all.py con un AttributeError y ninguna otra cadena llegaba
+    a correr. Ahora un fn() que devuelve None se trata igual que una
+    excepción: cuenta como intento fallido, entra al mismo backoff, y
+    si se agotan los intentos devuelve el mismo (None, error) que ya
+    manejan los callers."""
     ultimo_error = None
     for intento in range(1, MAX_INTENTOS + 1):
         try:
-            return fn()
+            resultado = fn()
         except Exception as e:
+            resultado = None
             ultimo_error = str(e)
-            log(f"  Intento {intento}/{MAX_INTENTOS} falló ({etiqueta}): {e}")
-            if intento < MAX_INTENTOS:
-                espera = 30 * intento
-                log(f"  Esperando {espera}s antes de reintentar (por si es un límite temporal de solicitudes)...")
-                time.sleep(espera)
+        else:
+            if resultado is not None:
+                return resultado
+            ultimo_error = "el scraper devolvió None sin lanzar una excepción (revisar su ejecutar())"
+        log(f"  Intento {intento}/{MAX_INTENTOS} falló ({etiqueta}): {ultimo_error}")
+        if intento < MAX_INTENTOS:
+            espera = 30 * intento
+            log(f"  Esperando {espera}s antes de reintentar (por si es un límite temporal de solicitudes)...")
+            time.sleep(espera)
     log(f"  ERROR definitivo tras {MAX_INTENTOS} intentos en {etiqueta}: {ultimo_error}")
     return None, ultimo_error
 
