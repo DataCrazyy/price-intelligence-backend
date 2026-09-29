@@ -25,6 +25,7 @@ precio es distinto al de la última captura.
 
 import argparse
 import json
+import math
 import os
 import re
 import sys
@@ -278,8 +279,37 @@ def upsert_listado(cur, producto_id: str, cadena_id: int, sucursal_id, codigo_ca
     return cur.fetchone()[0], producto_id
 
 
+def _validar_precios(precio_regular, precio_oferta):
+    """Punto unico de validacion de precios -- upsert_precio_actual e
+    insert_historial_si_cambio son los DOS unicos lugares del codigo que
+    escriben un precio a Postgres (cargar_json, cargar_excel y
+    cargar_resultado pasan siempre por aca), asi que validar aca cubre
+    a todos los scrapers y cargas sin duplicar el chequeo en cada uno.
+
+    precio_oferta es obligatorio: si viene None, negativo, NaN o infinito
+    se rechaza (ValueError) -- el caller ya envuelve cada producto en un
+    try/except, asi que esto descarta ESE producto puntual como error
+    sin tumbar la corrida completa. precio_regular se autocorrige (nunca
+    tira error) a precio_oferta si viene invalido o por debajo de la
+    oferta, igual que ya hacia cargar_excel a mano."""
+    try:
+        precio_oferta = float(precio_oferta)
+    except (TypeError, ValueError):
+        raise ValueError(f"precio_oferta invalido/no numerico: {precio_oferta!r}")
+    if not math.isfinite(precio_oferta) or precio_oferta < 0:
+        raise ValueError(f"precio_oferta fuera de rango: {precio_oferta!r}")
+    try:
+        precio_regular = float(precio_regular)
+    except (TypeError, ValueError):
+        precio_regular = precio_oferta
+    if not math.isfinite(precio_regular) or precio_regular < precio_oferta:
+        precio_regular = precio_oferta
+    return precio_regular, precio_oferta
+
+
 def upsert_precio_actual(cur, listado_id: str, precio_regular: float, precio_oferta: float,
                           agente_run_id: str = None):
+    precio_regular, precio_oferta = _validar_precios(precio_regular, precio_oferta)
     cur.execute(
         """
         INSERT INTO precios (listado_id, precio_regular, precio_oferta, agente_run_id)
@@ -299,6 +329,7 @@ def insert_historial_si_cambio(cur, listado_id: str, fecha: date, precio_regular
     """Sólo escribe una fila nueva en historial_precios si el precio de
     oferta cambió respecto a la última captura — así el histórico no crece
     con 365 filas idénticas al año por producto."""
+    precio_regular, precio_oferta = _validar_precios(precio_regular, precio_oferta)
     cur.execute(
         "SELECT precio_oferta FROM historial_precios WHERE listado_id = %s "
         "ORDER BY fecha DESC LIMIT 1",
