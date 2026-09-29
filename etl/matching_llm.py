@@ -32,6 +32,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+# Sin timeout explicito, el SDK de OpenAI usa su default (600s) -- si la
+# red o la API se cuelgan a mitad de una corrida de matchear(), cada
+# llamada puede tardar HASTA 10 MINUTOS en fallar, y con hasta
+# MAX_LLM_POR_CORRIDA (50) pares ambiguos por corrida eso es horas de
+# corrida colgada antes de que el error suba y el par quede pendiente.
+OPENAI_TIMEOUT_SECONDS = float(os.environ.get("OPENAI_TIMEOUT_SECONDS", 30))
 _client = None
 
 
@@ -44,7 +50,7 @@ def _get_client():
             raise RuntimeError(
                 "Falta OPENAI_API_KEY en el .env -- necesaria para el fallback de matching ambiguo (Fase 2)."
             )
-        _client = OpenAI(api_key=api_key)
+        _client = OpenAI(api_key=api_key, timeout=OPENAI_TIMEOUT_SECONDS)
     return _client
 
 
@@ -85,6 +91,7 @@ def revisar_par(nombre_a: str, nombre_b: str, categoria_a: str = None, categoria
         ],
         response_format={"type": "json_object"},
         temperature=0,
+        timeout=OPENAI_TIMEOUT_SECONDS,
     )
     data = json.loads(resp.choices[0].message.content)
     return {
