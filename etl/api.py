@@ -21,6 +21,7 @@ Endpoints de cliente (Fase 3 -- requieren header `X-API-Key`, ver
 gestionar_clientes.py para crear clientes/keys):
     GET  /v1/precios       -> mismo contenido que precios.json, pero autenticado y con rate limit por cliente
 """
+import re
 from datetime import date
 from pathlib import Path
 
@@ -66,7 +67,22 @@ def generar_reporte_pdf(categoria: str | None = None, cadenas: str | None = None
     `cadenas`: cadenas separadas por coma, o vacío para todas las disponibles.
     """
     cadenas_arg = [c.strip() for c in cadenas.split(",") if c.strip()] if cadenas else None
-    salida_nombre = f"reporte_dashboard_{date.today().isoformat()}.pdf"
+    # Antes el nombre de archivo era SOLO la fecha -- dos requests el mismo
+    # dia con filtros distintos (ej. "Cuidado Personal" y "Leches y
+    # Formulas") escribian al MISMO archivo en reportes/. Si corrian cerca
+    # una de otra (el boton "Generar reporte" clickeado dos veces, o dos
+    # personas a la vez), una podia pisar el PDF de la otra mientras
+    # render_pdf() todavia lo estaba escribiendo, y FileResponse terminaba
+    # sirviendo el reporte equivocado (o un archivo a medio escribir).
+    def _slug(valor):
+        if not valor:
+            return "todas"
+        return re.sub(r"[^a-zA-Z0-9]+", "-", valor.strip().lower()).strip("-") or "todas"
+
+    salida_nombre = (
+        f"reporte_dashboard_{date.today().isoformat()}"
+        f"_{_slug(categoria)}_{_slug(cadenas)}.pdf"
+    )
     try:
         ruta = generar_reporte.generar(categoria, cadenas_arg, salida_nombre)
     except SystemExit as e:

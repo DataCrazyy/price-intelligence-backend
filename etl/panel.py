@@ -137,9 +137,20 @@ def api_guardar_colecciones():
     cadena = data["cadena"]
     handles = data["handles"]
     cfg = cargar_config()
+    # Antes esto no chequeaba si algun chain_cfg matcheo -- si "cadena" no
+    # coincidia exacto con ninguna entrada real (estado viejo del
+    # frontend, una cadena renombrada, espacios/mayusculas distintas), el
+    # for no tocaba nada, guardar_config() reescribia el archivo IGUAL a
+    # como estaba, y el endpoint igual devolvia {"ok": true} -- el usuario
+    # creia que guardo su seleccion de categorias y en realidad no paso
+    # nada.
+    encontrada = False
     for chain_cfg in cfg["shopify"]:
         if chain_cfg["cadena"] == cadena:
             chain_cfg["colecciones"] = handles
+            encontrada = True
+    if not encontrada:
+        return jsonify({"error": f"cadena '{cadena}' no encontrada en config_cadenas.json"}), 404
     guardar_config(cfg)
     return jsonify({"ok": True})
 

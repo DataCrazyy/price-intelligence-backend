@@ -531,6 +531,27 @@ def cargar_excel(path: str, cadena_nombre: str = None, pais: str = "BO"):
     df = pd.read_excel(path)
     col = {f: _pick_col(df, f) for f in COLUMN_ALIASES}
 
+    # Sin esto, si el Excel no trae NINGUNA columna reconocible de nombre
+    # (ni "Nombre"/"nombre"/"Articulo"/"Artículo"), col["nombre"] queda
+    # None, y mas abajo `row[col["nombre"]]` explota con KeyError: None --
+    # el per-row try/except lo atrapa, pero el mensaje impreso
+    # ("[error] fila 0: None") no dice nada sobre CUAL es el problema real
+    # (una columna faltante/mal nombrada), y se repite identico en cada
+    # fila del archivo entero. Validar antes del loop falla rapido con un
+    # mensaje que de verdad ayuda a arreglarlo.
+    if col["nombre"] is None:
+        raise ValueError(
+            f"'{path}': no se encontro una columna de nombre de producto "
+            f"(alias esperados: {COLUMN_ALIASES['nombre']}). "
+            f"Columnas en el archivo: {list(df.columns)}"
+        )
+    if col["precio_oferta"] is None and col["precio_regular"] is None:
+        raise ValueError(
+            f"'{path}': no se encontro ninguna columna de precio "
+            f"(alias esperados: {COLUMN_ALIASES['precio_oferta']} / {COLUMN_ALIASES['precio_regular']}). "
+            f"Columnas en el archivo: {list(df.columns)}"
+        )
+
     conn = get_conn()
     cur = conn.cursor()
     cadena_ids_cache = {}

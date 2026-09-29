@@ -199,59 +199,69 @@ def scrapear(url: str, headed: bool = False) -> list[dict]:
     sucursal = extraer_sucursal(url)
     with sync_playwright() as pw:
         browser, context = _nuevo_contexto(pw, headed=headed)
-        page = context.new_page()
-        print(f"Abriendo {url} ...")
-        # No usamos wait_until="networkidle": este sitio tiene tráfico de
-        # fondo constante (monitoreo/analytics/anti-bot) que nunca queda
-        # inactivo, así que networkidle siempre agota el timeout. Esperamos
-        # en cambio a que el HTML base cargue y luego a que aparezcan los
-        # productos.
-        page.goto(url, wait_until="domcontentloaded", timeout=60000)
+        # try/finally alrededor de TODO lo que usa la pagina -- antes
+        # browser.close() se llamaba solo al final, en la ultima linea del
+        # bloque feliz. Si algo de en medio tiraba (page.goto/wait_for_selector
+        # con timeout, la pagina crashea, page.evaluate falla durante el
+        # scroll), el Chromium abierto quedaba huerfano corriendo en la
+        # maquina -- y como run_all.py reintenta cada ruta hasta 3 veces,
+        # una ruta que falla seguido podia dejar varios procesos de Chromium
+        # acumulados sin cerrar durante toda la corrida.
         try:
-            page.wait_for_selector("article.card", timeout=30000)
-        except Exception:
-            print("  ADVERTENCIA: no aparecieron productos en 30s.")
-            print(f"  URL actual (revisa si hubo redirect): {page.url}")
-            print(f"  Título de la página: {page.title()}")
-            debug_png = Path("debug_hipermaxi.png")
-            debug_html = Path("debug_hipermaxi.html")
-            page.screenshot(path=str(debug_png), full_page=True)
-            debug_html.write_text(page.content(), encoding="utf-8")
-            print(f"  Guardé una captura en {debug_png} y el HTML en {debug_html} -- ábrelos para ver qué se cargó de verdad.")
-            texto_visible = page.evaluate("document.body.innerText.slice(0, 400)")
-            print(f"  Primeros 400 caracteres de texto visible en la página:\n---\n{texto_visible}\n---")
-        page.wait_for_timeout(1500)
+            page = context.new_page()
+            print(f"Abriendo {url} ...")
+            # No usamos wait_until="networkidle": este sitio tiene tráfico de
+            # fondo constante (monitoreo/analytics/anti-bot) que nunca queda
+            # inactivo, así que networkidle siempre agota el timeout. Esperamos
+            # en cambio a que el HTML base cargue y luego a que aparezcan los
+            # productos.
+            page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            try:
+                page.wait_for_selector("article.card", timeout=30000)
+            except Exception:
+                print("  ADVERTENCIA: no aparecieron productos en 30s.")
+                print(f"  URL actual (revisa si hubo redirect): {page.url}")
+                print(f"  Título de la página: {page.title()}")
+                debug_png = Path("debug_hipermaxi.png")
+                debug_html = Path("debug_hipermaxi.html")
+                page.screenshot(path=str(debug_png), full_page=True)
+                debug_html.write_text(page.content(), encoding="utf-8")
+                print(f"  Guardé una captura en {debug_png} y el HTML en {debug_html} -- ábrelos para ver qué se cargó de verdad.")
+                texto_visible = page.evaluate("document.body.innerText.slice(0, 400)")
+                print(f"  Primeros 400 caracteres de texto visible en la página:\n---\n{texto_visible}\n---")
+            page.wait_for_timeout(1500)
 
-        # Scroll infinito real: baja de a incrementos hasta tocar fondo, y
-        # UNA VEZ en el fondo, espera a ver si entra contenido nuevo antes
-        # de darse por vencido (evita cortar antes de que cargue todo).
-        sin_cambio_en_fondo = 0
-        MAX_SIN_CAMBIO_EN_FONDO = 5
-        anterior = -1
-        for intento in range(200):
-            en_fondo = page.evaluate(
-                "(window.scrollY + window.innerHeight) >= (document.body.scrollHeight - 150)"
-            )
-            if not en_fondo:
+            # Scroll infinito real: baja de a incrementos hasta tocar fondo, y
+            # UNA VEZ en el fondo, espera a ver si entra contenido nuevo antes
+            # de darse por vencido (evita cortar antes de que cargue todo).
+            sin_cambio_en_fondo = 0
+            MAX_SIN_CAMBIO_EN_FONDO = 5
+            anterior = -1
+            for intento in range(200):
+                en_fondo = page.evaluate(
+                    "(window.scrollY + window.innerHeight) >= (document.body.scrollHeight - 150)"
+                )
+                if not en_fondo:
+                    page.mouse.wheel(0, 900)
+                    page.wait_for_timeout(500)
+                    continue
+
+                page.wait_for_timeout(1500)  # dar tiempo a que la carga XHR entre
+                actual = page.evaluate("document.querySelectorAll('article.card').length")
+                if actual == anterior:
+                    sin_cambio_en_fondo += 1
+                    if sin_cambio_en_fondo >= MAX_SIN_CAMBIO_EN_FONDO:
+                        break
+                else:
+                    sin_cambio_en_fondo = 0
+                    print(f"  ... {actual} productos cargados hasta ahora")
+                anterior = actual
                 page.mouse.wheel(0, 900)
                 page.wait_for_timeout(500)
-                continue
 
-            page.wait_for_timeout(1500)  # dar tiempo a que la carga XHR entre
-            actual = page.evaluate("document.querySelectorAll('article.card').length")
-            if actual == anterior:
-                sin_cambio_en_fondo += 1
-                if sin_cambio_en_fondo >= MAX_SIN_CAMBIO_EN_FONDO:
-                    break
-            else:
-                sin_cambio_en_fondo = 0
-                print(f"  ... {actual} productos cargados hasta ahora")
-            anterior = actual
-            page.mouse.wheel(0, 900)
-            page.wait_for_timeout(500)
-
-        productos = page.evaluate(EXTRAER_JS)
-        browser.close()
+            productos = page.evaluate(EXTRAER_JS)
+        finally:
+            browser.close()
 
     for p in productos:
         p["sucursal"] = sucursal

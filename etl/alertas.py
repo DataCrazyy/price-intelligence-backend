@@ -160,7 +160,13 @@ def enviar_email(destino: str, asunto: str, cuerpo: str):
     msg["Subject"] = asunto
     msg["From"] = GMAIL_USER
     msg["To"] = destino
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+    # timeout explicito -- sin esto, si Gmail esta lento o inalcanzable
+    # (blip de red, cambio de firewall) durante una corrida programada de
+    # `alertas.py revisar`, la conexion puede colgarse indefinidamente y
+    # trabar el resto del loop de alertas (ninguna otra se revisa/envia
+    # hasta que esta termine o falle) -- mismo tipo de problema que ya se
+    # arreglo con el timeout del LLM en matching_llm.py.
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as server:
         server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
         server.sendmail(GMAIL_USER, [destino], msg.as_string())
 
