@@ -228,6 +228,277 @@ def canonicalizar_categoria(nombre: str) -> str:
     return CATEGORIA_CANONICA.get(_clave_categoria(nombre), nombre.strip())
 
 
+
+# ---------------------------------------------------------------------------
+# Categoria "madre" canonica entre cadenas
+# ---------------------------------------------------------------------------
+# Hallazgo (2026-09): matchear() agrupa candidatos por `categoria` antes de
+# compararlos (ver mas abajo, es una optimizacion de performance -- sin esto
+# séria O(n^2) sobre toda la base). Pero cada cadena usa su propio menu de
+# navegacion como fuente de `categoria`, y esos menus NO coinciden entre si:
+# el mismo rubro real (ej. "Mascotas") vive bajo "Abarrotes" en Hipermaxi,
+# "Mascotas" en Amarket, "Hogar" en Farmacorp, y Fidalga ni siquiera trae
+# categoria madre (solo subcategoria). Como el bucketing es por el valor
+# EXACTO de categoria, esos productos nunca caian en el mismo bucket -- el
+# match entre cadenas para esos rubros simplemente no ocurria, aunque el
+# producto fuera identico.
+#
+# categoria_madre_canonica() traduce la categoria (y, si hace falta, la
+# subcategoria) de cualquier cadena a un set chico y compartido de
+# "categorias madre", usando primero un mapa exacto (casos conocidos y
+# frecuentes, sacado de un relevamiento de config_cadenas.json) y despues
+# un set de palabras clave como red de seguridad (cubre a Fidalga, que no
+# trae categoria madre propia, y cualquier categoria nueva no listada).
+#
+# GENERICOS_NO_TRADUCIR: colecciones de navegacion que NO son categorias de
+# producto (catalogos genericos tipo "Categorias"/"Categorías", o menus por
+# MARCA tipo "Nuestras Marcas" de Farmacorp, donde la "subcategoria" es en
+# realidad un nombre de marca como "GNC" o "Trojan") -- si `categoria` cae
+# en este set, no se usa el mapa exacto (evita matches falsos tipo
+# "Trojan" -> alguna categoria por casualidad de palabra), se intenta igual
+# por palabra clave sobre categoria+subcategoria, y si no hay match se
+# deja como estaba (mismo comportamiento que antes de este cambio).
+CATEGORIA_MADRE_EXACTA = {
+    # -- Amarket --
+    "ABARROTES Y DESPENSA": "Abarrotes y Despensa",
+    "BEBIDAS Y LICORES": "Bebidas",
+    "CARNES": "Carnes y Fiambres",
+    "CUIDADO PERSONAL": "Cuidado Personal",
+    "FRUTAS Y VERDURAS": "Frutas y Verduras",
+    "HOGAR": "Hogar y Decoracion",
+    "LIMPIEZA": "Limpieza",
+    "LACTEOS Y DERIVADOS": "Lacteos y Derivados",
+    "MASCOTAS": "Mascotas",
+    "MENAJE DE COCINA": "Hogar y Decoracion",
+    "PANADERIA": "Panaderia y Reposteria",
+    "SALUD Y BIENESTAR": "Salud y Farmacia",
+    "SNACK Y CONFITERIAS": "Snacks y Confiteria",
+    # -- Farmacorp --
+    "ALIMENTOS": "Abarrotes y Despensa",
+    "BELLEZA": "Belleza y Cosmetica",
+    "BELLEZA Y COSMETICA": "Belleza y Cosmetica",
+    "COCINA Y MENAJE": "Hogar y Decoracion",
+    "DECORACION": "Hogar y Decoracion",
+    "INFANTIL": "Mama y Bebe",
+    "MAMA Y BEBE": "Mama y Bebe",
+    "NUTRICION Y BIENESTAR": "Salud y Farmacia",
+    "PET LOVERS": "Mascotas",
+    "SALUD": "Salud y Farmacia",
+    "SALUD Y MEDICAMENTOS": "Salud y Farmacia",
+    "SUPLEMENTOS Y VITAMINAS": "Salud y Farmacia",
+    "SUPLEMENTOS Y NUTRICION": "Salud y Farmacia",
+    # -- Hipermaxi (slugs) --
+    "ABARROTES": "Abarrotes y Despensa",
+    "BAZAR": "Bazar, Jugueteria y Electro",
+    "BAZAR IMPORTACION": "Bazar, Jugueteria y Electro",
+    "BEBIDAS": "Bebidas",
+    "CONGELADOS": "Congelados",
+    "CUDADOS OTC": "Salud y Farmacia",
+    "CUIDADOS OTC": "Salud y Farmacia",
+    "CUIDADO DEL BEBE": "Mama y Bebe",
+    "CUIDADO DEL HOGAR": "Hogar y Decoracion",
+    "FARMACIA OTC": "Salud y Farmacia",
+    "FIAMBRES": "Carnes y Fiambres",
+    "GRANOS Y HORTALIZAS": "Abarrotes y Despensa",
+    "JUGUETERIA": "Bazar, Jugueteria y Electro",
+    "JUGUETERIA IMPORTACION": "Bazar, Jugueteria y Electro",
+    "PASTELERIA Y MASAS TIPICAS": "Panaderia y Reposteria",
+    "TEXTILES Y ZAPATOS": "Ropa y Textiles",
+    # -- generico / no es categoria real: se deja sin traducir a proposito
+    # (ver filtro aparte en config_cadenas.json) --
+}
+
+# Red de seguridad por palabra clave, evaluada en orden sobre el texto
+# normalizado de categoria+subcategoria. Cubre Fidalga (sin categoria
+# madre propia) y cualquier categoria nueva no listada arriba. Mas
+# especifico primero para no perder casos por una palabra generica.
+CATEGORIA_MADRE_PALABRAS = [
+    ("PASTA DENTAL", "Cuidado Personal"),
+    ("HIGIENE BUCAL", "Cuidado Personal"),
+    ("PAPEL HIGIENICO", "Cuidado Personal"),
+    ("TOALLA FEMENINA", "Cuidado Personal"),
+    ("SHAMPOO", "Cuidado Personal"),
+    ("PEINE", "Cuidado Personal"),
+    ("CEPILLO", "Cuidado Personal"),
+    ("DESODORANTE", "Cuidado Personal"),
+    ("JABON", "Cuidado Personal"),
+    ("HIGIENE", "Cuidado Personal"),
+    ("CUIDADO PERSONAL", "Cuidado Personal"),
+    ("PERFUM", "Belleza y Cosmetica"),
+    ("COSMETIC", "Belleza y Cosmetica"),
+    ("BELLEZA", "Belleza y Cosmetica"),
+    ("MASCOTA", "Mascotas"),
+    ("PERROS", "Mascotas"),
+    ("GATOS", "Mascotas"),
+    ("LACTEO", "Lacteos y Derivados"),
+    ("LECHE", "Lacteos y Derivados"),
+    ("YOGURT", "Lacteos y Derivados"),
+    ("QUESO", "Lacteos y Derivados"),
+    ("MANTEQUILLA", "Lacteos y Derivados"),
+    ("MARGARINA", "Lacteos y Derivados"),
+    ("LAVANDINA", "Limpieza"),
+    ("DETERGENTE", "Limpieza"),
+    ("DESINFECTANTE", "Limpieza"),
+    ("ESCOBA", "Limpieza"),
+    ("TRAPEADOR", "Limpieza"),
+    ("INSECTICIDA", "Limpieza"),
+    ("REPELENTE", "Limpieza"),
+    ("LIMPIEZA", "Limpieza"),
+    ("GASEOSA", "Bebidas"),
+    ("CERVEZA", "Bebidas"),
+    ("LICOR", "Bebidas"),
+    ("VINO", "Bebidas"),
+    ("AGUA", "Bebidas"),
+    ("JUGO", "Bebidas"),
+    ("CAFE", "Bebidas"),
+    ("ENERGIZANTE", "Bebidas"),
+    ("TE & MATE", "Bebidas"),
+    ("BEBIDA", "Bebidas"),
+    ("PAÑAL", "Mama y Bebe"),
+    ("PANALES", "Mama y Bebe"),
+    ("FORMULA", "Mama y Bebe"),
+    ("ARTICULOS PARA BEBE", "Mama y Bebe"),
+    ("ROPA DE BEBE", "Mama y Bebe"),
+    ("HIGIENE DE BEBE", "Mama y Bebe"),
+    ("BEBES", "Mama y Bebe"),
+    ("BEBE", "Mama y Bebe"),
+    ("INFANTIL", "Mama y Bebe"),
+    ("FARMACIA", "Salud y Farmacia"),
+    ("VITAMINA", "Salud y Farmacia"),
+    ("SUPLEMENTO", "Salud y Farmacia"),
+    ("MEDICAMENTO", "Salud y Farmacia"),
+    ("SALUD", "Salud y Farmacia"),
+    ("CARNE", "Carnes y Fiambres"),
+    ("FIAMBRE", "Carnes y Fiambres"),
+    ("EMBUTIDO", "Carnes y Fiambres"),
+    ("POLLO", "Carnes y Fiambres"),
+    ("HAMBURGUESA", "Carnes y Fiambres"),
+    ("PESCADO", "Carnes y Fiambres"),
+    ("MARISCO", "Carnes y Fiambres"),
+    ("CONGELADO", "Congelados"),
+    ("HELADO", "Congelados"),
+    ("HIELO", "Congelados"),
+    ("FRUTA", "Frutas y Verduras"),
+    ("VERDURA", "Frutas y Verduras"),
+    ("PANADERIA", "Panaderia y Reposteria"),
+    ("PAN MOLDE", "Panaderia y Reposteria"),
+    ("REPOSTERIA", "Panaderia y Reposteria"),
+    ("QUEQUE", "Panaderia y Reposteria"),
+    ("PANETON", "Panaderia y Reposteria"),
+    ("HORNEAD", "Panaderia y Reposteria"),
+    ("POLVO DE HORNEAR", "Panaderia y Reposteria"),
+    ("GALLETA", "Snacks y Confiteria"),
+    ("CHOCOLATE", "Snacks y Confiteria"),
+    ("SNACK", "Snacks y Confiteria"),
+    ("DULCE", "Snacks y Confiteria"),
+    ("CONFITER", "Snacks y Confiteria"),
+    ("SALADITO", "Snacks y Confiteria"),
+    ("CARAMELO", "Snacks y Confiteria"),
+    ("MERMELADA", "Snacks y Confiteria"),
+    ("DECORACION", "Hogar y Decoracion"),
+    ("COCINA", "Hogar y Decoracion"),
+    ("MENAJE", "Hogar y Decoracion"),
+    ("CRISTALERIA", "Hogar y Decoracion"),
+    ("HABITACION", "Hogar y Decoracion"),
+    ("ORGANIZACION", "Hogar y Decoracion"),
+    ("AROMATIZANTE", "Hogar y Decoracion"),
+    ("DESECHABLE", "Hogar y Decoracion"),
+    ("SERVILLETA", "Hogar y Decoracion"),
+    ("FERRETERIA", "Hogar y Decoracion"),
+    ("ELECTRODOMESTIC", "Bazar, Jugueteria y Electro"),
+    ("ELECTRONIC", "Bazar, Jugueteria y Electro"),
+    ("JUGUETE", "Bazar, Jugueteria y Electro"),
+    ("MUÑECA", "Bazar, Jugueteria y Electro"),
+    ("PELUCHE", "Bazar, Jugueteria y Electro"),
+    ("BICICLETA", "Bazar, Jugueteria y Electro"),
+    ("PATINETA", "Bazar, Jugueteria y Electro"),
+    ("PATINES", "Bazar, Jugueteria y Electro"),
+    ("FIGURAS DE ACCION", "Bazar, Jugueteria y Electro"),
+    ("JUEGOS DE MESA", "Bazar, Jugueteria y Electro"),
+    ("BAZAR", "Bazar, Jugueteria y Electro"),
+    ("AUTOS", "Bazar, Jugueteria y Electro"),
+    ("ROPA", "Ropa y Textiles"),
+    ("MODA", "Ropa y Textiles"),
+    ("TEXTIL", "Ropa y Textiles"),
+    ("ZAPATO", "Ropa y Textiles"),
+    ("AGENDA", "Papeleria y Oficina"),
+    ("CUADERNO", "Papeleria y Oficina"),
+    ("LIBRETA", "Papeleria y Oficina"),
+    ("LAPIZ", "Papeleria y Oficina"),
+    ("LAPICERO", "Papeleria y Oficina"),
+    ("MARCADOR", "Papeleria y Oficina"),
+    ("HOJAS & CARTULINAS", "Papeleria y Oficina"),
+    ("MATERIAL ESCOLAR", "Papeleria y Oficina"),
+    ("MATERIAL DE ESCRITORIO", "Papeleria y Oficina"),
+    ("LIBRERIA", "Papeleria y Oficina"),
+    ("CARBON", "Bazar, Jugueteria y Electro"),
+    ("CHURRASCO", "Carnes y Fiambres"),
+    ("ARROZ", "Abarrotes y Despensa"),
+    ("FIDEO", "Abarrotes y Despensa"),
+    ("PASTA", "Abarrotes y Despensa"),
+    ("HARINA", "Abarrotes y Despensa"),
+    ("AZUCAR", "Abarrotes y Despensa"),
+    ("EDULCORANTE", "Abarrotes y Despensa"),
+    ("ENLATADO", "Abarrotes y Despensa"),
+    ("ACEITE", "Abarrotes y Despensa"),
+    ("VINAGRE", "Abarrotes y Despensa"),
+    ("CEREAL", "Abarrotes y Despensa"),
+    ("AVENA", "Abarrotes y Despensa"),
+    ("GRANOLA", "Abarrotes y Despensa"),
+    ("SOPA", "Abarrotes y Despensa"),
+    ("CREMA INSTANTANEA", "Abarrotes y Despensa"),
+    ("SALSA", "Abarrotes y Despensa"),
+    ("CONDIMENTO", "Abarrotes y Despensa"),
+    ("ABARROTE", "Abarrotes y Despensa"),
+    ("DESPENSA", "Abarrotes y Despensa"),
+    ("GRANO", "Abarrotes y Despensa"),
+    ("CANASTA BASICA", "Abarrotes y Despensa"),
+    ("PRECOCIDO", "Abarrotes y Despensa"),
+    ("EXTERIOR", "Hogar y Decoracion"),
+    ("FLAN", "Snacks y Confiteria"),
+    ("BUDIN", "Snacks y Confiteria"),
+    ("GELATINA", "Snacks y Confiteria"),
+]
+
+GENERICOS_NO_TRADUCIR = {
+    "CATEGORIAS", "OFERTAS", "SUPERMERCADO", "NUESTRAS MARCAS",
+    "CONOCE NUESTRAS MARCAS", "DESTACADOS", "MAS VENDIDOS", "NOVEDADES",
+    "BANDEO", "OTROS", "ESPECIAL DE PASCUA", "FERIA DE INVIERNO",
+}
+
+def categoria_madre_canonica(categoria, subcategoria):
+    """OJO con el orden: se intenta primero con `subcategoria`, no con
+    `categoria`. Motivo (hallazgo real, ver ejemplo de Mascotas en el
+    docstring de arriba): la subcategoria suele ser el nivel mas
+    especifico y consistente entre las 4 cadenas (es lo unico que trae
+    Fidalga), mientras que la categoria "madre" de cada sitio puede ser
+    un paraguas demasiado ancho (Hipermaxi mete "Mascotas" adentro de
+    "Abarrotes"; Farmacorp, adentro de "Hogar"). Si se intentara primero
+    por categoria, esos dos casos "ganarian" con Abarrotes/Hogar antes de
+    siquiera mirar que la subcategoria dice Mascotas -- exactamente el
+    bug que esto esta resolviendo."""
+    cat_clave = _clave_categoria(categoria)
+    sub_clave = _clave_categoria(subcategoria)
+
+    if sub_clave and sub_clave not in GENERICOS_NO_TRADUCIR and sub_clave in CATEGORIA_MADRE_EXACTA:
+        return CATEGORIA_MADRE_EXACTA[sub_clave]
+    if cat_clave and cat_clave not in GENERICOS_NO_TRADUCIR and cat_clave in CATEGORIA_MADRE_EXACTA:
+        return CATEGORIA_MADRE_EXACTA[cat_clave]
+
+    texto = f"{categoria or ''} {subcategoria or ''}"
+    txt_clave = _clave_categoria(texto)
+    for palabra, madre in CATEGORIA_MADRE_PALABRAS:
+        # _clave_categoria() tambien sobre la palabra clave -- si no, una
+        # keyword con tilde (ej. "PAÑAL") nunca matchea porque txt_clave
+        # ya le saco los acentos y la keyword se compara tal cual.
+        if _clave_categoria(palabra) in txt_clave:
+            return madre
+
+    if cat_clave and cat_clave not in GENERICOS_NO_TRADUCIR:
+        return categoria.strip()
+    return None  # sin match -> se deja como venia (fallback de siempre)
+
+
 def get_or_create_cadena(cur, nombre: str, pais: str = "BO", sitio_web: str = None) -> int:
     nombre = canonicalizar_cadena(nombre)
     # comparación case-insensitive: "hipermaxi" y "Hipermaxi" son la misma cadena
@@ -595,6 +866,12 @@ def cargar_excel(path: str, cadena_nombre: str = None, pais: str = "BO"):
                 # respaldo para que el producto siempre aparezca en algún
                 # chip filtrable, en vez de quedar invisible en la lista.
                 subcategoria = categoria
+            # categoria_madre_canonica: pisa la CATEGORIA guardada (no la
+            # subcategoria, que sigue siendo la mas fina para filtros del
+            # frontend) con la categoria "madre" comun entre cadenas, para
+            # que matchear() las agrupe en el mismo bucket al comparar
+            # entre cadenas. Si no hay match conocido, se deja como venia.
+            categoria = categoria_madre_canonica(categoria, subcategoria) or categoria
             imagen = str(row[col["imagen"]]).strip() if col["imagen"] and pd.notna(row[col["imagen"]]) else None
             url = str(row[col["url"]]).strip() if col["url"] and pd.notna(row[col["url"]]) else None
             ciudad = str(row[col["ciudad"]]).strip() if col["ciudad"] and pd.notna(row[col["ciudad"]]) else "Santa Cruz"
@@ -682,6 +959,10 @@ def cargar_resultado(resultado, pais: str = "BO", etiqueta: str = None) -> dict:
         try:
             categoria = canonicalizar_categoria(p.categoria)
             subcategoria = canonicalizar_categoria(p.subcategoria) or categoria
+            # categoria_madre_canonica: mismo criterio que cargar_excel (ver
+            # nota ahi) -- pisa la CATEGORIA con la madre comun entre
+            # cadenas para que matchear() compare entre cadenas distintas.
+            categoria = categoria_madre_canonica(categoria, subcategoria) or categoria
             # p.marca viene del scraper (ej. "vendor" de Shopify) cuando
             # el sitio la provee -- marca real, cubre CUALQUIER categoria.
             # extract_brand() (BRANDS, 8 marcas de formula infantil) es
