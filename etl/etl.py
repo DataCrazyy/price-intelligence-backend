@@ -1429,6 +1429,84 @@ def desactivar_duplicados_por_cadena():
 
 
 # =========================================================================
+# Backfill: aplicar categoria_madre_canonica() a lo YA cargado
+# =========================================================================
+
+def backfill_categoria_madre(dry_run: bool = False, backup_path: str = None) -> dict:
+    """categoria_madre_canonica() (ver mas arriba) solo se aplica a partir
+    de ahora, en cada cargar_resultado()/cargar_excel() -- no reescribe
+    retroactivamente lo que ya esta en Postgres. Sin este backfill, todo
+    lo cargado ANTES de ese fix se queda con su categoria vieja (muchas
+    veces demasiado especifica -- ej. colecciones de Shopify descubiertas
+    como "todas" antes de que Diego curara config_cadenas.json, que
+    dejaron categorias tipo "Azucar Morena" o "Cerveza Potosina" en vez
+    de una categoria madre real). Eso infla matchear() con miles de
+    buckets de 1-2 productos que nunca van a cruzar entre cadenas.
+
+    Este backfill recorre TODOS los productos ya guardados, recalcula su
+    categoria con la misma funcion que ya usa la carga normal, y solo
+    actualiza las filas donde el valor realmente cambia. Antes de tocar
+    nada, exporta un respaldo (id, categoria vieja, categoria nueva,
+    subcategoria) a un .csv por si hace falta revisar o revertir algo
+    puntual a mano despues.
+
+    dry_run=True: calcula y reporta todo, pero no escribe en Postgres --
+    para ver el impacto antes de aplicarlo de verdad."""
+    import csv
+    from datetime import datetime
+
+    conn = get_conn()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SELECT id, categoria, subcategoria FROM productos")
+    productos = cur.fetchall()
+
+    cambios = []
+    for p in productos:
+        nueva = categoria_madre_canonica(p["categoria"], p["subcategoria"])
+        if nueva and nueva != p["categoria"]:
+            cambios.append((p["id"], p["categoria"], nueva, p["subcategoria"]))
+
+    backup_path = backup_path or f"backfill_categoria_madre_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+    with open(backup_path, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["producto_id", "categoria_vieja", "categoria_nueva", "subcategoria"])
+        w.writerows(cambios)
+
+    categorias_antes = len(set(p["categoria"] for p in productos if p["categoria"]))
+    categorias_despues = len(
+        set((categoria_madre_canonica(p["categoria"], p["subcategoria"]) or p["categoria"])
+            for p in productos if p["categoria"])
+    )
+
+    print(f"[backfill] {len(productos)} productos revisados, {len(cambios)} con categoria nueva")
+    print(f"[backfill] categorias distintas: {categorias_antes} -> {categorias_despues}")
+    print(f"[backfill] respaldo escrito en {backup_path}")
+
+    if dry_run:
+        print("[backfill] dry-run: no se escribio nada en Postgres")
+        cur.close()
+        conn.close()
+        return {"productos": len(productos), "cambios": len(cambios), "backup": backup_path, "dry_run": True}
+
+    cur2 = conn.cursor()
+    BATCH = 500
+    for i in range(0, len(cambios), BATCH):
+        lote = cambios[i:i + BATCH]
+        psycopg2.extras.execute_batch(
+            cur2,
+            "UPDATE productos SET categoria = %s, actualizado_en = now() WHERE id = %s",
+            [(nueva, pid) for pid, _vieja, nueva, _sub in lote],
+        )
+        conn.commit()
+        print(f"[backfill] {min(i + BATCH, len(cambios))}/{len(cambios)} actualizados")
+
+    cur.close()
+    cur2.close()
+    conn.close()
+    return {"productos": len(productos), "cambios": len(cambios), "backup": backup_path, "dry_run": False}
+
+
+# =========================================================================
 # CLI
 # =========================================================================
 
@@ -1450,6 +1528,13 @@ def main():
                      help="Tope de consultas NUEVAS al LLM en esta corrida "
                           "(default: env MATCH_LLM_MAX_POR_CORRIDA, o 50)")
 
+    p4 = sub.add_parser("backfill-categoria-madre",
+                         help="Recalcula la categoria de TODOS los productos ya cargados "
+                              "con categoria_madre_canonica() (ver nota ahi). Escribe un "
+                              ".csv de respaldo antes de tocar Postgres.")
+    p4.add_argument("--dry-run", action="store_true",
+                     help="Solo reporta el impacto (cuantos cambiarian), no escribe nada")
+
     args = ap.parse_args()
     if args.comando == "cargar-json":
         cargar_json(args.path)
@@ -1457,6 +1542,8 @@ def main():
         cargar_excel(args.path, args.cadena, args.pais)
     elif args.comando == "matchear":
         matchear(max_llm=args.max_llm if args.max_llm is not None else MAX_LLM_POR_CORRIDA)
+    elif args.comando == "backfill-categoria-madre":
+        backfill_categoria_madre(dry_run=args.dry_run)
 
 
 if __name__ == "__main__":
