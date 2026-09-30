@@ -1679,7 +1679,7 @@
                     </div>
                 </div>
             </div>
-            <p class="fine" id="fine">Los precios se toman de los sitios web de cada cadena y pueden variar en tienda. Price Intelligence no vende productos.</p>
+            <p class="fine" id="fine">Los precios se toman de los sitios web de cada cadena y pueden variar en tienda. Price Intelligence no vende productos. Registramos de forma anónima qué se busca y qué productos se abren, para mejorar el sitio; no guardamos datos personales.</p>
         </div>
     </footer>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1829,6 +1829,38 @@
             return { items: data.map(aGrupo), total, base: `${base}&order=${ORDEN_SQL[r.orden] || ORDEN_SQL['']}` };
         }
 
+        /* ================= Registro de uso (anónimo) ================= */
+        // Anota qué se busca, qué se abre y a qué tienda se va, para mejorar el sitio.
+        // Sin datos personales: `sesion` es un código al azar de este navegador. La clave
+        // pública solo puede AGREGAR a web_eventos, nunca leer (db/migracion_eventos.sql).
+        const SESION = (() => {
+            try {
+                let s = localStorage.getItem('pi_sesion');
+                if (!s) { s = (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36)).replace(/-/g, '').slice(0, 24); localStorage.setItem('pi_sesion', s) }
+                return s;
+            } catch (e) { return 'anon' + Math.random().toString(36).slice(2, 12) }
+        })();
+        const MOVIL = matchMedia('(max-width: 899px)').matches;
+        const registrados = new Set();
+        function registrar(tipo, datos = {}, unaVez = null) {
+            try {
+                if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+                if (unaVez) { if (registrados.has(unaVez)) return; registrados.add(unaVez) }
+                const fila = { sesion: SESION, tipo, movil: MOVIL };
+                for (const [c, v] of Object.entries(datos)) if (v !== undefined && v !== null && v !== '' && v !== false) fila[c] = typeof v === 'string' ? v.slice(0, c === 'k' ? 200 : c === 'q' ? 120 : 80) : v;
+                fetch(`${API}/web_eventos`, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal', ...(API.startsWith(SUPABASE_URL) ? { apikey: API_KEY, Authorization: `Bearer ${API_KEY}` } : {}) }, body: JSON.stringify(fila) }).catch(() => { });
+            } catch (e) { }
+        }
+        function registrarVista(r) {
+            if (r.view === 'home') return registrar('inicio', {}, 'inicio');
+            if (r.view === 'p') { const g = S._prod; if (g && g.k === r.key) registrar('producto', { k: g.k, precio: g.best.precio_oferta, extra: { n: g.n } }, 'p:' + g.k); return }
+            const extra = {};
+            if (r.orden) extra.orden = r.orden;
+            if (r.oferta) extra.oferta = true;
+            if (r.multi) extra.multi = true;
+            registrar(r.q ? 'busqueda' : r.cat ? 'categoria' : 'listado', { q: r.q, cat: r.cat, cadena: r.cadena, resultados: S._ultimoTotal ?? 0, extra: Object.keys(extra).length ? extra : null }, 'r:' + location.hash);
+        }
+
         /* ================= Router ================= */
         function ruta() {
             let h = location.hash.slice(1) || '/';
@@ -1942,6 +1974,7 @@
             const key = location.hash;
             const n = Math.max(PAGE, (mem[key] && mem[key].count) || PAGE);
             const res = await buscar(r, n);
+            S._ultimoTotal = res.total || 0;
             let html = cabeceraResultados(r, `${int(res.total)} ${res.total === 1 ? 'producto' : 'productos'}${r.cadena ? ' en ' + esc(r.cadena) : ''}`, true) + barraFiltros(r);
             if (!res.total) return html + `<div class="wrap empty"><h2>No encontramos productos</h2><p>Probá con otra palabra o quitá algún filtro.</p><a class="btn btn-secondary" href="#/">Volver al inicio</a></div>`;
             const disponibles = res.local ? res.local.length : res.total;
@@ -2016,7 +2049,7 @@
             const filas = g.list.map((x, i) => {
                 const of = enOferta(x);
                 const mejor = i === 0 && g.n > 1;
-                return `<a class="offer${mejor ? ' best' : ''}" href="${esc(x.url || '#')}" target="_blank" rel="noopener" aria-label="${esc(x.cadena)}: ${money(x.precio_oferta)}. Abrir en su sitio"><span class="offer-name"><b>${esc(x.cadena)}</b>${mejor ? '<small>Mejor precio</small>' : ''}</span><span class="offer-price num"><b>${money(x.precio_oferta)}</b>${of ? `<small><span class="off">-${Math.round(pctOff(x))}%</span><s>${money(x.precio_regular)}</s></small>` : (i > 0 && g.n > 1 ? `<small>+${money(x.precio_oferta - b.precio_oferta)}</small>` : '')}</span><span class="offer-go">${I.ext}</span></a>`;
+                return `<a class="offer${mejor ? ' best' : ''}" data-tienda="${esc(x.cadena)}" data-precio="${x.precio_oferta}" href="${esc(x.url || '#')}" target="_blank" rel="noopener" aria-label="${esc(x.cadena)}: ${money(x.precio_oferta)}. Abrir en su sitio"><span class="offer-name"><b>${esc(x.cadena)}</b>${mejor ? '<small>Mejor precio</small>' : ''}</span><span class="offer-price num"><b>${money(x.precio_oferta)}</b>${of ? `<small><span class="off">-${Math.round(pctOff(x))}%</span><s>${money(x.precio_regular)}</s></small>` : (i > 0 && g.n > 1 ? `<small>+${money(x.precio_oferta - b.precio_oferta)}</small>` : '')}</span><span class="offer-go">${I.ext}</span></a>`;
             }).join('');
             const ahorro = g.worst.precio_oferta - b.precio_oferta;
             const save = g.n > 1 && ahorro > 0 ? `<p class="p-save num">Ahorrás ${money(ahorro)} (${Math.round(ahorro / g.worst.precio_oferta * 100)}%) frente a la más cara</p>` : '';
@@ -2035,7 +2068,7 @@
             html += `</div></div>`;
             html += rail('También te puede interesar', '', sim, hrefBuscar({ cat: g.macro }));
             html += `</div>`;
-            html += `<div class="buybar" id="buybar"><div class="buybar-info num"><b>${money(b.precio_oferta)}</b><small>en ${esc(b.cadena)}${g.n > 1 ? ' · el más barato' : ''}</small></div><a class="btn btn-primary" href="${esc(b.url || '#')}" target="_blank" rel="noopener">Ir a la tienda ${I.ext}</a></div>`;
+            html += `<div class="buybar" id="buybar"><div class="buybar-info num"><b>${money(b.precio_oferta)}</b><small>en ${esc(b.cadena)}${g.n > 1 ? ' · el más barato' : ''}</small></div><a class="btn btn-primary" data-tienda="${esc(b.cadena)}" data-precio="${b.precio_oferta}" href="${esc(b.url || '#')}" target="_blank" rel="noopener">Ir a la tienda ${I.ext}</a></div>`;
             return html;
         }
 
@@ -2069,6 +2102,7 @@
             else if (r.view === 'r') document.title = `${r.q ? r.q : r.cat ? catLabel(r.cat) : 'Productos'} — Price Intelligence`;
             else document.title = 'Price Intelligence — Compará precios en Santa Cruz';
             wire(r);
+            registrarVista(r);
             const m = mem[location.hash];
             if (!adelante && m) window.scrollTo(0, m.y); else if (adelante) window.scrollTo(0, 0);
         }
@@ -2095,6 +2129,7 @@
             const share = $('#share');
             if (share) share.onclick = async () => {
                 const g = S._prod; if (!g) return;
+                registrar('compartir', { k: g.k });
                 const text = `${g.nombre}: ${money(g.best.precio_oferta)} en ${g.best.cadena}${g.n > 1 ? ` (comparado en ${g.n} cadenas)` : ''}`;
                 const url = location.href;
                 if (navigator.share) { try { await navigator.share({ title: g.nombre, text, url }) } catch (e) { } }
@@ -2146,6 +2181,7 @@
         sg.addEventListener('click', e => { if (e.target.closest('a')) { cerrarSg(); qi.blur() } });
 
         /* ================= Navegación ================= */
+        document.addEventListener('click', e => { const a = e.target.closest('a[data-tienda]'); if (a && S._prod) registrar('tienda', { k: S._prod.k, cadena: a.dataset.tienda, precio: +a.dataset.precio }) });
         document.addEventListener('click', e => { const a = e.target.closest('a[href^="#/"]'); if (a) { navForward = true; navigated = true } });
         let scT;
         window.addEventListener('scroll', () => { clearTimeout(scT); scT = setTimeout(() => { mem[location.hash] = { ...(mem[location.hash] || {}), y: window.scrollY } }, 80) }, { passive: true });
