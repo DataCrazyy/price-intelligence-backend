@@ -304,6 +304,24 @@ CATEGORIA_MADRE_EXACTA = {
     "JUGUETERIA IMPORTACION": "Bazar, Jugueteria y Electro",
     "PASTELERIA Y MASAS TIPICAS": "Panaderia y Reposteria",
     "TEXTILES Y ZAPATOS": "Ropa y Textiles",
+    # -- sumado a partir de un backfill sobre datos ya cargados (2026-09-30):
+    # relevamiento real de las (categoria, subcategoria) con mas volumen de
+    # productos que NO estaban cayendo en ningun bucket canonico. --
+    "INSUMOS MEDICOS": "Salud y Farmacia",
+    "SUEROS": "Salud y Farmacia",
+    "CUIDADO DE LA PIEL": "Belleza y Cosmetica",
+    "SKINCARE": "Belleza y Cosmetica",
+    "BEAUTY": "Belleza y Cosmetica",
+    "MANICURA": "Belleza y Cosmetica",
+    "COLORACION CAPILAR": "Belleza y Cosmetica",
+    "LABIOS PERFECTOS": "Belleza y Cosmetica",
+    "PLASTICOS Y SIMILARES": "Hogar y Decoracion",
+    "MI HOGAR": "Hogar y Decoracion",
+    "ZONA ESCOLAR": "Papeleria y Oficina",
+    "HAVAIANAS": "Ropa y Textiles",
+    "RES": "Carnes y Fiambres",
+    "FRUTOS SECOS Y SEMILLAS": "Abarrotes y Despensa",
+    "TE": "Bebidas",
     # -- generico / no es categoria real: se deja sin traducir a proposito
     # (ver filtro aparte en config_cadenas.json) --
 }
