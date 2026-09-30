@@ -9,9 +9,10 @@ una sola vez al final, y exporta precios.json. Cero intervención manual,
 cero pasos sueltos.
 
 Uso:
-    python run_all.py                 # corre todo lo que está en config_cadenas.json
-    python run_all.py --solo Fidalga  # corre solo una cadena
-    python run_all.py --sin-export    # no regenera data/precios.json (para pruebas)
+    python run_all.py                            # corre todo lo que está en config_cadenas.json
+    python run_all.py --solo Fidalga             # corre solo una cadena
+    python run_all.py --sin-export               # no regenera data/precios.json (para pruebas)
+    python run_all.py --solo Fidalga --limite 3  # prueba de humo: solo 3 colecciones/URLs de Fidalga
 
 Pensado para programarse en Task Scheduler / cron y correr solo, sin que
 nadie esté mirando.
@@ -122,7 +123,7 @@ def _con_reintentos(cadena: str, etiqueta: str, fn):
     return None, ultimo_error
 
 
-def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = None):
+def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = None, limite: int | None = None):
     config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
     hoy = date.today().isoformat()
     carpeta_hoy = RAW_DIR / hoy
@@ -144,6 +145,10 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
             descubiertas = scraper_shopify.listar_colecciones(sitio_base)
             colecciones = [{"categoria": c.get("categoria", "General"), "subcategoria": c["titulo"], "handle": c["handle"]} for c in descubiertas if c["productos"] > 0]
             log(f"  {len(colecciones)} categorías con productos encontradas")
+
+        if limite is not None:
+            colecciones = colecciones[:limite]
+            log(f"  --limite {limite}: solo se corren {len(colecciones)} colección(es) de {cadena} en esta corrida")
 
         for col in colecciones:
             # Compatibilidad: maneja diccionarios estructurados o strings directos
@@ -192,7 +197,12 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
             errores.append(f"{cadena}: script '{chain_cfg['script']}' no registrado")
             continue
 
-        for url in chain_cfg["urls"]:
+        urls_cadena = chain_cfg["urls"]
+        if limite is not None:
+            urls_cadena = urls_cadena[:limite]
+            log(f"  --limite {limite}: solo se corren {len(urls_cadena)} URL(s) de {cadena} en esta corrida")
+
+        for url in urls_cadena:
             etiqueta = f"{cadena}/{url}"
             log(f"Scrapeando {etiqueta} (navegador) ...")
             request = ScrapeRequest(cadena=cadena, url=url)
@@ -235,7 +245,10 @@ if __name__ == "__main__":
     ap.add_argument("--solo", help="Correr solo esta cadena (ej: Fidalga)")
     ap.add_argument("--sin-export", action="store_true", help="No regenerar data/precios.json")
     ap.add_argument("--max-llm", type=int, default=None,
-                      help="Tope de consultas NUEVAS al LLM en el matchear() de esta corrida "
+                     help="Tope de consultas NUEVAS al LLM en el matchear() de esta corrida "
                           "(default: env MATCH_LLM_MAX_POR_CORRIDA, o 50)")
+    ap.add_argument("--limite", type=int, default=None,
+                     help="Solo corre las primeras N colecciones/URLs de cada cadena "
+                          "(para pruebas rapidas de humo -- ej: --solo Fidalga --limite 3)")
     args = ap.parse_args()
-    correr(args.solo, hacer_export=not args.sin_export, max_llm=args.max_llm)
+    correr(args.solo, hacer_export=not args.sin_export, max_llm=args.max_llm, limite=args.limite)
