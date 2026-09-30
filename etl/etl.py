@@ -322,6 +322,7 @@ CATEGORIA_MADRE_EXACTA = {
     "RES": "Carnes y Fiambres",
     "FRUTOS SECOS Y SEMILLAS": "Abarrotes y Despensa",
     "TE": "Bebidas",
+    "PROTEINAS Y CREATINAS": "Salud y Farmacia",
     # -- generico / no es categoria real: se deja sin traducir a proposito
     # (ver filtro aparte en config_cadenas.json) --
 }
