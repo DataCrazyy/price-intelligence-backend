@@ -232,6 +232,15 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
             import export_json
             export_json.export_json(str(EXPORT_PATH))
 
+        # La página web lee de Supabase (tabla web_productos), no del JSON.
+        # Si todavía no se corrió db/migracion_web.sql, avisa y sigue.
+        log("Publicando web_productos para la página ...")
+        try:
+            import publicar_web
+            publicar_web.publicar()
+        except Exception as e:
+            log(f"  ADVERTENCIA: no se pudo publicar la web ({e}). ¿Corriste db/migracion_web.sql en Supabase?")
+
     log(f"Listo. Cargas: {archivos_cargados}. Errores: {len(errores)}")
     for e in errores:
         log(f"  - {e}")
