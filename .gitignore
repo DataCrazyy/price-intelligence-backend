@@ -30,3 +30,4 @@ price_intel_backup.dump
 # sobreescriben en cada corrida fallida, no son codigo ni datos reales.
 etl/debug_*.png
 etl/debug_*.html
+_to_delete/

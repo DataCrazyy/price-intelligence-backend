@@ -1493,6 +1493,361 @@
             }
         }
 
+        /* ============ Lista de compras ============ */
+        .lista-cta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: var(--r-md);
+            background: var(--accent);
+            color: var(--on-accent);
+            transition: transform .12s var(--ease), background .15s
+        }
+
+        .lista-cta:hover {
+            background: var(--accent-press)
+        }
+
+        .lista-cta:active {
+            transform: scale(.98)
+        }
+
+        .lista-cta .ico {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .18);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0
+        }
+
+        .lista-cta .ico svg {
+            width: 24px;
+            height: 24px
+        }
+
+        .lista-cta b {
+            display: block;
+            font-size: 16px;
+            font-weight: 700
+        }
+
+        .lista-cta small {
+            display: block;
+            font-size: 13px;
+            opacity: .9;
+            margin-top: 1px
+        }
+
+        .lista-cta>svg {
+            width: 20px;
+            height: 20px;
+            margin-left: auto;
+            flex-shrink: 0
+        }
+
+        .lista-form {
+            margin-top: 16px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            padding: 12px
+        }
+
+        .lista-form textarea {
+            width: 100%;
+            min-height: 108px;
+            resize: vertical;
+            border: 0;
+            outline: none;
+            background: transparent;
+            font: inherit;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text);
+            padding: 4px
+        }
+
+        .lista-form textarea::placeholder {
+            color: var(--text-2)
+        }
+
+        .lista-acciones {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            align-items: center;
+            border-top: 1px solid var(--line);
+            padding-top: 10px;
+            margin-top: 6px;
+            flex-wrap: wrap
+        }
+
+        .lista-acciones .cuenta {
+            margin-right: auto;
+            font-size: 12px;
+            color: var(--text-2)
+        }
+
+        .btn.escuchando {
+            background: var(--good-soft);
+            color: var(--good);
+            border-color: var(--good)
+        }
+
+        .ejemplos {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            margin-top: 12px;
+            padding-bottom: 2px
+        }
+
+        .ejemplos::-webkit-scrollbar {
+            display: none
+        }
+
+        .ejemplos span {
+            font-size: 13px;
+            color: var(--text-2);
+            align-self: center;
+            flex: none
+        }
+
+        .li-items {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            overflow: hidden
+        }
+
+        .li-item {
+            padding: 12px 14px
+        }
+
+        .li-item+.li-item {
+            border-top: 1px solid var(--line)
+        }
+
+        .li-main {
+            display: grid;
+            grid-template-columns: 56px minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: center
+        }
+
+        .li-thumb {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            background: var(--thumb);
+            border: 1px solid var(--line);
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            color: #C7C7CC
+        }
+
+        .li-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain
+        }
+
+        .li-thumb svg {
+            width: 26px;
+            height: 26px
+        }
+
+        .li-name {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden
+        }
+
+        .li-name a:hover {
+            text-decoration: underline
+        }
+
+        .li-pedido {
+            font-size: 12px;
+            color: var(--text-2);
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .li-precio {
+            text-align: right;
+            white-space: nowrap
+        }
+
+        .li-precio b {
+            display: block;
+            font-size: 16px;
+            font-weight: 700
+        }
+
+        .li-precio small {
+            font-size: 12px;
+            color: var(--text-2)
+        }
+
+        .li-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding-left: 68px;
+            flex-wrap: wrap
+        }
+
+        .stepper {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            overflow: hidden
+        }
+
+        .stepper button {
+            width: 36px;
+            height: 34px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent)
+        }
+
+        .stepper button:hover {
+            background: var(--surface-2)
+        }
+
+        .stepper span {
+            min-width: 28px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px
+        }
+
+        .li-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            min-height: 34px;
+            padding: 0 8px;
+            border-radius: 8px
+        }
+
+        .li-link:hover {
+            background: var(--surface-2)
+        }
+
+        .li-link.quitar {
+            color: var(--text-2);
+            margin-left: auto
+        }
+
+        .li-alts {
+            margin: 10px 0 0 68px;
+            display: grid;
+            gap: 6px
+        }
+
+        .li-alt {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            font-size: 13px;
+            width: 100%
+        }
+
+        .li-alt:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft)
+        }
+
+        .li-alt span {
+            flex: 1;
+            min-width: 0
+        }
+
+        .li-alt b {
+            white-space: nowrap
+        }
+
+        .li-item.no .li-name {
+            color: var(--text-2)
+        }
+
+        .resumen-fila {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 56px;
+            padding: 10px 14px
+        }
+
+        .resumen-fila+.resumen-fila {
+            border-top: 1px solid var(--line)
+        }
+
+        .resumen-fila.best {
+            background: var(--accent-soft)
+        }
+
+        .resumen-fila .nom {
+            flex: 1;
+            min-width: 0
+        }
+
+        .resumen-fila .nom b {
+            display: block;
+            font-size: 15px;
+            font-weight: 600
+        }
+
+        .resumen-fila .nom small {
+            font-size: 12px;
+            color: var(--text-2)
+        }
+
+        .resumen-fila .nom small.ok {
+            color: var(--good);
+            font-weight: 600
+        }
+
+        .resumen-fila .tot {
+            font-size: 17px;
+            font-weight: 700;
+            white-space: nowrap
+        }
+
+        .resumen-fila.parcial .tot {
+            color: var(--text-2);
+            font-weight: 500;
+            font-size: 15px
+        }
+
+        .lista-fin {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px
+        }
+
         /* ============ Footer ============ */
         .footer {
             border-top: 1px solid var(--line);
@@ -1695,6 +2050,8 @@
         // Para probar contra una copia local: abrir la página en localhost con ?api=http://localhost:3000
         const API = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('api')) || SUPABASE_URL + '/rest/v1';
         const PAGE = 24;
+        // Función de la lista con IA (supabase/functions/armar-lista). Para pruebas locales: ?fn=http://localhost:8000
+        const FN_LISTA = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('fn')) || SUPABASE_URL + '/functions/v1/armar-lista';
         const $ = s => document.querySelector(s);
         const nf = new Intl.NumberFormat('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const money = n => 'Bs ' + nf.format(+n || 0);
@@ -1853,6 +2210,7 @@
         }
         function registrarVista(r) {
             if (r.view === 'home') return registrar('inicio', {}, 'inicio');
+            if (r.view === 'lista') return;
             if (r.view === 'p') { const g = S._prod; if (g && g.k === r.key) registrar('producto', { k: g.k, precio: g.best.precio_oferta, extra: { n: g.n } }, 'p:' + g.k); return }
             const extra = {};
             if (r.orden) extra.orden = r.orden;
@@ -1866,6 +2224,7 @@
             let h = location.hash.slice(1) || '/';
             try { h = decodeURI(h) } catch (e) { }
             if (h.startsWith('/p/')) { let k = location.hash.slice(4); try { k = decodeURIComponent(k) } catch (e) { } return { view: 'p', key: k } }
+            if (h.startsWith('/lista')) return { view: 'lista' };
             if (h.startsWith('/buscar')) {
                 const qs = new URLSearchParams(location.hash.split('?')[1] || '');
                 return { view: 'r', q: qs.get('q') || '', cat: qs.get('cat') || '', cadena: qs.get('cadena') || '', oferta: qs.get('oferta') === '1', multi: qs.get('multi') === '1', orden: qs.get('orden') || '' };
@@ -1941,7 +2300,7 @@
             const tomar = (rows, n) => { const out = []; for (const r of rows) { if (vistos.has(r.k)) continue; out.push(aGrupo(r)); vistos.add(r.k); if (out.length >= n) break } return out };
             const tiles = [`<a class="cat hot" href="${hrefBuscar({ oferta: true, orden: 'descuento' })}"><span class="cat-ico">${I.tag}</span>Ofertas</a>`]
                 .concat(S.cats.map(c => `<a class="cat" href="${hrefBuscar({ cat: c })}"><span class="cat-ico">${catIcon(c)}</span>${esc(catLabel(c))}</a>`));
-            let html = `<div class="wrap fade-in">${heroHome()}<nav class="rail cats" aria-label="Categorías">${tiles.join('')}</nav>`;
+            let html = `<div class="wrap fade-in">${heroHome()}${ctaLista()}<nav class="rail cats" aria-label="Categorías">${tiles.join('')}</nav>`;
             html += rail('Ofertas de hoy', `${int(S.ofertas)} productos con descuento`, tomar(ofertas.data, 16), hrefBuscar({ oferta: true, orden: 'descuento' }));
             html += rail('Los más comparados', 'Están en 3 o más cadenas: acá es donde más se ahorra', tomar(comparados.data, 16), hrefBuscar({ multi: true, orden: 'ahorro' }));
             principales.forEach((c, i) => { html += rail(c, `${int(S.catCount[c])} productos`, tomar(porCat[i].data, 12), hrefBuscar({ cat: c })) });
@@ -2072,6 +2431,126 @@
             return html;
         }
 
+        /* ================= Lista de compras con IA ================= */
+        const I_LISTA = ic('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/>', 1.8);
+        const I_MIC = ic('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', 1.8);
+        const L = { texto: '', res: null, abierto: -1, cargando: false, error: '' };
+        try { L.texto = localStorage.getItem('pi_lista_texto') || ''; L.res = JSON.parse(localStorage.getItem('pi_lista_res') || 'null') } catch (e) { }
+        function guardarLista() { try { localStorage.setItem('pi_lista_texto', L.texto); localStorage.setItem('pi_lista_res', JSON.stringify(L.res)) } catch (e) { } }
+        function ctaLista() {
+            return `<a class="lista-cta" href="#/lista"><span class="ico">${I_LISTA}</span><span><b>Armá tu lista de compras</b><small>Escribila o dictala y te decimos en qué cadena sale más barata</small></span>${I.fwd}</a>`;
+        }
+        const precioMin = p => p.listados.reduce((m, l) => l.p < m.p ? l : m);
+        function calcularLista(items) {
+            const ok = items.filter(i => i.elegido);
+            const cadenas = [...new Set(ok.flatMap(i => i.elegido.listados.map(l => l.c)))];
+            const porCadena = cadenas.map(c => {
+                let total = 0, tiene = 0;
+                for (const i of ok) { const l = i.elegido.listados.find(x => x.c === c); if (l) { total += l.p * i.cantidad; tiene++ } }
+                return { c, total, tiene };
+            }).sort((a, b) => b.tiene - a.tiene || a.total - b.total);
+            let comb = 0; const usadas = new Set();
+            for (const i of ok) { const l = precioMin(i.elegido); comb += l.p * i.cantidad; usadas.add(l.c) }
+            return { porCadena, comb, usadas: [...usadas], n: ok.length };
+        }
+        function htmlResumen(items) {
+            const t = calcularLista(items);
+            if (!t.n) return '';
+            const mejor = t.porCadena[0];
+            let filas = `<div class="resumen-fila best"><span class="nom"><b>Combinando cadenas</b><small>${t.usadas.length === 1 ? 'Todo en ' + esc(t.usadas[0]) : esc(listaCadenas(t.usadas))}</small></span><span class="tot num">${money(t.comb)}</span></div>`;
+            filas += t.porCadena.map(x => `<div class="resumen-fila${x.tiene < t.n ? ' parcial' : ''}"><span class="nom"><b>Todo en ${esc(x.c)}</b>${x.tiene === t.n ? `<small class="ok">Tiene los ${t.n} productos</small>` : `<small>Tiene ${x.tiene} de ${t.n}</small>`}</span><span class="tot num">${money(x.total)}</span></div>`).join('');
+            let nota;
+            if (t.usadas.length === 1) nota = `Te conviene comprar todo en <b>${esc(t.usadas[0])}</b>.`;
+            else if (mejor && mejor.tiene === t.n && mejor.total - t.comb >= 0.5) nota = `Combinando ${t.usadas.length} cadenas ahorrás <b class="num">${money(mejor.total - t.comb)}</b> frente a comprar todo en ${esc(mejor.c)}. Si preferís una sola tienda, ${esc(mejor.c)} es la más barata con todo.`;
+            else if (mejor && mejor.tiene === t.n) nota = `Comprando todo en <b>${esc(mejor.c)}</b> pagás casi lo mismo que combinando, en una sola tienda.`;
+            else nota = `Ninguna cadena tiene todo tu pedido: combinar es la única forma de conseguir los ${t.n} productos.`;
+            return `<section class="p-block"><h2>Dónde te conviene</h2><div class="offers">${filas}</div><p class="dots-foot" style="border:0;padding-top:0">${nota} Precios del ${esc(fecha(S.fecha))}.</p></section>`;
+        }
+        function htmlItem(it, i) {
+            if (!it.elegido) return `<div class="li-item no"><div class="li-main"><span class="li-thumb">${I.info}</span><span><span class="li-name">No encontramos “${esc(it.texto)}”</span><span class="li-pedido">Puede que ninguna de las 5 cadenas lo venda en línea.</span></span><a class="li-link" href="${hrefBuscar({ q: it.busqueda || it.texto })}">Buscar</a></div><div class="li-bar"><button class="li-link quitar" type="button" data-quitar="${i}">Quitar</button></div></div>`;
+            const p = it.elegido, l = precioMin(p);
+            const alts = L.abierto === i && it.alternativas.length ? `<div class="li-alts">${it.alternativas.map((a, j) => `<button class="li-alt" type="button" data-alt="${i}:${j}"><span>${esc(a.nombre)}</span><b class="num">${money(precioMin(a).p)}</b></button>`).join('')}</div>` : '';
+            return `<div class="li-item"><div class="li-main"><span class="li-thumb">${p.img ? `<img src="${esc(imgUrl(p.img, 120))}" alt="" loading="lazy" onerror="this.remove()">` : I.bag}</span><span style="min-width:0"><a class="li-name" href="${hrefProd(p.k)}">${esc(p.nombre)}</a><span class="li-pedido">Pediste: “${esc(it.texto)}”</span></span><span class="li-precio num"><b>${money(l.p * it.cantidad)}</b><small>${it.cantidad > 1 ? `${it.cantidad} × ${money(l.p)} · ` : ''}${esc(l.c)}</small></span></div><div class="li-bar"><span class="stepper"><button type="button" data-menos="${i}" aria-label="Uno menos">−</button><span class="num" aria-live="polite">${it.cantidad}</span><button type="button" data-mas="${i}" aria-label="Uno más">+</button></span>${it.alternativas.length ? `<button class="li-link" type="button" data-cambiar="${i}" aria-expanded="${L.abierto === i}">${L.abierto === i ? 'Cerrar' : 'Cambiar'}</button>` : ''}<button class="li-link quitar" type="button" data-quitar="${i}">Quitar</button></div>${alts}</div>`;
+        }
+        function htmlResultadoLista() {
+            if (L.cargando) return `<p class="p-note" style="margin-top:20px">Buscando tus productos en ${S.chains.length || 5} cadenas…</p><div class="sk" style="height:180px;margin-top:12px;border-radius:16px"></div><div class="sk" style="height:260px;margin-top:16px;border-radius:16px"></div>`;
+            if (L.error) return `<div class="verdict neutral" style="margin-top:16px">${I.info}<span>${esc(L.error)}</span></div>`;
+            if (!L.res) return '';
+            const items = L.res.items;
+            if (!items.length) return `<div class="verdict neutral" style="margin-top:16px">${I.info}<span>No reconocimos productos en lo que escribiste. Probá separarlos con comas.</span></div>`;
+            const aviso = L.res.modo === 'basico' ? `<div class="verdict neutral" style="margin-top:16px">${I.info}<span>La IA no respondió a tiempo y separamos tu lista de forma básica. Revisá que los productos sean los que querías.</span></div>` : '';
+            return `${aviso}${htmlResumen(items)}<section class="p-block"><h2>Tu lista (${items.length})</h2><div class="li-items">${items.map(htmlItem).join('')}</div></section><div class="lista-fin"><button class="btn btn-wa" type="button" id="lista-compartir">Compartir por WhatsApp</button><button class="btn btn-secondary" type="button" id="lista-nueva">Empezar otra lista</button></div>`;
+        }
+        function vistaLista() {
+            const hayVoz = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+            const ejemplos = ['Leche Pil, pan, huevos y café', '2 arroz Grano de Oro, aceite Fino y azúcar', 'Pañales Huggies G, toallitas y shampoo Johnson'];
+            return `<div class="wrap fade-in"><div class="res-head" style="display:block"><a class="crumb" href="#/">${I.back.replace('<svg', '<svg width="16" height="16"')}Inicio</a><h1>Tu lista de compras</h1><p>Escribila o dictala como te salga. La buscamos en las ${S.chains.length || 5} cadenas y te decimos dónde te conviene.</p></div>
+                <form class="lista-form" id="lista-form"><label class="sr" for="lista-texto">Qué necesitás comprar</label><textarea id="lista-texto" maxlength="800" placeholder="Ej: 2 leches Pil de litro, arroz Grano de Oro, detergente Omo, papel higiénico">${esc(L.texto)}</textarea>
+                <div class="lista-acciones"><span class="cuenta num" id="lista-cuenta">${L.texto.length}/800</span>${hayVoz ? `<button class="btn btn-secondary" type="button" id="lista-mic">${I_MIC}<span>Dictar</span></button>` : ''}<button class="btn btn-primary" type="submit" id="lista-armar">Armar mi lista</button></div></form>
+                <div class="ejemplos"><span>Probá:</span>${ejemplos.map(e => `<button class="chip" type="button" data-ejemplo="${esc(e)}">${esc(e)}</button>`).join('')}</div>
+                <div id="lista-res">${htmlResultadoLista()}</div></div>`;
+        }
+        function pintarResultadoLista() { const el = $('#lista-res'); if (el) { el.innerHTML = htmlResultadoLista(); wireResultadoLista() } }
+        async function armarLista() {
+            const ta = $('#lista-texto'); const texto = ta.value.trim();
+            if (texto.length < 2) { ta.focus(); return }
+            L.texto = texto; L.cargando = true; L.error = ''; L.abierto = -1; pintarResultadoLista();
+            $('#lista-armar').disabled = true;
+            try {
+                const r = await fetch(FN_LISTA, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(FN_LISTA.startsWith(SUPABASE_URL) ? { apikey: API_KEY, Authorization: `Bearer ${API_KEY}` } : {}) }, body: JSON.stringify({ texto }) });
+                const d = await r.json().catch(() => ({}));
+                if (!r.ok) throw Error(d.error || `No pudimos armar la lista (error ${r.status}).`);
+                L.res = d; guardarLista();
+                registrar('lista', { resultados: d.items.length, extra: { encontrados: d.items.filter(i => i.elegido).length, modo: d.modo } });
+            } catch (e) {
+                L.error = /Failed to fetch|NetworkError|Load failed/i.test(e.message) ? 'No pudimos conectarnos. Revisá tu conexión y probá de nuevo.' : e.message;
+            }
+            L.cargando = false; $('#lista-armar') && ($('#lista-armar').disabled = false);
+            pintarResultadoLista();
+            const el = $('#lista-res'); if (el && L.res && !L.error) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        function wireResultadoLista() {
+            const items = L.res ? L.res.items : [];
+            document.querySelectorAll('[data-mas]').forEach(b => b.onclick = () => { const it = items[+b.dataset.mas]; it.cantidad = Math.min(50, it.cantidad + 1); guardarLista(); pintarResultadoLista() });
+            document.querySelectorAll('[data-menos]').forEach(b => b.onclick = () => { const it = items[+b.dataset.menos]; if (it.cantidad > 1) { it.cantidad--; guardarLista(); pintarResultadoLista() } });
+            document.querySelectorAll('[data-quitar]').forEach(b => b.onclick = () => { items.splice(+b.dataset.quitar, 1); L.abierto = -1; guardarLista(); pintarResultadoLista() });
+            document.querySelectorAll('[data-cambiar]').forEach(b => b.onclick = () => { const i = +b.dataset.cambiar; L.abierto = L.abierto === i ? -1 : i; pintarResultadoLista() });
+            document.querySelectorAll('[data-alt]').forEach(b => b.onclick = () => { const [i, j] = b.dataset.alt.split(':').map(Number); const it = items[i]; const viejo = it.elegido; it.elegido = it.alternativas[j]; it.alternativas[j] = viejo; L.abierto = -1; guardarLista(); pintarResultadoLista() });
+            const comp = $('#lista-compartir');
+            if (comp) comp.onclick = () => {
+                const t = calcularLista(items);
+                const lineas = items.filter(i => i.elegido).map(i => { const l = precioMin(i.elegido); return `• ${i.cantidad > 1 ? i.cantidad + ' × ' : ''}${i.elegido.nombre} — ${money(l.p * i.cantidad)} (${l.c})` });
+                const mejor = t.porCadena[0];
+                const texto = `Mi lista de compras (${fecha(S.fecha)}):\n${lineas.join('\n')}\n\nCombinando cadenas: ${money(t.comb)}` + (mejor ? `\nTodo en ${mejor.c}: ${money(mejor.total)}${mejor.tiene < t.n ? ` (tiene ${mejor.tiene} de ${t.n})` : ''}` : '') + `\n\nArmada con Price Intelligence: ${location.origin}${location.pathname}#/lista`;
+                registrar('compartir', { extra: { lista: true } });
+                window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+            };
+            const nueva = $('#lista-nueva');
+            if (nueva) nueva.onclick = () => { L.texto = ''; L.res = null; L.error = ''; guardarLista(); const ta = $('#lista-texto'); ta.value = ''; $('#lista-cuenta').textContent = '0/800'; pintarResultadoLista(); ta.focus(); window.scrollTo({ top: 0, behavior: 'smooth' }) };
+        }
+        let reconocedor = null;
+        function wireLista() {
+            const ta = $('#lista-texto');
+            ta.oninput = () => { L.texto = ta.value; $('#lista-cuenta').textContent = `${ta.value.length}/800`; guardarLista() };
+            $('#lista-form').onsubmit = e => { e.preventDefault(); armarLista() };
+            document.querySelectorAll('[data-ejemplo]').forEach(b => b.onclick = () => { ta.value = b.dataset.ejemplo; ta.oninput(); armarLista() });
+            const mic = $('#lista-mic');
+            if (mic) mic.onclick = () => {
+                if (reconocedor) { reconocedor.stop(); return }
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const rec = new SR(); reconocedor = rec;
+                rec.lang = 'es-BO'; rec.interimResults = true; rec.continuous = true;
+                const base = ta.value ? ta.value.replace(/\s*$/, ', ') : '';
+                rec.onresult = e => { let t = ''; for (const r of e.results) t += r[0].transcript; ta.value = (base + t).slice(0, 800); ta.oninput() };
+                const fin = () => { reconocedor = null; mic.classList.remove('escuchando'); mic.querySelector('span').textContent = 'Dictar' };
+                rec.onend = fin;
+                rec.onerror = ev => { fin(); if (ev.error === 'not-allowed') toast('Activá el permiso del micrófono para dictar') };
+                mic.classList.add('escuchando'); mic.querySelector('span').textContent = 'Escuchando… tocá para terminar';
+                try { rec.start() } catch (e) { fin() }
+            };
+            wireResultadoLista();
+        }
+
         /* ================= Render ================= */
         let renderSeq = 0;
         async function render() {
@@ -2082,13 +2561,13 @@
             navForward = false;
             document.body.classList.remove('has-buybar');
             // 1) esqueleto inmediato, 2) datos, 3) contenido real (si el usuario no se fue a otra ruta)
-            app.innerHTML = r.view === 'p' ? esqueletoProducto() : r.view === 'r' ? esqueletoResultados(r) : esqueletoHome();
+            app.innerHTML = r.view === 'p' ? esqueletoProducto() : r.view === 'r' ? esqueletoResultados(r) : r.view === 'lista' ? vistaLista() : esqueletoHome();
             if (adelante) window.scrollTo(0, 0);
             const qi = $('#q');
             if (document.activeElement !== qi) { qi.value = r.view === 'r' ? r.q : ''; $('#q-clear').hidden = !qi.value }
             let html;
             try {
-                html = await (r.view === 'p' ? vistaProducto(r.key) : r.view === 'r' ? vistaResultados(r) : vistaHome());
+                html = await (r.view === 'p' ? vistaProducto(r.key) : r.view === 'r' ? vistaResultados(r) : r.view === 'lista' ? (S.ready ? Promise.resolve() : cargarResumen().catch(() => { })).then(vistaLista) : vistaHome());
             } catch (e) {
                 if (seq !== renderSeq) return;
                 app.innerHTML = vistaError(e.message);
@@ -2100,8 +2579,10 @@
             document.body.classList.toggle('has-buybar', r.view === 'p' && !!$('#buybar'));
             if (r.view === 'p' && S._prod && S._prod.k === r.key) document.title = `${S._prod.nombre} — Price Intelligence`;
             else if (r.view === 'r') document.title = `${r.q ? r.q : r.cat ? catLabel(r.cat) : 'Productos'} — Price Intelligence`;
+            else if (r.view === 'lista') document.title = 'Tu lista de compras — Price Intelligence';
             else document.title = 'Price Intelligence — Compará precios en Santa Cruz';
             wire(r);
+            if (r.view === 'lista') wireLista();
             registrarVista(r);
             const m = mem[location.hash];
             if (!adelante && m) window.scrollTo(0, m.y); else if (adelante) window.scrollTo(0, 0);
