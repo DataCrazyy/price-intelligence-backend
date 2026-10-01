@@ -87,6 +87,7 @@ async function anotarUso(fila: Record<string, unknown>) {
 type Prod = { k: string; nombre: string; img: string | null; n: number; precio: number; listados: { c: string; p: number; r: number; u: string | null }[] };
 const SELECT = "k,nombre,img,n,precio,listados";
 
+let NN_OK = true;
 async function candidatos(busqueda: string, marca?: string): Promise<Prod[]> {
   let t = palabras(busqueda);
   if (marca) for (const w of palabras(marca)) if (!t.includes(w)) t.push(w);
@@ -94,13 +95,27 @@ async function candidatos(busqueda: string, marca?: string): Promise<Prod[]> {
   if (!t.length) return [];
   // Todas las palabras; si no hay nada, se afloja de a poco
   const intentos = [t, t.slice(0, 2), t.slice(0, 1)].filter((x, i, a) => x.length && a.findIndex((y) => y.join() === x.join()) === i);
+  // Primero palabras completas en el NOMBRE (nn): "pan" no trae "Tulipán".
+  // Si la columna nn todavía no existe o no hay nada, se usa la búsqueda vieja.
+  const palabra = (w: string) => `(^|[^a-z0-9])${w}(e|es|s)?([^a-z0-9]|$)`;
+  const filtros: string[] = [];
   for (const ws of intentos) {
-    const filtro = ws.length > 1 ? `and=(${ws.map((w) => `st.ilike.*${w}*`).join(",")})` : `st=ilike.*${ws[0]}*`;
-    const filas: Prod[] = await (await rest(`web_productos?select=${SELECT}&${filtro}&order=n.desc,best_off.desc&limit=40`)).json();
+    if (NN_OK) filtros.push(ws.map((w) => `nn=imatch.${encodeURIComponent(palabra(w))}`).join("&"));
+    filtros.push(ws.length > 1 ? `and=(${ws.map((w) => `st.ilike.*${w}*`).join(",")})` : `st=ilike.*${ws[0]}*`);
+  }
+  for (const filtro of filtros) {
+    let filas: Prod[];
+    try {
+      filas = await (await rest(`web_productos?select=${SELECT}&${filtro}&order=n.desc,best_off.desc&limit=40`)).json();
+    } catch (e) {
+      if (filtro.startsWith("nn=")) { NN_OK = false; continue }
+      throw e;
+    }
     if (filas.length) {
       const puntaje = (p: Prod) => {
         const nn = norm(p.nombre);
-        return t.filter((w) => nn.includes(w)).length * 3 + (nn.startsWith(t[0]) ? 2 : 0) + Math.min(p.n, 4) + (p.img ? 1 : 0);
+        const enPalabra = (w: string) => new RegExp(palabra(w)).test(nn);
+        return t.filter(enPalabra).length * 4 + t.filter((w) => nn.includes(w)).length + (nn.startsWith(t[0]) ? 3 : 0) + Math.min(p.n, 4) + (p.img ? 1 : 0);
       };
       return filas.sort((a, b) => puntaje(b) - puntaje(a)).slice(0, CANDIDATOS);
     }

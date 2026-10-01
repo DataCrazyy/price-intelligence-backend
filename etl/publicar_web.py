@@ -166,6 +166,7 @@ def calcular(filas, hist, fecha, macro_de, otros):
             "best_off": round(best_off, 2),
             "puntaje_oferta": round(min(best_off, 40) + (15 if n >= 2 and ahorro >= 0.5 else 0), 2),
             "cadenas": [x["cadena"] for x in lst],
+            "nn": norm_busqueda(nombre),                      # solo el nombre: la web busca acá primero
             "st": norm_busqueda(f"{nombre} {' '.join(x['cadena'] for x in lst)} {best['subcategoria'] or ''} {macro}"),
             "listados": [{"c": x["cadena"], "p": round(x["precio"], 2), "r": round(max(x["regular"] or 0, x["precio"]), 2), "u": x["url"]} for x in lst],
             "historial": historial,
@@ -176,22 +177,34 @@ def calcular(filas, hist, fecha, macro_de, otros):
 
 # ------------------------------------------------------------------ escritura
 COLUMNAS = ["k", "nombre", "macro", "img", "n", "precio", "precio_regular", "cadena", "url", "ahorro",
-            "cadena_cara", "best_off", "puntaje_oferta", "cadenas", "st", "listados", "historial"]
+            "cadena_cara", "best_off", "puntaje_oferta", "cadenas", "st", "nn", "listados", "historial"]
 
 
 def escribir(conn, filas_web, resumen):
     """Todo en UNA transacción: quien esté mirando la página ve los datos
     viejos hasta el commit, y después los nuevos -- nunca una mezcla."""
     cur = conn.cursor()
+    # Solo las columnas que existen (si todavía no se corrió db/migracion_busqueda.sql, falta `nn`)
+    cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name = 'web_productos'")
+    existentes = {r[0] for r in cur.fetchall()}
+    columnas = [c for c in COLUMNAS if c in existentes]
+    if "nn" not in existentes:
+        print("[publicar_web] AVISO: falta la columna nn -- corré db/migracion_busqueda.sql en Supabase para mejorar la búsqueda.")
     cur.execute("DELETE FROM web_productos")
-    valores = [tuple(psycopg2.extras.Json(f[c]) if c in ("listados", "historial") else f[c] for c in COLUMNAS) for f in filas_web]
+    valores = [tuple(psycopg2.extras.Json(f[c]) if c in ("listados", "historial") else f[c] for c in columnas) for f in filas_web]
     psycopg2.extras.execute_values(
-        cur, f"INSERT INTO web_productos ({', '.join(COLUMNAS)}) VALUES %s", valores, page_size=1000)
+        cur, f"INSERT INTO web_productos ({', '.join(columnas)}) VALUES %s", valores, page_size=1000)
     cur.execute("""
         INSERT INTO web_resumen (id, datos, actualizado_en) VALUES (1, %s, now())
         ON CONFLICT (id) DO UPDATE SET datos = EXCLUDED.datos, actualizado_en = now()
     """, (psycopg2.extras.Json(resumen),))
     conn.commit()
+
+
+def conectar():
+    """Conexión con keepalives para que el pooler de Supabase no la corte en lecturas largas."""
+    return psycopg2.connect(DATABASE_URL, connect_timeout=20, keepalives=1,
+                            keepalives_idle=30, keepalives_interval=10, keepalives_count=5)
 
 
 def publicar(dry_run=False):
@@ -201,9 +214,23 @@ def publicar(dry_run=False):
     t0 = time.time()
     mapa, palabras, otros = cargar_categorias()
     macro_de = crear_macro(mapa, palabras, otros)
-    conn = psycopg2.connect(DATABASE_URL)
+    # Supabase a veces corta la conexión ("SSL error: unexpected eof"):
+    # se reintenta la lectura hasta 3 veces con una conexión nueva.
+    for intento in range(1, 4):
+        conn = None
+        try:
+            conn = conectar()
+            filas, hist, fecha, cadenas = leer(conn)
+            break
+        except psycopg2.OperationalError as e:
+            if conn is not None:
+                try: conn.close()
+                except Exception: pass
+            if intento == 3:
+                raise
+            print(f"[publicar_web] se cortó la conexión ({str(e).strip()[:80]}); reintento {intento + 1}/3 en {5 * intento}s…")
+            time.sleep(5 * intento)
     try:
-        filas, hist, fecha, cadenas = leer(conn)
         filas_web, cat_count = calcular(filas, hist, fecha, macro_de, otros)
         resumen = {
             "fecha": fecha,
