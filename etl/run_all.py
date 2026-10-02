@@ -234,6 +234,17 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
 
         # La página web lee de Supabase (tabla web_productos), no del JSON.
         # Si todavía no se corrió db/migracion_web.sql, avisa y sigue.
+        # Categorías: la IA clasifica solo los productos nuevos (centavos por corrida).
+        log("Clasificando productos nuevos en categorías ...")
+        try:
+            import clasificar
+            r = clasificar.clasificar()
+            log(f"  {r['clasificados']} clasificados, {r['pendientes']} pendientes")
+        except SystemExit as e:
+            log(f"  ADVERTENCIA: no se clasificó ({e}).")
+        except Exception as e:
+            log(f"  ADVERTENCIA: no se pudo clasificar ({e}). ¿Corriste db/migracion_categorias.sql en Supabase?")
+
         log("Publicando web_productos para la página ...")
         try:
             import publicar_web

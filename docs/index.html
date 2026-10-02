@@ -1079,6 +1079,69 @@
         .p-cat {
             font-size: 13px;
             font-weight: 600;
+            color: var(--text-2)
+        }
+
+        .p-cat a {
+            color: var(--accent)
+        }
+
+        .p-cat a:hover {
+            text-decoration: underline
+        }
+
+        /* Subcategorías: pastillas suaves, se distinguen de los filtros (negros) */
+        .subs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            margin: 12px -18px 0;
+            padding: 2px 18px 4px;
+            scroll-padding-inline: 18px
+        }
+
+        .subs::-webkit-scrollbar {
+            display: none
+        }
+
+        .sub {
+            flex: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: background .15s, color .15s, border-color .15s, transform .12s var(--ease)
+        }
+
+        .sub:hover {
+            border-color: var(--accent)
+        }
+
+        .sub:active {
+            transform: scale(.96)
+        }
+
+        .sub-n {
+            font-size: 12px;
+            color: var(--text-2)
+        }
+
+        .sub[aria-pressed="true"] {
+            background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 600
+        }
+
+        .sub[aria-pressed="true"] .sub-n {
             color: var(--accent)
         }
 
@@ -2910,7 +2973,7 @@
         const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
         const fecha = iso => { if (!iso) return ''; const [y, m, d] = iso.split('-').map(Number); return `${d} de ${MESES[m - 1]}` };
         const fechaCorta = iso => { const [y, m, d] = iso.split('-').map(Number); return `${d} ${MESES[m - 1].slice(0, 3)}` };
-        const OTROS = (window.CategoriasMacro && CategoriasMacro.CATEGORIA_OTROS) || 'Otros / Promociones';
+        let OTROS = 'Otros';   // lo confirma web_resumen.datos.otros (etl/taxonomia.py)
         const macroCategoria = x => window.CategoriasMacro ? CategoriasMacro.macroCategoria(x) : OTROS;
 
         // Fotos: se piden ya reducidas (CDN de Shopify o proxy de resize) para que carguen rápido en celular.
@@ -2954,20 +3017,30 @@
             'Escolar e Infantil': ic('<path d="M7 8a5 5 0 0 1 10 0v11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V8Z"/><path d="M9 3h6v5H9z"/><line x1="9" y1="14" x2="15" y2="14"/>'),
             'Supermercado': ic('<path d="M4 9 5 4h14l1 5"/><path d="M4 9a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0"/><path d="M5 9v10h14V9"/>'),
             'Mascotas': ic('<circle cx="7" cy="8" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="17" cy="8" r="1.6"/><path d="M8 14c0-2 2-3 4-3s4 1 4 3-2 5-4 5-4-3-4-5Z"/>'),
-            [OTROS]: ic('<path d="M3 11 11 3h7a2 2 0 0 1 2 2v7l-8 8a2 2 0 0 1-2.8 0L3 13.8a2 2 0 0 1 0-2.8Z"/><circle cx="15" cy="9" r="1.3"/>'),
+            'Lácteos y Huevos': ic('<path d="M8 3h8v4l2 2v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9l2-2V3Z"/><path d="M8 3 12 6 16 3"/>'),
+            'Despensa': ic('<path d="M4 9h16l-1.5 10.2A2 2 0 0 1 16.5 21h-9a2 2 0 0 1-2-1.8L4 9Z"/><path d="M9 9 10.5 4"/><path d="M15 9 13.5 4"/>'),
+            'Snacks y Dulces': ic('<circle cx="12" cy="12" r="4.2"/><path d="M8.9 9.1 4.5 6.5l.6 5.1M15.1 14.9l4.4 2.6-.6-5.1"/><path d="M10.6 10.6l2.8 2.8"/>'),
+            'Frescos y Congelados': ic('<path d="M12 8c-3-2.2-7.5-.2-7.5 4.8 0 4.4 3 8.2 5.2 8.2 1 0 1.5-.5 2.3-.5s1.3.5 2.3.5c2.2 0 5.2-3.8 5.2-8.2 0-5-4.5-7-7.5-4.8Z"/><path d="M12 8c0-2.2 1.2-4 3.5-4.5"/>'),
+            'Limpieza': ic('<path d="M10 2h3v3h-3z"/><path d="M8 9V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/><path d="M8 9h8l1 11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L8 9Z"/><path d="M15 3h3l2 2"/>'),
+            'Hogar y Bazar': ic('<path d="M4 11 12 4l8 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>'),
+            'Bebé': ic('<path d="M9 10h6v9a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-9Z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/><line x1="9" y1="14" x2="15" y2="14"/>'),
+            'Farmacia': ic('<rect x="3" y="8" width="18" height="8" rx="4"/><line x1="12" y1="8" x2="12" y2="16"/>'),
+            'Escolar y Juguetes': ic('<path d="M7 8a5 5 0 0 1 10 0v11a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V8Z"/><path d="M9 3h6v5H9z"/><line x1="9" y1="14" x2="15" y2="14"/>'),
+            'Otros': ic('<path d="M3 11 11 3h7a2 2 0 0 1 2 2v7l-8 8a2 2 0 0 1-2.8 0L3 13.8a2 2 0 0 1 0-2.8Z"/><circle cx="15" cy="9" r="1.3"/>'),
+            'Otros / Promociones': ic('<path d="M3 11 11 3h7a2 2 0 0 1 2 2v7l-8 8a2 2 0 0 1-2.8 0L3 13.8a2 2 0 0 1 0-2.8Z"/><circle cx="15" cy="9" r="1.3"/>'),
         };
         const catIcon = c => CAT_ICON[c] || I.bag;
-        const catLabel = c => c === OTROS ? 'Otros' : c;
+        const catLabel = c => c === OTROS || c === 'Otros / Promociones' ? 'Otros' : c;
 
         /* ================= Estado ================= */
-        const S = { ready: false, error: null, fecha: '', chains: [], cats: [], catCount: {}, total: 0, ofertas: 0 };
+        const S = { ready: false, error: null, fecha: '', chains: [], cats: [], catCount: {}, subs: {}, total: 0, ofertas: 0 };
         const mem = {};            // posición de scroll y cantidad mostrada por ruta, para volver al mismo lugar
         let navForward = true, navigated = false;
 
         /* ================= Datos (Supabase) ================= */
         // Solo lectura: la clave "anon" es pública por diseño y únicamente puede leer
         // web_productos y web_resumen (ver db/migracion_web.sql).
-        const CARD = 'k,nombre,macro,img,n,precio,precio_regular,cadena,ahorro,best_off';
+        let CARD = 'k,nombre,macro,img,n,precio,precio_regular,cadena,ahorro,best_off';   // + sub si ya existe (ver cargarResumen)
         const cacheApi = new Map();
         function api(path, count = false) {
             const clave = path + (count ? '#c' : '');
@@ -2989,7 +3062,7 @@
         const pctOff = x => enOferta(x) ? (1 - x.precio_oferta / x.precio_regular) * 100 : 0;
         function aGrupo(r) {
             const best = { precio_oferta: +r.precio, precio_regular: +r.precio_regular, cadena: r.cadena, url: r.url };
-            const g = { k: r.k, nombre: r.nombre, macro: r.macro, img: r.img || '', n: r.n, best, ahorro: +r.ahorro, bestOff: +r.best_off, nn: norm(r.nombre) };
+            const g = { k: r.k, nombre: r.nombre, macro: r.macro, sub: r.sub || '', img: r.img || '', n: r.n, best, ahorro: +r.ahorro, bestOff: +r.best_off, nn: norm(r.nombre) };
             if (r.listados) {
                 g.list = r.listados.map(x => ({ cadena: x.c, precio_oferta: +x.p, precio_regular: +x.r, url: x.u }));
                 g.best = { ...g.list[0], url: g.list[0].url || r.url };
@@ -3003,8 +3076,18 @@
             const d = (data[0] || {}).datos || {};
             S.fecha = d.fecha || '';
             S.chains = (d.cadenas || []).slice().sort((a, b) => a.localeCompare(b, 'es'));
+            if (d.otros) OTROS = d.otros;
+            // La columna sub llega con db/migracion_categorias.sql: si todavía no está, la página sigue igual que antes
+            if (d.subs && Object.keys(d.subs).length) {
+                try { await api('web_productos?select=sub&limit=1'); S.conSub = true; if (!CARD.includes(',sub,')) CARD = CARD.replace('macro,', 'macro,sub,') } catch (e) { S.conSub = false }
+            }
             S.catCount = d.cats || {};
-            S.cats = Object.keys(S.catCount).sort((a, b) => (a === OTROS) - (b === OTROS) || S.catCount[b] - S.catCount[a]);
+            // {categoría: [[subcategoría, n], ...]} -> {categoría: {subcategoría: n}} en el orden de la taxonomía
+            S.subs = {};
+            for (const [c, v] of Object.entries(d.subs || {})) S.subs[c] = Array.isArray(v) ? Object.fromEntries(v) : v;
+            // Orden fijo de la taxonomía (como los pasillos del súper); si no viene, por cantidad
+            S.cats = (d.orden && d.orden.length ? d.orden.filter(c => c in S.catCount) : Object.keys(S.catCount))
+                .sort((a, b) => (a === OTROS) - (b === OTROS) || (d.orden && d.orden.length ? 0 : S.catCount[b] - S.catCount[a]));
             S.total = d.total || 0;
             S.ofertas = d.ofertas || 0;
             S.ready = true;
@@ -3014,6 +3097,7 @@
         function filtros(r) {
             const f = [];
             if (r.cat) f.push('macro=eq.' + enc(r.cat));
+            if (r.cat && r.sub && S.conSub) f.push('sub=eq.' + enc(r.sub));
             if (r.cadena) f.push('cadenas=cs.' + enc(`{"${r.cadena}"}`));
             if (r.oferta) f.push('best_off=gte.1');
             if (r.multi) f.push('n=gte.2');
@@ -3056,9 +3140,13 @@
         async function facetas(q) {
             const t = tokens(q || '');
             if (!t.length) return {};
-            const { data } = await apiTexto('web_productos?select=macro', q, '&limit=4000');
-            const c = {}; for (const x of data) c[x.macro] = (c[x.macro] || 0) + 1;
-            return c;
+            const { data } = await apiTexto(`web_productos?select=macro${S.conSub ? ',sub' : ''}`, q, '&limit=4000');
+            const c = {}, subs = {};
+            for (const x of data) {
+                c[x.macro] = (c[x.macro] || 0) + 1;
+                if (x.sub) { const m = subs[x.macro] || (subs[x.macro] = {}); m[x.sub] = (m[x.sub] || 0) + 1 }
+            }
+            return { cats: c, subs };
         }
         async function buscar(r, n) {
             const base = `web_productos?select=${CARD}&${filtros(r).join('&')}`;
@@ -3118,7 +3206,7 @@
             if (h.startsWith('/lista')) return { view: 'lista' };
             if (h.startsWith('/buscar')) {
                 const qs = new URLSearchParams(location.hash.split('?')[1] || '');
-                return { view: 'r', q: qs.get('q') || '', cat: qs.get('cat') || '', cadena: qs.get('cadena') || '', oferta: qs.get('oferta') === '1', multi: qs.get('multi') === '1', orden: qs.get('orden') || '' };
+                return { view: 'r', q: qs.get('q') || '', cat: qs.get('cat') || '', sub: qs.get('sub') || '', cadena: qs.get('cadena') || '', oferta: qs.get('oferta') === '1', multi: qs.get('multi') === '1', orden: qs.get('orden') || '' };
             }
             return { view: 'home' };
         }
@@ -3126,6 +3214,7 @@
             const qs = new URLSearchParams();
             if (o.q) qs.set('q', o.q);
             if (o.cat) qs.set('cat', o.cat);
+            if (o.cat && o.sub) qs.set('sub', o.sub);
             if (o.cadena) qs.set('cadena', o.cadena);
             if (o.oferta) qs.set('oferta', '1');
             if (o.multi) qs.set('multi', '1');
@@ -3200,7 +3289,7 @@
         }
 
         const ORDENES = [['', 'Relevancia'], ['precio', 'Menor precio'], ['ahorro', 'Mayor ahorro entre cadenas'], ['descuento', 'Mayor descuento'], ['az', 'Nombre A–Z']];
-        function tituloResultados(r) { return r.q ? `“${r.q}”` : r.cat ? catLabel(r.cat) : r.oferta ? 'Ofertas de hoy' : r.multi ? 'Los más comparados' : 'Todos los productos' }
+        function tituloResultados(r) { return r.q ? `“${r.q}”` : r.cat ? (r.sub || catLabel(r.cat)) : r.oferta ? 'Ofertas de hoy' : r.multi ? 'Los más comparados' : 'Todos los productos' }
         function cabeceraResultados(r, sub, conOrden) {
             const sort = conOrden ? `<label class="sort"><span class="sr">Ordenar</span><select id="orden" aria-label="Ordenar resultados">${ORDENES.map(([v, l]) => `<option value="${v}"${v === r.orden ? ' selected' : ''}>${l}</option>`).join('')}</select>${I.down}</label>` : '';
             return `<div class="wrap res-head fade-in"><div><a class="crumb" href="#/">${I.back.replace('<svg', '<svg width="16" height="16"')}Inicio</a><h1>${esc(tituloResultados(r))}</h1><p class="num">${sub}</p></div>${sort}</div>`;
@@ -3215,6 +3304,15 @@
             ];
             return `<div class="toolbar"><div class="wrap"><div class="chips" aria-label="Filtros">${chips.join('')}</div></div></div>`;
         }
+        // Subcategorías de la categoría elegida, en el orden de la taxonomía ("Leche", "Yogurt"...)
+        function barraSubs(r, subs) {
+            const orden = Object.keys(S.subs[r.cat] || {});
+            const lista = Object.keys(subs).sort((a, b) => (orden.indexOf(a) + 1 || 999) - (orden.indexOf(b) + 1 || 999));
+            if (!S.conSub || !r.cat || lista.length < 2 && !r.sub) return '';
+            const total = Object.values(subs).reduce((a, b) => a + b, 0);
+            const pill = (s, l, n) => `<a class="sub" href="${hrefBuscar({ ...r, sub: s })}" aria-pressed="${(r.sub || '') === s}">${esc(l)}<span class="sub-n num">${int(n)}</span></a>`;
+            return `<div class="wrap"><nav class="subs" aria-label="Subcategorías de ${esc(catLabel(r.cat))}">${pill('', 'Todo', total)}${lista.map(s => pill(s, s, subs[s])).join('')}</nav></div>`;
+        }
         function esqueletoResultados(r) {
             return cabeceraResultados(r, 'Buscando…', false) + (S.ready ? barraFiltros(r) : '') + `<div class="wrap"><div class="grid">${skCards(8)}</div></div>`;
         }
@@ -3225,15 +3323,21 @@
             const res = await buscar(r, n);
             S._ultimoTotal = res.total || 0;
             let html = cabeceraResultados(r, `${int(res.total)} ${res.total === 1 ? 'producto' : 'productos'}${r.cadena ? ' en ' + esc(r.cadena) : ''}`, true);
+            let subsCat = r.cat ? S.subs[r.cat] || {} : {};
             if (r.q) {
-                let fc = {}; try { fc = await facetas(r.q) } catch (e) { }
-                const cats = Object.keys(fc).sort((a, b) => (a === OTROS) - (b === OTROS) || fc[b] - fc[a]);
+                let fc = { cats: {}, subs: {} }; try { fc = await facetas(r.q) } catch (e) { }
+                const cats = Object.keys(fc.cats).sort((a, b) => (a === OTROS) - (b === OTROS) || fc.cats[b] - fc.cats[a]);
                 if (cats.length > 1 || r.cat) {
-                    const total = Object.values(fc).reduce((a, b) => a + b, 0);
-                    const tile = (c, l, icono, n) => `<a class="pf-cat" href="${hrefBuscar({ ...r, cat: c })}" aria-pressed="${(r.cat || '') === c}"><span class="pf-cat-ico">${icono}</span><span class="pf-cat-txt">${esc(l)}</span><span class="pf-cat-n num">${int(n)}</span></a>`;
-                    html += `<div class="wrap"><div class="pf-cats facetas" role="group" aria-label="Filtrar por categoría">${tile('', 'Todas', I.grid, total)}${cats.map(c => tile(c, catLabel(c), catIcon(c), fc[c])).join('')}</div></div>`;
+                    const total = Object.values(fc.cats).reduce((a, b) => a + b, 0);
+                    const tile = (c, l, icono, n) => `<a class="pf-cat" href="${hrefBuscar({ ...r, cat: c, sub: '' })}" aria-pressed="${(r.cat || '') === c}"><span class="pf-cat-ico">${icono}</span><span class="pf-cat-txt">${esc(l)}</span><span class="pf-cat-n num">${int(n)}</span></a>`;
+                    html += `<div class="wrap"><div class="pf-cats facetas" role="group" aria-label="Filtrar por categoría">${tile('', 'Todas', I.grid, total)}${cats.map(c => tile(c, catLabel(c), catIcon(c), fc.cats[c])).join('')}</div></div>`;
                 }
+                // Con búsqueda: las subcategorías de la categoría elegida (o de la única que hay)
+                const catSub = r.cat || (cats.length === 1 ? cats[0] : '');
+                subsCat = catSub ? fc.subs[catSub] || {} : {};
+                if (!r.cat && catSub) subsCat = {};   // sin categoría elegida no se filtra por subcategoría
             }
+            html += barraSubs(r, subsCat);
             html += barraFiltros(r);
             if (!res.total) return html + `<div class="wrap empty"><h2>No encontramos productos</h2><p>Probá con otra palabra o quitá algún filtro.</p><a class="btn btn-secondary" href="#/">Volver al inicio</a></div>`;
             const disponibles = res.local ? res.local.length : res.total;
@@ -3287,7 +3391,7 @@
         }
         async function similares(g) {
             const pal = g.nn.replace(/[^a-z0-9 ]/g, ' ').split(' ').filter(w => w.length >= 4 && !/^\d/.test(w));
-            const base = `web_productos?select=${CARD}&macro=eq.${enc(g.macro)}&k=neq.${enc(g.k)}&img=not.is.null&order=n.desc,ahorro.desc&limit=12`;
+            const base = `web_productos?select=${CARD}&macro=eq.${enc(g.macro)}${g.sub && S.conSub ? '&sub=eq.' + enc(g.sub) : ''}&k=neq.${enc(g.k)}&img=not.is.null&order=n.desc,ahorro.desc&limit=12`;
             let rows = pal[0] ? (await apiTexto(base, pal[0])).data : [];
             if (rows.length < 6) rows = rows.concat((await api(base)).data.filter(x => !rows.some(y => y.k === x.k))).slice(0, 12);
             return rows.map(aGrupo);
@@ -3318,7 +3422,7 @@
             railId = 0;
             let html = `<div class="wrap fade-in"><div class="p-top"><button class="icon-btn" type="button" id="back">${I.back}Volver</button><button class="icon-btn" type="button" id="share" style="padding:0 10px">${I.share}Compartir</button></div>`;
             html += `<div class="p-grid">${media}<div>`;
-            html += `<a class="p-cat" href="${hrefBuscar({ cat: g.macro })}">${esc(catLabel(g.macro))}</a><h1 class="p-name">${esc(g.nombre)}</h1>`;
+            html += `<p class="p-cat"><a href="${hrefBuscar({ cat: g.macro })}">${esc(catLabel(g.macro))}</a>${g.sub ? `<span aria-hidden="true"> › </span><a href="${hrefBuscar({ cat: g.macro, sub: g.sub })}">${esc(g.sub)}</a>` : ''}</p><h1 class="p-name">${esc(g.nombre)}</h1>`;
             html += `<div class="p-best"><div class="p-price num"><strong>${money(b.precio_oferta)}</strong>${was}</div><p class="p-where">en <b>${esc(b.cadena)}</b>${g.n > 1 ? ` · comparado en ${g.n} cadenas` : ''}</p>${save}</div>`;
             html += `<button class="btn btn-secondary btn-agregar-lista" type="button" id="agregar-lista">＋ Agregar a mi lista</button>`;
             html += veredicto(g);
@@ -3326,7 +3430,7 @@
             html += rango(g);
             html += `<section class="p-block"><details class="hist"><summary>Historial de precios ${I.down}</summary><div class="hist-body">${grafico(g)}</div></details></section>`;
             html += `</div></div>`;
-            html += rail('También te puede interesar', '', sim, hrefBuscar({ cat: g.macro }));
+            html += rail('También te puede interesar', '', sim, hrefBuscar({ cat: g.macro, sub: g.sub }));
             html += `</div>`;
             html += `<div class="buybar" id="buybar"><div class="buybar-info num"><b>${money(b.precio_oferta)}</b><small>en ${esc(b.cadena)}${g.n > 1 ? ' · el más barato' : ''}</small></div><a class="btn btn-primary" data-tienda="${esc(b.cadena)}" data-precio="${b.precio_oferta}" href="${esc(b.url || '#')}" target="_blank" rel="noopener">Ir a la tienda ${I.ext}</a></div>`;
             return html;

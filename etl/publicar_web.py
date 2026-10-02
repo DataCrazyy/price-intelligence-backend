@@ -30,6 +30,8 @@ import psycopg2
 import psycopg2.extras
 from dotenv import load_dotenv
 
+import taxonomia
+
 load_dotenv()
 DATABASE_URL = os.environ.get("DATABASE_URL")
 CATEGORIAS_JS = Path(__file__).resolve().parent.parent / "docs" / "categorias.js"
@@ -99,15 +101,22 @@ def leer(conn):
     fecha = cur.fetchone()["f"]
     cur.execute("SELECT coalesce(array_agg(nombre ORDER BY nombre), '{}') AS c FROM cadenas WHERE activo")
     cadenas = list(cur.fetchone()["c"])
-    return filas, hist, (fecha.isoformat() if fecha else None), cadenas
+    # Categorías propias (etl/clasificar.py). Si la tabla no existe todavía, se usa la regla vieja.
+    clasif = {}
+    cur.execute("SELECT to_regclass('producto_categoria') IS NOT NULL AS hay")
+    if cur.fetchone()["hay"]:
+        cur.execute("SELECT k, cat, sub FROM producto_categoria")
+        clasif = {r["k"]: (r["cat"], r["sub"]) for r in cur.fetchall() if taxonomia.valida(r["cat"], r["sub"])}
+    return filas, hist, (fecha.isoformat() if fecha else None), cadenas, clasif
 
 
-def calcular(filas, hist, fecha, macro_de, otros):
+def calcular(filas, hist, fecha, macro_de, otros, clasif=None):
+    clasif = clasif or {}
     grupos = defaultdict(list)
     for f in filas:
         grupos[f["k"]].append(f)
 
-    filas_web, cat_count = [], defaultdict(int)
+    filas_web, cat_count, sub_count = [], defaultdict(int), defaultdict(lambda: defaultdict(int))
     for k, lst in grupos.items():
         # una fila por cadena (la más barata si la cadena lo lista dos veces)
         por_cadena = {}
@@ -130,6 +139,12 @@ def calcular(filas, hist, fecha, macro_de, otros):
                 if m != otros:
                     macro = m
                     break
+        # La clasificación propia manda; si el producto todavía no la tiene,
+        # se traduce la regla vieja a las categorías nuevas (sin subcategoría).
+        if k in clasif:
+            macro, sub = clasif[k]
+        else:
+            macro, sub = taxonomia.DESDE_REGLA.get(macro, taxonomia.OTROS), None
 
         def off(x):
             return (1 - x["precio"] / x["regular"]) * 100 if x["regular"] and x["regular"] > x["precio"] else 0.0
@@ -155,6 +170,7 @@ def calcular(filas, hist, fecha, macro_de, otros):
             "k": k,
             "nombre": nombre,
             "macro": macro,
+            "sub": sub,
             "img": img,
             "n": n,
             "precio": round(best["precio"], 2),
@@ -167,16 +183,21 @@ def calcular(filas, hist, fecha, macro_de, otros):
             "puntaje_oferta": round(min(best_off, 40) + (15 if n >= 2 and ahorro >= 0.5 else 0), 2),
             "cadenas": [x["cadena"] for x in lst],
             "nn": norm_busqueda(nombre),                      # solo el nombre: la web busca acá primero
-            "st": norm_busqueda(f"{nombre} {' '.join(x['cadena'] for x in lst)} {best['subcategoria'] or ''} {macro}"),
+            "st": norm_busqueda(f"{nombre} {' '.join(x['cadena'] for x in lst)} {best['subcategoria'] or ''} {macro} {sub or ''}"),
             "listados": [{"c": x["cadena"], "p": round(x["precio"], 2), "r": round(max(x["regular"] or 0, x["precio"]), 2), "u": x["url"]} for x in lst],
             "historial": historial,
         })
         cat_count[macro] += 1
-    return filas_web, dict(cat_count)
+        if sub:
+            sub_count[macro][sub] += 1
+    # subcategorías en el orden de la taxonomía
+    # como lista [[sub, n], ...]: jsonb no respeta el orden de las claves y acá el orden importa
+    subs = {c: [[s, sub_count[c][s]] for s in taxonomia.TAXONOMIA.get(c, {}) if sub_count[c].get(s)] for c in sub_count}
+    return filas_web, dict(cat_count), subs
 
 
 # ------------------------------------------------------------------ escritura
-COLUMNAS = ["k", "nombre", "macro", "img", "n", "precio", "precio_regular", "cadena", "url", "ahorro",
+COLUMNAS = ["k", "nombre", "macro", "sub", "img", "n", "precio", "precio_regular", "cadena", "url", "ahorro",
             "cadena_cara", "best_off", "puntaje_oferta", "cadenas", "st", "nn", "listados", "historial"]
 
 
@@ -190,6 +211,8 @@ def escribir(conn, filas_web, resumen):
     columnas = [c for c in COLUMNAS if c in existentes]
     if "nn" not in existentes:
         print("[publicar_web] AVISO: falta la columna nn -- corré db/migracion_busqueda.sql en Supabase para mejorar la búsqueda.")
+    if "sub" not in existentes:
+        print("[publicar_web] AVISO: falta la columna sub -- corré db/migracion_categorias.sql en Supabase.")
     cur.execute("DELETE FROM web_productos")
     valores = [tuple(psycopg2.extras.Json(f[c]) if c in ("listados", "historial") else f[c] for c in columnas) for f in filas_web]
     psycopg2.extras.execute_values(
@@ -220,7 +243,7 @@ def publicar(dry_run=False):
         conn = None
         try:
             conn = conectar()
-            filas, hist, fecha, cadenas = leer(conn)
+            filas, hist, fecha, cadenas, clasif = leer(conn)
             break
         except psycopg2.OperationalError as e:
             if conn is not None:
@@ -231,16 +254,22 @@ def publicar(dry_run=False):
             print(f"[publicar_web] se cortó la conexión ({str(e).strip()[:80]}); reintento {intento + 1}/3 en {5 * intento}s…")
             time.sleep(5 * intento)
     try:
-        filas_web, cat_count = calcular(filas, hist, fecha, macro_de, otros)
+        filas_web, cat_count, subs = calcular(filas, hist, fecha, macro_de, otros, clasif)
         resumen = {
             "fecha": fecha,
             "cadenas": cadenas,
             "total": len(filas_web),
             "ofertas": sum(1 for f in filas_web if f["best_off"] >= 1),
             "cats": cat_count,
+            "subs": subs,                                   # {categoría: [[subcategoría, productos], ...]}
+            "orden": [c for c in taxonomia.CATEGORIAS if c in cat_count],
+            "otros": taxonomia.OTROS,
         }
         print(f"[publicar_web] {len(filas)} listados -> {len(filas_web)} productos · "
               f"{sum(1 for f in filas_web if f['n'] >= 2)} en 2+ cadenas · {resumen['ofertas']} con descuento · datos del {fecha}")
+        sin = sum(1 for f in filas_web if not f["sub"])
+        print(f"[publicar_web] categorías: {len(filas_web) - sin} con categoría propia · {sin} con la regla vieja"
+              + (" (corré python clasificar.py)" if sin else ""))
         for c, n in sorted(cat_count.items(), key=lambda x: -x[1]):
             print(f"    {n:>6}  {c}")
         if dry_run:
