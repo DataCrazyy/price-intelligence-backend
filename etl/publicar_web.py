@@ -72,6 +72,20 @@ def crear_macro(mapa, palabras, otros):
     return macro
 
 
+def origen_img(url):
+    """Hipermaxi guarda sus fotos detrás de su proxy ("/api/image-proxy?url=…" o
+    "/_next/image?url=…"), que desde otra web no funciona: devuelve la URL real."""
+    from urllib.parse import unquote
+    u = (url or "").strip()
+    for _ in range(3):
+        m = re.match(r"^(?:https?://(?:www\.)?hipermaxi\.com)?/(?:_next/image|api/image-proxy)\?(?:[^#]*?&)?url=(.*)$", u, re.I)
+        if not m:
+            break
+        resto = m.group(1)
+        u = resto if re.match(r"^https?://", resto, re.I) else unquote(resto.split("&")[0])
+    return None if not u or u.startswith("/") else u
+
+
 def norm_busqueda(texto):
     """Igual que norm() de la página: minúsculas, sin acentos, espacios simples."""
     t = unicodedata.normalize("NFD", str(texto or ""))
@@ -153,7 +167,7 @@ def calcular(filas, hist, fecha, macro_de, otros, clasif=None):
         ahorro = round(worst["precio"] - best["precio"], 2)
         n = len(lst)
         nombre = (best["nombre"] or "").strip()
-        img = next((x["imagen"] for x in lst if x["imagen"]), None)
+        img = next((u for u in (origen_img(x["imagen"]) for x in lst) if u), None)
 
         historial = []
         for x in lst:

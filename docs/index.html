@@ -3,6 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://images.weserv.nl" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
+    <link rel="dns-prefetch" href="https://images.weserv.nl">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <title>Price Intelligence — Compará precios en Santa Cruz</title>
     <meta name="description" content="Compará precios de supermercados y farmacias de Santa Cruz, Bolivia: Fidalga, Hipermaxi, Amarket, Farmacorp y Farmacias Chávez.">
@@ -3834,6 +3838,233 @@
                 transform: none
             }
         }
+
+        /* Fotos: aparecen suave cuando terminan de cargar */
+        .thumb img, .pi-foto img, .p-media img, .pd-media img {
+            opacity: 0;
+            transition: opacity .25s ease
+        }
+
+        .thumb img.ok, .pi-foto img.ok, .p-media img.ok, .pd-media img.ok {
+            opacity: 1
+        }
+
+        /* ============ Panel: producto actual más grande ============ */
+        .panel-actual {
+            grid-template-columns: 88px minmax(0, 1fr) !important;
+            gap: 14px !important;
+            padding: 12px;
+            border-radius: 16px;
+            background: var(--surface-2);
+            border: 1px solid var(--line)
+        }
+
+        .panel-actual .pi-foto {
+            width: 88px;
+            height: 88px;
+            border-radius: 14px;
+            background: #fff
+        }
+
+        .panel-actual .pi-foto svg {
+            width: 34px;
+            height: 34px
+        }
+
+        .panel-actual .pi-name {
+            font-size: 16px;
+            font-weight: 600
+        }
+
+        .panel-actual .pi-sub {
+            font-size: 13px;
+            white-space: normal
+        }
+
+        /* ============ Panel: detalle del producto antes de elegirlo ============ */
+        .sheet-head .panel-volver {
+            display: none
+        }
+
+        .sheet.en-detalle .sheet-head .panel-volver {
+            display: inline-flex
+        }
+
+        .pd {
+            display: grid;
+            gap: 16px
+        }
+
+        .pd-media {
+            position: relative;
+            height: 240px;
+            border-radius: 20px;
+            background: #fff;
+            border: 1px solid var(--line);
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            color: #C7C7CC
+        }
+
+        .pd-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 14px
+        }
+
+        .pd-media>svg {
+            width: 64px;
+            height: 64px
+        }
+
+        .pd-cat {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent)
+        }
+
+        .pd-nombre {
+            font-size: 20px;
+            line-height: 1.25;
+            font-weight: 700;
+            letter-spacing: -.015em;
+            margin-top: 4px
+        }
+
+        .pd-mejor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px
+        }
+
+        .pd-precio {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -.02em
+        }
+
+        .pd-mejor .cad-tag {
+            height: 26px;
+            font-size: 13.5px
+        }
+
+        .pd-nota {
+            margin-top: 6px;
+            font-size: 14px;
+            color: var(--text-2)
+        }
+
+        .pd-nota.ok {
+            color: var(--good);
+            font-weight: 600
+        }
+
+        .pd-nota.caro {
+            color: #C9341F;
+            font-weight: 600
+        }
+
+        .pd-tit {
+            margin-top: 18px;
+            font-size: 12.5px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            color: var(--text-2)
+        }
+
+        .pd-cads {
+            list-style: none;
+            margin: 8px 0 0;
+            padding: 0;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            overflow: hidden
+        }
+
+        .pd-cads li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-top: 1px solid var(--line);
+            font-size: 15px
+        }
+
+        .pd-cads li:first-child {
+            border-top: 0
+        }
+
+        .pd-cads li .c {
+            flex: 1;
+            font-weight: 600
+        }
+
+        .pd-cads li s {
+            color: var(--text-2);
+            font-size: 13px
+        }
+
+        .pd-cads li b {
+            font-weight: 700
+        }
+
+        .pd-cads li.mejor {
+            background: color-mix(in srgb, var(--good) 8%, var(--surface))
+        }
+
+        .pd-cads li .badge-ok {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--good);
+            background: color-mix(in srgb, var(--good) 14%, transparent);
+            padding: 3px 8px;
+            border-radius: 999px
+        }
+
+        .pd-acciones {
+            position: sticky;
+            bottom: -22px;
+            display: flex;
+            gap: 10px;
+            margin: 6px -18px -22px;
+            padding: 12px 18px calc(14px + env(safe-area-inset-bottom));
+            background: color-mix(in srgb, var(--surface) 92%, transparent);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--line)
+        }
+
+        .pd-acciones .btn {
+            min-height: 50px;
+            border-radius: 14px;
+            font-size: 16px
+        }
+
+        .pd-acciones .btn-primary {
+            flex: 1
+        }
+
+        @media (min-width: 700px) {
+            .pd {
+                grid-template-columns: 300px minmax(0, 1fr);
+                gap: 24px;
+                align-items: start
+            }
+
+            .pd-media {
+                height: 300px;
+                position: sticky;
+                top: 0
+            }
+
+            .pd-acciones {
+                grid-column: 1 / -1
+            }
+        }
     </style>
 </head>
 
@@ -3931,10 +4162,25 @@
         const macroCategoria = x => window.CategoriasMacro ? CategoriasMacro.macroCategoria(x) : OTROS;
 
         // Fotos: se piden ya reducidas (CDN de Shopify o proxy de resize) para que carguen rápido en celular.
+        // Hipermaxi guarda sus fotos detrás de su propio proxy ("/api/image-proxy?url=…" o
+        // "/_next/image?url=…"), que desde otra web no funciona: se saca la URL real de la foto.
+        function origenImg(url) {
+            let u = String(url || '').trim();
+            for (let i = 0; i < 3; i++) {
+                const m = u.match(/^(?:https?:\/\/(?:www\.)?hipermaxi\.com)?\/(?:_next\/image|api\/image-proxy)\?(?:[^#]*?&)?url=(.*)$/i);
+                if (!m) break;
+                let resto = m[1];
+                if (/^https?:\/\//i.test(resto)) u = resto;                         // sin codificar: es todo el resto
+                else { u = decodeURIComponent(resto.split('&')[0]) }
+            }
+            if (u.startsWith('/')) return '';                                          // ruta relativa de otra web: no sirve
+            return u;
+        }
         function imgUrl(url, w) {
+            url = origenImg(url);
             if (!url) return '';
             try {
-                const u = new URL(url, location.href);
+                const u = new URL(url);
                 if (/(^|\.)cdn\.shopify\.com$/i.test(u.hostname)) { u.searchParams.set('width', w); return u.toString() }
                 if (!/^https?:$/i.test(u.protocol)) return url;
                 return `https://images.weserv.nl/?url=${encodeURIComponent(u.href.replace(/^https?:\/\//i, ''))}&w=${w}&q=75&output=webp`;
@@ -3984,6 +4230,8 @@
             'Otros / Promociones': ic('<path d="M3 11 11 3h7a2 2 0 0 1 2 2v7l-8 8a2 2 0 0 1-2.8 0L3 13.8a2 2 0 0 1 0-2.8Z"/><circle cx="15" cy="9" r="1.3"/>'),
         };
         const catIcon = c => CAT_ICON[c] || I.bag;
+
+        document.addEventListener('load', e => { const t = e.target; if (t && t.tagName === 'IMG') t.classList.add('ok') }, true);
 
         /* ================= Pantalla de inicio ================= */
         const SPLASH = (() => {
@@ -4646,13 +4894,56 @@
         const PANEL = { modo: 'agregar', idx: -1, cat: '', cadena: '', orden: '', q: '', seq: 0, enfoque: null };
         function asegurarPanel() {
             if ($('#panel-bg')) return;
-            document.body.insertAdjacentHTML('beforeend', `<div class="sheet-bg" id="panel-bg" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="panel-t"><div class="sheet-head"><h3 id="panel-t"></h3><button class="icon-btn" type="button" id="panel-x" aria-label="Cerrar" style="padding:0 10px">✕</button></div><div class="sheet-body" id="panel-body"></div></div></div>`);
+            document.body.insertAdjacentHTML('beforeend', `<div class="sheet-bg" id="panel-bg" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="panel-t"><div class="sheet-head"><button class="icon-btn panel-volver" type="button" id="panel-volver" aria-label="Volver a la lista de resultados">${I.back}Volver</button><h3 id="panel-t"></h3><button class="icon-btn" type="button" id="panel-x" aria-label="Cerrar" style="padding:0 10px">✕</button></div><div class="sheet-body" id="panel-body"></div></div></div>`);
             $('#panel-bg').addEventListener('click', e => { if (e.target.id === 'panel-bg') cerrarPanel() });
             $('#panel-x').onclick = cerrarPanel;
-            document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#panel-bg').hidden) cerrarPanel() });
+            $('#panel-volver').onclick = cerrarDetalle;
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#panel-bg').hidden) { if (PANEL.det) cerrarDetalle(); else cerrarPanel() } });
+        }
+        // ---- Detalle de un producto dentro del panel: foto grande, precios por cadena, Elegir / Volver
+        function abrirDetalle(p) {
+            if (!p) return;
+            const body = $('#panel-body'), sheet = body.closest('.sheet');
+            if (!PANEL.det) PANEL.det = { nodos: [...body.childNodes], scroll: body.scrollTop, titulo: $('#panel-t').textContent };
+            const ls = [...p.listados].sort((a, b) => a.p - b.p), mejor = ls[0], caro = ls[ls.length - 1];
+            const it = PANEL.idx >= 0 && L.res ? L.res.items[PANEL.idx] : null;
+            const actual = PANEL.modo === 'cambiar' && it && it.elegido && it.elegido.k !== p.k ? it.elegido : null;
+            let comp = '';
+            if (actual) {
+                const d = mejor.p - precioMin(actual).p;
+                comp = Math.abs(d) < .01 ? `<p class="pd-nota">Mismo precio que el que tenés en tu lista.</p>`
+                    : d < 0 ? `<p class="pd-nota ok num">${money(-d)} más barato que el que tenés en tu lista.</p>`
+                    : `<p class="pd-nota caro num">${money(d)} más caro que el que tenés en tu lista.</p>`;
+            }
+            const nota = ls.length > 1 && caro.p - mejor.p >= .01
+                ? `<p class="pd-nota ok num">Ahorrás ${money(caro.p - mejor.p)} frente a ${esc(caro.c)}</p>`
+                : ls.length > 1 ? `<p class="pd-nota">Cuesta lo mismo en ${ls.length} cadenas.</p>` : `<p class="pd-nota">Por ahora solo lo encontramos en ${esc(mejor.c)}.</p>`;
+            const src = imgUrl(p.img, 600);
+            const filas = ls.map((l, i) => `<li class="${i === 0 && ls.length > 1 ? 'mejor' : ''}"><span class="c">${esc(l.c)}</span>${i === 0 && ls.length > 1 ? '<span class="badge-ok">Mejor precio</span>' : ''}<span class="num">${l.r > l.p ? `<s>${money(l.r)}</s> ` : ''}<b>${money(l.p)}</b></span></li>`).join('');
+            const accion = PANEL.modo === 'agregar' ? 'Agregar a mi lista' : 'Elegir este producto';
+            body.innerHTML = `<div class="pd"><div class="pd-media">${src ? `<img src="${esc(src)}" alt="${esc(p.nombre)}" decoding="async" onerror="this.remove()">` : ''}${src ? '' : catIcon(p.macro)}</div>
+                <div><p class="pd-cat">${p.macro ? esc(catLabel(p.macro)) + (p.sub ? ` › ${esc(p.sub)}` : '') : ''}</p><h4 class="pd-nombre">${esc(p.nombre)}</h4>
+                <div class="pd-mejor"><span class="pd-precio num">${money(mejor.p)}</span><span class="cad-tag">${esc(mejor.c)}</span></div>${nota}${comp}
+                <p class="pd-tit">Precios por cadena</p><ul class="pd-cads">${filas}</ul></div>
+                <div class="pd-acciones"><button class="btn btn-secondary" type="button" id="pd-volver">Volver</button><button class="btn btn-primary" type="button" id="pd-elegir">${accion}</button></div></div>`;
+            $('#panel-t').textContent = 'Detalle del producto';
+            sheet.classList.add('en-detalle');
+            body.scrollTop = 0;
+            $('#pd-volver').onclick = cerrarDetalle;
+            $('#pd-elegir').onclick = () => { PANEL.det = null; sheet.classList.remove('en-detalle'); elegirDelPanel(p) };
+            $('#pd-elegir').focus({ preventScroll: true });
+        }
+        function cerrarDetalle() {
+            const body = $('#panel-body'); if (!body || !PANEL.det) return;
+            const { nodos, scroll, titulo } = PANEL.det; PANEL.det = null;
+            body.replaceChildren(...nodos);
+            body.closest('.sheet').classList.remove('en-detalle');
+            $('#panel-t').textContent = titulo;
+            body.scrollTop = scroll;
         }
         function cerrarPanel() {
             const bg = $('#panel-bg'); if (!bg) return;
+            if (PANEL.det) { PANEL.det = null; bg.querySelector('.sheet').classList.remove('en-detalle') }
             bg.classList.remove('open'); document.body.style.overflow = '';
             setTimeout(() => { bg.hidden = true }, 200);
             if (PANEL.enfoque && document.contains(PANEL.enfoque)) PANEL.enfoque.focus();
@@ -4660,7 +4951,7 @@
         async function abrirPanel(modo, idx) {
             asegurarPanel();
             if (!S.ready) await cargarResumen().catch(() => { });
-            PANEL.modo = modo; PANEL.idx = idx; PANEL.enfoque = document.activeElement;
+            PANEL.modo = modo; PANEL.idx = idx; PANEL.enfoque = document.activeElement; PANEL.det = null; $('#panel-bg .sheet').classList.remove('en-detalle');
             const it = idx >= 0 && L.res ? L.res.items[idx] : null;
             PANEL.q = it ? (it.elegido ? '' : (it.busqueda || it.texto)) : '';
             PANEL.cat = ''; PANEL.cadena = ''; PANEL.orden = '';
@@ -4674,7 +4965,7 @@
         }
         function filaProducto(p, attrs) {
             const l = (PANEL.cadena && p.listados.find(x => x.c === PANEL.cadena)) || precioMin(p);
-            const accion = PANEL.modo === 'agregar' ? 'Agregar' : 'Elegir';
+            const accion = 'Seleccionar';
             return `<button class="sr-item" type="button" ${attrs}>${miniFoto(p)}<span class="pi-txt"><span class="pi-name">${esc(p.nombre)}</span><span class="pi-sub fila-precio num"><b>${money(l.p)}</b><span class="cad-tag">${esc(l.c)}</span>${p.listados.length > 1 ? `<span class="cad-mas">+${p.listados.length - 1} ${p.listados.length > 2 ? 'cadenas' : 'cadena'}</span>` : ''}</span></span><span class="sr-accion">${accion}</span></button>`;
         }
         function pintarPanel() {
@@ -4702,7 +4993,7 @@
             if (menos) menos.onclick = () => { if (it.cantidad > 1) { it.cantidad--; guardarLista(); pintarResultadoLista(); $('#panel-body .stepper .num').textContent = it.cantidad } };
             const ficha = $('#panel-body .panel-ficha'); if (ficha) ficha.onclick = () => { navForward = true; navigated = true; cerrarPanel() };
             if (quitar) quitar.onclick = () => { const i = PANEL.idx, quitado = L.res.items[i]; L.res.items.splice(i, 1); guardarLista(); pintarResultadoLista(); cerrarPanel(); toastDeshacer('Producto quitado', () => { L.res.items.splice(i, 0, quitado); guardarLista(); pintarResultadoLista() }) };
-            document.querySelectorAll('#panel-body [data-alt]').forEach(b => b.onclick = () => { const j = +b.dataset.alt; const viejo = it.elegido; it.elegido = it.alternativas[j]; it.alternativas[j] = viejo; guardarLista(); pintarResultadoLista(); cerrarPanel() });
+            document.querySelectorAll('#panel-body [data-alt]').forEach(b => b.onclick = () => abrirDetalle(it.alternativas[+b.dataset.alt]));
             let t;
             $('#panel-q').oninput = e => { PANEL.q = e.target.value; $('#panel-clear').hidden = !PANEL.q; clearTimeout(t); t = setTimeout(buscarEnPanel, 220) };
             $('#panel-clear').onclick = () => { PANEL.q = ''; $('#panel-q').value = ''; $('#panel-clear').hidden = true; $('#panel-q').focus(); buscarEnPanel() };
@@ -4721,7 +5012,7 @@
             if (PANEL.cadena) f.push('cadenas=cs.' + enc(`{"${PANEL.cadena}"}`));
             const orden = PANEL.orden === 'precio' ? 'precio.asc' : 'n.desc,best_off.desc';
             let data = [], total = 0, modo = 'exacto';
-            try { ({ data, total, modo } = await apiTexto(`web_productos?select=k,nombre,img,n,precio,listados,macro${f.length ? '&' + f.join('&') : ''}`, PANEL.q, `&order=${orden}&limit=60`, true, true)) }
+            try { ({ data, total, modo } = await apiTexto(`web_productos?select=k,nombre,img,n,precio,listados,macro${S.conSub ? ',sub' : ''}${f.length ? '&' + f.join('&') : ''}`, PANEL.q, `&order=${orden}&limit=60`, true, true)) }
             catch (e) { if (seq === PANEL.seq) { res.removeAttribute('aria-busy'); res.innerHTML = `<p class="pi-sub" style="padding:14px 2px">No se pudo buscar. Probá de nuevo.</p>` } return }
             if (seq !== PANEL.seq) return;
             facetas(PANEL.q).then(r => {
@@ -4756,7 +5047,7 @@
             $('#panel-count').textContent = filtrado ? `${int(total)} ${total === 1 ? 'producto' : 'productos'}${total > PANEL.resultados.length ? ` · mostrando ${PANEL.resultados.length}` : ''}` : 'Los más comparados';
             res.removeAttribute('aria-busy');
             res.innerHTML = (PANEL.resultados.length ? avisoBusqueda(modo, PANEL.q) : '') + (PANEL.resultados.length ? PANEL.resultados.map((p, i) => filaProducto(p, `data-elegir="${i}"`)).join('') : `<div class="pf-vacio"><b>Sin resultados</b><span>Probá con otra palabra${PANEL.cat || PANEL.cadena ? ' o quitá algún filtro' : ''}.</span></div>`);
-            res.querySelectorAll('[data-elegir]').forEach(b => b.onclick = () => elegirDelPanel(PANEL.resultados[+b.dataset.elegir]));
+            res.querySelectorAll('[data-elegir]').forEach(b => b.onclick = () => abrirDetalle(PANEL.resultados[+b.dataset.elegir]));
         }
         function elegirDelPanel(p) {
             const prod = { k: p.k, nombre: p.nombre, img: p.img, listados: p.listados };
