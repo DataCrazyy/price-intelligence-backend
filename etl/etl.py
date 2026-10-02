@@ -1143,11 +1143,12 @@ def _registrar_progreso_matching(cur, conn, run_id, procesados, total, fusiones,
         "bucket_actual": bucket_idx,
         "buckets_totales": bucket_total,
     }
-    cur.execute(
-        "UPDATE agent_runs SET registros_procesados=%s, detalle=%s WHERE id=%s",
-        (procesados, json.dumps(detalle), run_id),
-    )
-    conn.commit()
+    if run_id is not None:   # en modo prueba no se escribe nada en la base
+        cur.execute(
+            "UPDATE agent_runs SET registros_procesados=%s, detalle=%s WHERE id=%s",
+            (procesados, json.dumps(detalle), run_id),
+        )
+        conn.commit()
     eta_txt = f", ETA ~{eta_seg // 60}min" if eta_seg else ""
     cat_txt = f" [{categoria_actual}]" if categoria_actual else ""
     print(f"[matchear] {procesados}/{total} candidatos ({detalle['porcentaje']}%){cat_txt} -- "
@@ -1155,7 +1156,59 @@ def _registrar_progreso_matching(cur, conn, run_id, procesados, total, fusiones,
     return detalle
 
 
-def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm: int = MAX_LLM_POR_CORRIDA):
+# Categorías propias (etl/clasificar.py, tabla producto_categoria): la IA ubica cada
+# producto por su NOMBRE en una lista fija, igual para todas las cadenas. Para el
+# matcheo son mejores que la categoría de cada cadena ("Lo Nuevo", "Zona Papa",
+# "Supermercado"...): dos SKUs que son el mismo producto caen en la misma categoría
+# aunque cada cadena los haya puesto en lugares distintos, y dos productos de
+# categorías distintas ("Leche Pil" vs "Leche corporal") nunca se comparan.
+#   MATCH_AGRUPAR=cadena  como siempre: agrupa por la categoría de cada cadena (por defecto
+#                         hasta revisar la prueba)
+#   MATCH_AGRUPAR=ia      agrupa por la categoría propia: se activa poniendo esta línea
+#                         en el .env después de revisar `python etl.py matchear --prueba`
+MATCH_AGRUPAR = os.environ.get("MATCH_AGRUPAR", "cadena").strip().lower()
+
+
+def _categorias_propias(cur):
+    """{producto_clave: (categoria, subcategoria)} o {} si la tabla todavía no existe."""
+    cur.execute("SELECT to_regclass('producto_categoria') IS NOT NULL AS hay")
+    fila = cur.fetchone()
+    if not (fila["hay"] if isinstance(fila, dict) else fila[0]):
+        return {}
+    cur.execute("SELECT k, cat, sub FROM producto_categoria")
+    return {r["k"]: (r["cat"], r["sub"]) for r in cur.fetchall()}
+
+
+def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm: int = MAX_LLM_POR_CORRIDA,
+             prueba: bool = False, agrupar: str = None):
+    """(ver más abajo). `prueba=True`: NO escribe nada ni consulta al LLM (solo usa
+    las respuestas ya guardadas); deja etl/prueba_matcheo.csv con las fusiones que
+    haría, para revisarlas antes de activar."""
+    # la prueba muestra lo que haría el modo nuevo, salvo que se pida otro
+    agrupar = agrupar or ("ia" if prueba else MATCH_AGRUPAR)
+    # Supabase a veces corta la conexión en corridas largas ("SSL error", "server closed
+    # the connection"). Lo hecho hasta el último guardado (cada ~20 s) ya quedó en la base
+    # y lo fusionado deja de ser candidato, así que alcanza con volver a empezar: sigue
+    # casi donde quedó. Las consultas al LLM ya hechas se descuentan del tope.
+    estado = {"llm": 0}
+    restante = max_llm
+    for intento in range(1, 6):
+        estado["llm"] = 0
+        try:
+            return _matchear(min_score, ambiguo_min, restante, prueba, agrupar, estado)
+        except (psycopg2.OperationalError, psycopg2.InterfaceError) as e:
+            restante = max(0, restante - estado["llm"])
+            if intento == 5:
+                raise
+            espera = 10 * intento
+            print(f"[matchear] se cortó la conexión con la base ({str(e).strip()[:80]}). "
+                  f"Lo hecho quedó guardado; reintento {intento + 1}/5 en {espera}s "
+                  f"(quedan {restante} consultas LLM de esta corrida)…", flush=True)
+            time.sleep(espera)
+
+
+def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
+    estado = estado if estado is not None else {}
     """Recorre los PRODUCTOS que hoy sólo tienen listados de UNA sola
     cadena (todavía no fueron cruzados con ninguna otra), y fusiona los
     que parecen el mismo producto real, sin importar de qué cadena venga
@@ -1193,8 +1246,13 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
 
     # Fila de seguimiento visible desde el arranque (no recién al final) --
     # esto es lo que el panel/consola consultan para mostrar "en progreso".
-    run_id = start_agent_run(cur, "matching", fuente_metodo=f"max_llm={max_llm}")
-    conn.commit()
+    run_id = None
+    if not prueba:
+        run_id = start_agent_run(cur, "matching", fuente_metodo=f"max_llm={max_llm} agrupar={agrupar}")
+        conn.commit()
+    cat_ia = _categorias_propias(cur)
+    cur.execute("SELECT id, nombre FROM cadenas")
+    nombre_cadena = {r["id"]: r["nombre"] for r in cur.fetchall()}
 
     cur.execute(
         """
@@ -1223,6 +1281,7 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
             r["_norm"], _es_formula_infantil(r["_brand"], r["categoria"], r["subcategoria"])
         )
         r["_precio"] = float(r["precio_oferta"]) if r["precio_oferta"] else None
+        r["_cat_ia"], r["_sub_ia"] = cat_ia.get(r["producto_clave"], (None, None))
 
     # Bucketing por categoría -- ANTES de esto, matchear() comparaba TODOS
     # los candidatos contra TODOS (O(n²) real: con 8000 candidatos ya son
@@ -1239,7 +1298,13 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
     # infrecuente en vez de recorrer todo el catálogo cada vez.
     buckets = {}
     for r in candidatos:
-        clave_bucket = r["categoria"] or "Sin categoría"
+        if agrupar == "ia" and r["_cat_ia"]:
+            clave_bucket = r["_cat_ia"]
+        elif agrupar == "ia":
+            # todavía sin categoría propia (corré clasificar.py): queda con la de la cadena
+            clave_bucket = f"Sin clasificar · {r['categoria'] or 'Sin categoría'}"
+        else:
+            clave_bucket = r["categoria"] or "Sin categoría"
         buckets.setdefault(clave_bucket, []).append(r)
 
     # Sub-bucketing por subcategoría: SOLO para categorías que quedaron
@@ -1261,7 +1326,10 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
             continue
         subgrupos = {}
         for r in grupo:
-            sub = (r["subcategoria"] or "Sin subcategoría").strip() or "Sin subcategoría"
+            if agrupar == "ia" and r["_sub_ia"]:
+                sub = r["_sub_ia"]
+            else:
+                sub = (r["subcategoria"] or "Sin subcategoría").strip() or "Sin subcategoría"
             subgrupos.setdefault(sub, []).append(r)
         for sub, sgrupo in subgrupos.items():
             buckets_finales[f"{categoria_bucket} / {sub}"] = sgrupo
@@ -1280,6 +1348,9 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
     ultimo_commit = inicio
     procesados_global = 0
     categoria_en_curso = None
+    bloqueados = 0          # pares que la categoría propia separó (modo "cadena")
+    fusiones_prueba = []    # modo prueba: lo que se fusionaría
+    dudosos_sin_revisar = 0
 
     try:
         for bucket_idx, (categoria_bucket, grupo) in enumerate(orden_buckets, start=1):
@@ -1305,6 +1376,9 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
                         ratio = max(a["_precio"], b["_precio"]) / min(a["_precio"], b["_precio"])
                         if ratio > PRECIO_RATIO_MAX:
                             continue
+                    if agrupar == "ia" and a["_cat_ia"] and b["_cat_ia"] and a["_cat_ia"] != b["_cat_ia"]:
+                        bloqueados += 1
+                        continue  # la IA los ubicó en categorías distintas: no son el mismo producto
                     score = _score(a, b)
 
                     decision, confianza, metodo = None, None, "fuzzy"
@@ -1322,10 +1396,14 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
                             decision = cacheada["decision"]
                             confianza = float(cacheada["confianza"]) if cacheada["confianza"] is not None else None
                             metodo = "llm"
+                        elif prueba:
+                            dudosos_sin_revisar += 1
+                            continue  # en modo prueba no se gasta en el LLM
                         elif llm_usados < max_llm:
                             try:
                                 resp = matching_llm.revisar_par(a["nombre"], b["nombre"], a.get("categoria"), b.get("categoria"))
                                 llm_usados += 1
+                                estado["llm"] = llm_usados
                                 _guardar_revision_llm(
                                     cur, a["producto_clave"], a["nombre"], b["producto_clave"], b["nombre"],
                                     round(score, 1), resp["mismo_producto"], resp["confianza"], resp["razon"],
@@ -1339,6 +1417,21 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
                             continue  # tope de esta corrida alcanzado -- se retoma en la próxima
 
                     if not decision:
+                        continue
+
+                    if prueba:
+                        fusiones_prueba.append({
+                            "categoria_propia": a["_cat_ia"] or "", "subcategoria_propia": a["_sub_ia"] or "",
+                            "producto_a": a["nombre"], "cadena_a": nombre_cadena.get(a["cadena_id"], ""),
+                            "producto_b": b["nombre"], "cadena_b": nombre_cadena.get(b["cadena_id"], ""),
+                            "puntaje": round(score, 1), "metodo": metodo,
+                            # antes se agrupaba por la categoría de cada cadena: si era distinta, este par nunca se comparaba
+                            "nuevo_gracias_a_categorias": "si" if (a["categoria"] or "") != (b["categoria"] or "") else "",
+                            "categoria_cadena_a": a["categoria"] or "", "categoria_cadena_b": b["categoria"] or "",
+                            "clave_a": a["producto_clave"], "clave_b": b["producto_clave"],
+                        })
+                        resueltos.add(b["producto_id"])
+                        fusiones += 1
                         continue
 
                     # "a" es el canónico (el más antiguo): re-apunta TODOS los
@@ -1388,22 +1481,55 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
             cur, conn, run_id, total, total, fusiones, llm_usados, llm_pospuestos, inicio,
             bucket_idx=len(orden_buckets), bucket_total=len(orden_buckets),
         )
-        finish_agent_run(cur, run_id, "ok", total, 0, detalle_final)
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        try:
-            finish_agent_run(cur, run_id, "error", procesados_global, 1,
-                              {"error": str(e), "categoria_actual": categoria_en_curso})
+        if not prueba:
+            detalle_final["pares_bloqueados_por_categoria"] = bloqueados
+            finish_agent_run(cur, run_id, "ok", total, 0, detalle_final)
             conn.commit()
+        else:
+            conn.rollback()
+    except Exception as e:
+        try:
+            conn.rollback()
         except Exception:
-            pass
+            pass   # la conexión ya estaba cortada: se reintenta desde matchear()
+        if run_id is not None:
+            try:
+                finish_agent_run(cur, run_id, "error", procesados_global, 1,
+                                  {"error": str(e), "categoria_actual": categoria_en_curso})
+                conn.commit()
+            except Exception:
+                pass
         raise
     finally:
-        cur.close()
-        conn.close()
+        for x in (cur, conn):
+            try:
+                x.close()
+            except Exception:
+                pass
 
-    print(f"matchear: {len(orden_buckets)} categorías procesadas por separado (en vez de comparar todo el catálogo entre sí)")
+    print(f"matchear: {len(orden_buckets)} grupos procesados por separado (agrupando por "
+          f"{'categoría propia' if agrupar == 'ia' else 'categoría de la cadena'}; "
+          f"{sum(1 for r in candidatos if r['_cat_ia'])}/{len(candidatos)} candidatos con categoría propia)")
+    if bloqueados:
+        print(f"matchear: {bloqueados} pares no se compararon porque la IA los ubicó en categorías distintas")
+
+    if prueba:
+        import csv
+        ruta = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prueba_matcheo.csv")
+        columnas = ["categoria_propia", "subcategoria_propia", "producto_a", "cadena_a", "producto_b", "cadena_b",
+                    "puntaje", "metodo", "nuevo_gracias_a_categorias", "categoria_cadena_a", "categoria_cadena_b",
+                    "clave_a", "clave_b"]
+        with open(ruta, "w", newline="", encoding="utf-8-sig") as f:   # utf-8-sig: Excel lo abre con tildes
+            w = csv.DictWriter(f, fieldnames=columnas, delimiter=";")
+            w.writeheader()
+            for x in sorted(fusiones_prueba, key=lambda x: (x["nuevo_gracias_a_categorias"] != "si", x["categoria_propia"], -x["puntaje"])):
+                w.writerow(x)
+        nuevas = sum(1 for x in fusiones_prueba if x["nuevo_gracias_a_categorias"])
+        print(f"\n[PRUEBA] No se escribió nada. Se fusionarían {fusiones} productos; "
+              f"{nuevas} de esos pares antes ni se comparaban (estaban en categorías distintas según la cadena).")
+        print(f"[PRUEBA] {dudosos_sin_revisar} pares dudosos se le preguntarían al LLM (en la corrida real, hasta {max_llm} por vez).")
+        print(f"[PRUEBA] Revisá: {ruta}")
+        return {"fusiones": fusiones, "nuevas": nuevas, "bloqueados": bloqueados, "dudosos": dudosos_sin_revisar}
 
     print(f"matchear: {fusiones} productos fusionados entre cadenas ({llm_usados} consultas nuevas al LLM"
           f"{f', {llm_pospuestos} pares pospuestos por el tope de esta corrida' if llm_pospuestos else ''})")
@@ -1543,6 +1669,10 @@ def main():
     p2.add_argument("--pais", default="BO")
 
     p3 = sub.add_parser("matchear")
+    p3.add_argument("--prueba", action="store_true",
+                     help="No escribe nada ni consulta al LLM: deja prueba_matcheo.csv con las fusiones que haría")
+    p3.add_argument("--agrupar", choices=["ia", "cadena"], default=None,
+                     help="Agrupar por la categoría propia (ia, por defecto) o por la de cada cadena (como antes)")
     p3.add_argument("--max-llm", type=int, default=None,
                      help="Tope de consultas NUEVAS al LLM en esta corrida "
                           "(default: env MATCH_LLM_MAX_POR_CORRIDA, o 50)")
@@ -1560,7 +1690,8 @@ def main():
     elif args.comando == "cargar-excel":
         cargar_excel(args.path, args.cadena, args.pais)
     elif args.comando == "matchear":
-        matchear(max_llm=args.max_llm if args.max_llm is not None else MAX_LLM_POR_CORRIDA)
+        matchear(max_llm=args.max_llm if args.max_llm is not None else MAX_LLM_POR_CORRIDA,
+                 prueba=args.prueba, agrupar=args.agrupar)
     elif args.comando == "backfill-categoria-madre":
         backfill_categoria_madre(dry_run=args.dry_run)
 

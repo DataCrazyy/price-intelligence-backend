@@ -224,17 +224,9 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
     if archivos_cargados == 0:
         log("Nada se cargó, se salta matchear/export.")
     else:
-        log("Corriendo matchear() ...")
-        etl.matchear(max_llm=max_llm if max_llm is not None else etl.MAX_LLM_POR_CORRIDA)
-
-        if hacer_export:
-            log(f"Exportando a {EXPORT_PATH} ...")
-            import export_json
-            export_json.export_json(str(EXPORT_PATH))
-
-        # La página web lee de Supabase (tabla web_productos), no del JSON.
-        # Si todavía no se corrió db/migracion_web.sql, avisa y sigue.
-        # Categorías: la IA clasifica solo los productos nuevos (centavos por corrida).
+        # Primero se clasifican los productos nuevos: el matcheo agrupa por esas
+        # categorías propias (más parejas entre cadenas que las de cada cadena).
+        # La IA clasifica solo lo nuevo (centavos por corrida).
         log("Clasificando productos nuevos en categorías ...")
         try:
             import clasificar
@@ -245,6 +237,16 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
         except Exception as e:
             log(f"  ADVERTENCIA: no se pudo clasificar ({e}). ¿Corriste db/migracion_categorias.sql en Supabase?")
 
+        log("Corriendo matchear() ...")
+        etl.matchear(max_llm=max_llm if max_llm is not None else etl.MAX_LLM_POR_CORRIDA)
+
+        if hacer_export:
+            log(f"Exportando a {EXPORT_PATH} ...")
+            import export_json
+            export_json.export_json(str(EXPORT_PATH))
+
+        # La página web lee de Supabase (tabla web_productos), no del JSON.
+        # Si todavía no se corrió db/migracion_web.sql, avisa y sigue.
         log("Publicando web_productos para la página ...")
         try:
             import publicar_web

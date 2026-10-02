@@ -31,3 +31,7 @@ price_intel_backup.dump
 etl/debug_*.png
 etl/debug_*.html
 _to_delete/
+
+# Archivos de revisión que generan los scripts
+etl/muestra_categorias.csv
+etl/prueba_matcheo.csv
