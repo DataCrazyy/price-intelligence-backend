@@ -4048,6 +4048,15 @@
             flex: 1
         }
 
+        @media (min-width: 900px) {
+            /* en computadora, la ficha mide lo que su contenido (sin hueco blanco abajo) */
+            .sheet.en-detalle {
+                overflow: hidden;
+                height: auto;
+                max-height: min(84vh, 760px)
+            }
+        }
+
         @media (min-width: 700px) {
             .pd {
                 grid-template-columns: 300px minmax(0, 1fr);
@@ -4925,11 +4934,10 @@
                 <div><p class="pd-cat">${p.macro ? esc(catLabel(p.macro)) + (p.sub ? ` › ${esc(p.sub)}` : '') : ''}</p><h4 class="pd-nombre">${esc(p.nombre)}</h4>
                 <div class="pd-mejor"><span class="pd-precio num">${money(mejor.p)}</span><span class="cad-tag">${esc(mejor.c)}</span></div>${nota}${comp}
                 <p class="pd-tit">Precios por cadena</p><ul class="pd-cads">${filas}</ul></div>
-                <div class="pd-acciones"><button class="btn btn-secondary" type="button" id="pd-volver">Volver</button><button class="btn btn-primary" type="button" id="pd-elegir">${accion}</button></div></div>`;
+                <div class="pd-acciones"><button class="btn btn-primary" type="button" id="pd-elegir">${accion}</button></div></div>`;
             $('#panel-t').textContent = 'Detalle del producto';
             sheet.classList.add('en-detalle');
             body.scrollTop = 0;
-            $('#pd-volver').onclick = cerrarDetalle;
             $('#pd-elegir').onclick = () => { PANEL.det = null; sheet.classList.remove('en-detalle'); elegirDelPanel(p) };
             $('#pd-elegir').focus({ preventScroll: true });
         }
