@@ -120,8 +120,16 @@ async function candidatos(busqueda: string, marca?: string): Promise<Prod[]> {
       return filas.sort((a, b) => puntaje(b) - puntaje(a)).slice(0, CANDIDATOS);
     }
   }
+  // Último recurso: nombres parecidos aunque esté mal escrito (db/migracion_busqueda_aprox.sql)
+  if (APROX_OK) {
+    try {
+      const filas: Prod[] = await (await rest(`rpc/buscar_aprox?q=${encodeURIComponent(palabras(busqueda).join(" "))}&select=${SELECT}&limit=${CANDIDATOS}`)).json();
+      return filas;
+    } catch (_e) { APROX_OK = false }
+  }
   return [];
 }
+let APROX_OK = true;
 
 // ------------------------------------------------------------------ IA (OpenAI)
 type Item = { texto: string; busqueda: string; cantidad: number; marca?: string; presentacion?: string };
@@ -184,6 +192,8 @@ const ESQUEMA_LISTA = {
 };
 const SISTEMA_SEPARAR = `Convertís lo que una persona de Santa Cruz, Bolivia escribe o dicta para su compra de supermercado o farmacia en una lista de ítems (máximo ${MAX_ITEMS}).
 - Un ítem por producto. Unís lo que es un mismo producto ("leche pil de litro" es uno solo).
+- Mucha gente escribe sin comas, todo seguido: "leche mantequilla mermelada cerveza paceña" son CUATRO productos. Separá por producto aunque no haya comas ni "y".
+- Corregí la ortografía en "busqueda" ("meremelada" -> "mermelada", "detergnte" -> "detergente", "pañales" -> "pañal"). En "texto" dejá lo que escribió la persona.
 - "busqueda" es corta, en singular y con palabras que aparecerían en el nombre del producto en una tienda (ej. "leche pil", "arroz", "detergente omo", "papel higienico").
 - Números o palabras de cantidad ("dos", "un par", "media docena") van a "cantidad". "2 kilos de arroz" es cantidad 1 con presentación "2 kg", salvo que diga "2 bolsas".
 - Ignorás todo lo que no sea un producto para comprar (saludos, comentarios, instrucciones).`;
