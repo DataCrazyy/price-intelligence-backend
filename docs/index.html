@@ -1923,7 +1923,7 @@
         .planes {
             display: grid;
             grid-auto-flow: column;
-            grid-auto-columns: minmax(232px, 1fr);
+            grid-auto-columns: minmax(300px, 1fr);
             gap: 12px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
@@ -1936,7 +1936,7 @@
 
         @media (max-width: 899px) {
             .planes {
-                grid-auto-columns: 80%;
+                grid-auto-columns: 88%;
                 scrollbar-width: none
             }
 
@@ -2949,10 +2949,910 @@
                 transform: translateY(6px)
             }
         }
+
+        /* ============ Banner de inicio ============ */
+        .hb {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            margin-top: 18px;
+            border-radius: 24px;
+            padding: 22px 20px 20px;
+            color: #fff;
+            background:
+                radial-gradient(120% 120% at 100% 0%, rgba(160, 145, 255, .55) 0%, transparent 55%),
+                radial-gradient(90% 90% at 0% 100%, rgba(40, 25, 170, .55) 0%, transparent 60%),
+                linear-gradient(135deg, #4636E3 0%, #5B4BF5 50%, #7656FF 100%);
+            box-shadow: 0 18px 40px -18px rgba(70, 54, 227, .55)
+        }
+
+        .hb-txt {
+            position: relative;
+            z-index: 2
+        }
+
+        .hb-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 28px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .16);
+            border: 1px solid rgba(255, 255, 255, .22);
+            font-size: 12.5px;
+            font-weight: 600;
+            backdrop-filter: blur(6px)
+        }
+
+        .hb-kicker i {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4BE08A;
+            box-shadow: 0 0 0 0 rgba(75, 224, 138, .7);
+            animation: latido 2s infinite
+        }
+
+        @keyframes latido {
+            70% { box-shadow: 0 0 0 8px rgba(75, 224, 138, 0) }
+            100% { box-shadow: 0 0 0 0 rgba(75, 224, 138, 0) }
+        }
+
+        .hb h1 {
+            margin-top: 14px;
+            font-size: 30px;
+            line-height: 1.08;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            text-wrap: balance;
+            max-width: 15ch
+        }
+
+        .hb p {
+            margin-top: 10px;
+            font-size: 15px;
+            line-height: 1.45;
+            opacity: .92;
+            max-width: 46ch
+        }
+
+        .hb-stats {
+            display: flex;
+            gap: 18px;
+            margin-top: 16px
+        }
+
+        .hb-stats div {
+            display: flex;
+            flex-direction: column
+        }
+
+        .hb-stats b {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.02em
+        }
+
+        .hb-stats span {
+            font-size: 12px;
+            opacity: .8
+        }
+
+        .hb-ctas {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 18px
+        }
+
+        .hb-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            height: 48px;
+            padding: 0 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: transform .12s var(--ease), background .15s
+        }
+
+        .hb-btn:active {
+            transform: scale(.97)
+        }
+
+        .hb-btn svg {
+            width: 20px;
+            height: 20px
+        }
+
+        .hb-btn.blanco {
+            background: #fff;
+            color: #4636E3;
+            box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .35)
+        }
+
+        .hb-btn.blanco:hover {
+            background: #F3F1FF
+        }
+
+        .hb-btn.vidrio {
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .3);
+            color: #fff
+        }
+
+        .hb-btn.vidrio:hover {
+            background: rgba(255, 255, 255, .22)
+        }
+
+        /* Íconos de categorías flotando de fondo */
+        .hb-deco {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none
+        }
+
+        .hb-deco span {
+            position: absolute;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .22);
+            color: #fff;
+            opacity: .55;
+            animation: flotar 7s ease-in-out infinite alternate
+        }
+
+        .hb-deco svg {
+            width: 22px;
+            height: 22px
+        }
+
+        @keyframes flotar {
+            from { transform: translateY(0) rotate(-4deg) }
+            to { transform: translateY(-14px) rotate(5deg) }
+        }
+
+        /* Dato del día: el producto donde más se ahorra hoy */
+        .hb-dato {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 56px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .96);
+            color: var(--text-light, #1D1D1F);
+            box-shadow: 0 10px 30px -14px rgba(0, 0, 0, .45);
+            transition: transform .15s var(--ease)
+        }
+
+        .hb-dato:active {
+            transform: scale(.98)
+        }
+
+        .hb-dato .pi-foto {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: #fff
+        }
+
+        .hb-dato small {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            color: #4636E3
+        }
+
+        .hb-dato .nom {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-size: 14.5px;
+            font-weight: 600;
+            margin-top: 2px;
+            color: #1D1D1F
+        }
+
+        .hb-dato .det {
+            font-size: 13px;
+            color: #6E6E73;
+            margin-top: 2px
+        }
+
+        .hb-dato .det b {
+            color: #0A7A3E
+        }
+
+        @media (min-width: 900px) {
+            .hb {
+                display: grid;
+                grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+                gap: 32px;
+                align-items: center;
+                margin-top: 28px;
+                padding: 44px 44px 40px;
+                border-radius: 32px
+            }
+
+            .hb h1 {
+                font-size: 48px
+            }
+
+            .hb p {
+                font-size: 17px
+            }
+
+            .hb-stats b {
+                font-size: 26px
+            }
+
+            .hb-dato {
+                margin-top: 0;
+                grid-template-columns: 84px minmax(0, 1fr);
+                padding: 16px
+            }
+
+            .hb-dato .pi-foto {
+                width: 84px;
+                height: 84px
+            }
+
+            .hb-dato .nom {
+                -webkit-line-clamp: 2;
+                font-size: 16px
+            }
+
+            .hb-deco span {
+                width: 58px;
+                height: 58px;
+                border-radius: 18px;
+                opacity: .8
+            }
+
+            .hb-deco svg {
+                width: 28px;
+                height: 28px
+            }
+        }
+
+        @media (max-width: 899px) {
+            .hb-deco span:nth-child(n+3) {
+                display: none
+            }
+
+            .hb-deco span {
+                opacity: .35
+            }
+
+            .hb h1 {
+                font-size: 27px;
+                max-width: 16ch
+            }
+
+            .hb p {
+                font-size: 14px
+            }
+
+            .hb-btn {
+                flex: 1;
+                justify-content: center;
+                padding: 0 12px
+            }
+        }
+
+        /* ============ Categorías: una fila que se desliza ============ */
+        .cats-sec {
+            margin-top: 28px
+        }
+
+        .cats-sec .section-head {
+            margin-bottom: 8px
+        }
+
+        .rail.cats {
+            grid-auto-flow: column;
+            grid-template-columns: none;
+            grid-auto-columns: 84px;
+            gap: 6px;
+            overflow-x: auto;
+            margin: 0 calc(var(--pad) * -1);
+            padding: 4px var(--pad) 8px;
+            -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+            mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent)
+        }
+
+        .rail.cats .cat {
+            font-size: 13px;
+            gap: 8px
+        }
+
+        .rail.cats .cat-ico {
+            width: 68px;
+            height: 68px;
+            border-radius: 22px;
+            box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, .04))
+        }
+
+        .rail.cats .cat-ico svg {
+            width: 32px;
+            height: 32px
+        }
+
+        .cat-n {
+            display: block;
+            font-size: 11.5px;
+            color: var(--text-2);
+            font-weight: 500;
+            margin-top: 1px
+        }
+
+        .cat.hot .cat-n {
+            color: var(--accent)
+        }
+
+        @media (min-width: 900px) {
+            .rail.cats {
+                grid-auto-columns: 108px;
+                gap: 8px;
+                overflow-x: auto;
+                margin: 0;
+                padding: 4px 0 8px
+            }
+
+            .rail.cats .cat-ico {
+                width: 80px;
+                height: 80px;
+                border-radius: 26px
+            }
+
+            .rail.cats .cat-ico svg {
+                width: 36px;
+                height: 36px
+            }
+
+            .rail.cats .cat {
+                font-size: 14px
+            }
+        }
+
+        /* ============ Pantalla de inicio (solo la primera visita de la sesión) ============ */
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            background:
+                radial-gradient(80% 60% at 50% 35%, rgba(150, 135, 255, .55), transparent 70%),
+                linear-gradient(160deg, #3F2FD8 0%, #5B4BF5 55%, #7656FF 100%);
+            color: #fff;
+            transition: opacity .45s ease, transform .45s ease
+        }
+
+        #splash.fuera {
+            opacity: 0;
+            transform: scale(1.06);
+            pointer-events: none
+        }
+
+        .sp-orbita {
+            position: relative;
+            width: 232px;
+            height: 232px
+        }
+
+        .sp-anillo {
+            position: absolute;
+            inset: 0;
+            animation: girar 16s linear infinite
+        }
+
+        .sp-anillo span {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 44px;
+            height: 44px;
+            margin: -22px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .25);
+            transform: rotate(var(--a)) translate(104px) rotate(calc(var(--a) * -1))
+        }
+
+        .sp-anillo span svg {
+            width: 22px;
+            height: 22px;
+            animation: girar 16s linear infinite reverse
+        }
+
+        .sp-anillo span.on {
+            background: #fff;
+            color: #5B4BF5
+        }
+
+        @keyframes girar {
+            to { rotate: 360deg }
+        }
+
+        .sp-centro {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 112px;
+            height: 112px;
+            margin: -56px;
+            border-radius: 34px;
+            background: #fff;
+            color: #5B4BF5;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 20px 50px -14px rgba(20, 10, 120, .6)
+        }
+
+        .sp-centro svg {
+            width: 52px;
+            height: 52px;
+            animation: aparecer .38s var(--ease)
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: scale(.6) rotate(-12deg) }
+            to { opacity: 1; transform: none }
+        }
+
+        .sp-marca {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -.02em
+        }
+
+        .sp-marca .brand-mark {
+            background: rgba(255, 255, 255, .2)
+        }
+
+        .sp-txt {
+            margin-top: -14px;
+            font-size: 15px;
+            opacity: .9;
+            min-height: 22px
+        }
+
+        .sp-barra {
+            width: 160px;
+            height: 4px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, .25);
+            overflow: hidden
+        }
+
+        .sp-barra span {
+            display: block;
+            height: 100%;
+            width: 40%;
+            border-radius: 4px;
+            background: #fff;
+            animation: barrido 1.1s ease-in-out infinite
+        }
+
+        @keyframes barrido {
+            from { transform: translateX(-100%) }
+            to { transform: translateX(250%) }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sp-anillo, .sp-anillo span svg, .sp-barra span, .hb-deco span, .hb-kicker i {
+                animation: none
+            }
+        }
+
+        /* ============ Lista: cabecera tipo banner ============ */
+        .lb {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            margin-top: 14px;
+            border-radius: 24px;
+            padding: 20px 16px 16px;
+            color: #fff;
+            background:
+                radial-gradient(120% 120% at 100% 0%, rgba(160, 145, 255, .55) 0%, transparent 55%),
+                radial-gradient(90% 90% at 0% 100%, rgba(40, 25, 170, .5) 0%, transparent 60%),
+                linear-gradient(135deg, #4636E3 0%, #5B4BF5 50%, #7656FF 100%);
+            box-shadow: 0 18px 40px -18px rgba(70, 54, 227, .55)
+        }
+
+        .lb .hb-deco span {
+            opacity: .3
+        }
+
+        .lb-txt {
+            position: relative;
+            z-index: 2
+        }
+
+        .lb h1 {
+            margin-top: 12px;
+            font-size: 26px;
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -.03em
+        }
+
+        .lb>.lb-txt>p {
+            margin-top: 6px;
+            font-size: 14px;
+            opacity: .9;
+            max-width: 52ch
+        }
+
+        .lb .lista-form {
+            position: relative;
+            z-index: 2;
+            margin-top: 16px;
+            border: 0;
+            border-radius: 18px;
+            padding: 12px;
+            background: var(--surface);
+            color: var(--text);
+            box-shadow: 0 14px 34px -16px rgba(20, 10, 120, .55)
+        }
+
+        .lb .lista-form:focus-within {
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, .55), 0 14px 34px -16px rgba(20, 10, 120, .55)
+        }
+
+        .lb .lista-form textarea {
+            font-size: 17px;
+            min-height: 96px
+        }
+
+        .lb #lista-armar {
+            min-height: 46px;
+            padding: 0 20px;
+            border-radius: 12px;
+            font-size: 15.5px
+        }
+
+        .lista-tip {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            color: var(--accent);
+            padding: 0 4px 6px
+        }
+
+        .lista-tip.on {
+            display: flex
+        }
+
+        .lista-tip svg {
+            width: 15px;
+            height: 15px;
+            flex: none
+        }
+
+        .lb .ejemplos {
+            position: relative;
+            z-index: 2;
+            margin-top: 14px
+        }
+
+        .lb .ejemplos span {
+            color: rgba(255, 255, 255, .85)
+        }
+
+        .lb .ejemplos .chip {
+            background: rgba(255, 255, 255, .14);
+            border-color: rgba(255, 255, 255, .28);
+            color: #fff
+        }
+
+        .lb .ejemplos .chip:hover {
+            background: rgba(255, 255, 255, .24)
+        }
+
+        .lb #lista-agregar {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            opacity: .95
+        }
+
+        @media (min-width: 900px) {
+            .lb {
+                padding: 32px 32px 24px;
+                border-radius: 28px
+            }
+
+            .lb h1 {
+                font-size: 38px
+            }
+
+            .lb>.lb-txt>p {
+                font-size: 16px
+            }
+        }
+
+        #lista-res {
+            scroll-margin-top: 128px
+        }
+
+        @media (min-width: 900px) {
+            #lista-res {
+                scroll-margin-top: 84px
+            }
+        }
+
+        .lb .lista-acciones {
+            flex-wrap: nowrap
+        }
+
+        @media (max-width: 479px) {
+            .lb #lista-mic {
+                width: 46px;
+                min-height: 46px;
+                padding: 0;
+                flex: none
+            }
+
+            .lb #lista-mic span {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0 0 0 0)
+            }
+
+            .lb #lista-mic.escuchando {
+                background: #FDECEA;
+                border-color: #C9341F;
+                color: #C9341F
+            }
+        }
+
+        /* ============ Lista: "Armando tu pedido" ============ */
+        .armando {
+            margin-top: 20px;
+            border-radius: 24px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            padding: 22px 18px;
+            display: grid;
+            gap: 18px;
+            justify-items: center;
+            text-align: center;
+            box-shadow: var(--shadow-lg)
+        }
+
+        .arm-escena {
+            position: relative;
+            width: 220px;
+            height: 150px
+        }
+
+        .arm-carro {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 96px;
+            height: 96px;
+            margin-left: -48px;
+            border-radius: 30px;
+            background: var(--accent);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 16px 34px -14px rgba(70, 54, 227, .7);
+            animation: carro 1.2s ease-in-out infinite
+        }
+
+        .arm-carro svg {
+            width: 50px;
+            height: 50px
+        }
+
+        @keyframes carro {
+            0%, 100% { transform: translateY(0) }
+            45% { transform: translateY(3px) scale(1.03, .97) }
+        }
+
+        .arm-cae {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            margin-left: -20px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            color: var(--accent);
+            display: grid;
+            place-items: center;
+            opacity: 0;
+            animation: cae 2.4s cubic-bezier(.5, 0, .7, 1) infinite
+        }
+
+        .arm-cae svg {
+            width: 22px;
+            height: 22px
+        }
+
+        @keyframes cae {
+            0% { opacity: 0; transform: translate(var(--x), -6px) rotate(var(--r)) scale(1) }
+            12% { opacity: 1 }
+            62% { opacity: 1; transform: translate(0, 82px) rotate(0) scale(.8) }
+            72%, 100% { opacity: 0; transform: translate(0, 96px) scale(.4) }
+        }
+
+        .arm-cadenas {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px
+        }
+
+        .arm-cadenas span {
+            height: 28px;
+            padding: 0 11px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 12.5px;
+            font-weight: 600;
+            background: var(--surface-2);
+            border: 1px solid var(--line);
+            color: var(--text-2);
+            transition: background .25s, color .25s, border-color .25s, transform .25s
+        }
+
+        .arm-cadenas span.on {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px)
+        }
+
+        .arm-pasos {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+            text-align: left;
+            width: min(100%, 340px);
+            margin: 0;
+            padding: 0
+        }
+
+        .arm-pasos li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: var(--text-2);
+            transition: color .25s
+        }
+
+        .arm-pasos li i {
+            flex: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--line);
+            display: grid;
+            place-items: center;
+            transition: background .25s, border-color .25s
+        }
+
+        .arm-pasos li.activo {
+            color: var(--text);
+            font-weight: 600
+        }
+
+        .arm-pasos li.activo i {
+            border-color: var(--accent);
+            border-top-color: transparent;
+            animation: girar .8s linear infinite
+        }
+
+        .arm-pasos li.hecho {
+            color: var(--text)
+        }
+
+        .arm-pasos li.hecho i {
+            background: var(--good);
+            border-color: var(--good)
+        }
+
+        .arm-pasos li.hecho i::after {
+            content: '';
+            width: 9px;
+            height: 5px;
+            border: 2px solid #fff;
+            border-top: 0;
+            border-right: 0;
+            transform: rotate(-45deg) translate(1px, -1px)
+        }
+
+        .arm-pedido {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+            max-width: 520px
+        }
+
+        .arm-pedido span {
+            padding: 5px 10px;
+            border-radius: 10px;
+            background: var(--surface-2);
+            font-size: 13px;
+            opacity: 0;
+            transform: translateY(6px);
+            animation: entra .35s var(--ease) forwards
+        }
+
+        @keyframes entra {
+            to { opacity: 1; transform: none }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .arm-carro, .arm-cae, .arm-pasos li.activo i {
+                animation: none
+            }
+
+            .arm-cae {
+                display: none
+            }
+
+            .arm-pedido span {
+                animation: none;
+                opacity: 1;
+                transform: none
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div id="splash" aria-hidden="true">
+        <div class="sp-orbita"><div class="sp-anillo" id="sp-anillo"></div><div class="sp-centro" id="sp-centro"></div></div>
+        <div class="sp-marca"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M5 18v-5M10 18V9M15 18V6M20 18v-7" /></svg></span>Price Intelligence</div>
+        <div class="sp-txt" id="sp-txt">Buscando los mejores precios…</div>
+        <div class="sp-barra"><span></span></div>
+    </div>
+    <script>
+        // La pantalla de inicio solo aparece al entrar por el inicio y una vez por sesión
+        (function () {
+            var ver = false;
+            try { ver = !sessionStorage.getItem('pi_splash') && /^#?\/?$/.test(location.hash) && !/[?&]nosplash/.test(location.search); if (ver) sessionStorage.setItem('pi_splash', '1') } catch (e) { }
+            if (!ver) { var s = document.getElementById('splash'); s.parentNode.removeChild(s) }
+            else window.__splashT0 = Date.now();
+        })();
+    </script>
     <a class="sr" href="#app">Saltar al contenido</a>
     <header class="header">
         <div class="wrap header-in">
@@ -3084,6 +3984,35 @@
             'Otros / Promociones': ic('<path d="M3 11 11 3h7a2 2 0 0 1 2 2v7l-8 8a2 2 0 0 1-2.8 0L3 13.8a2 2 0 0 1 0-2.8Z"/><circle cx="15" cy="9" r="1.3"/>'),
         };
         const catIcon = c => CAT_ICON[c] || I.bag;
+
+        /* ================= Pantalla de inicio ================= */
+        const SPLASH = (() => {
+            const el = document.getElementById('splash');
+            if (!el) return { cerrar() { } };
+            const cats = ['Lácteos y Huevos', 'Despensa', 'Bebidas', 'Farmacia', 'Limpieza', 'Snacks y Dulces', 'Cuidado Personal', 'Bebé', 'Frescos y Congelados', 'Mascotas'];
+            const anillo = document.getElementById('sp-anillo'), centro = document.getElementById('sp-centro'), txt = document.getElementById('sp-txt');
+            anillo.innerHTML = cats.map((c, i) => `<span style="--a:${i * 360 / cats.length}deg">${CAT_ICON[c]}</span>`).join('');
+            const marcas = [...anillo.children];
+            let i = 0;
+            const paso = () => {
+                const c = cats[i % cats.length];
+                centro.innerHTML = CAT_ICON[c];
+                txt.innerHTML = `Comparando <b>${esc(c)}</b>…`;
+                marcas.forEach((m, j) => m.classList.toggle('on', j === i % cats.length));
+                i++;
+            };
+            paso();
+            const t = setInterval(paso, 650);
+            let cerrado = false;
+            const cerrar = () => {
+                if (cerrado) return; cerrado = true;
+                const espera = Math.max(0, 2600 - (Date.now() - (window.__splashT0 || 0)));   // que se alcance a leer
+                setTimeout(() => { el.classList.add('fuera'); setTimeout(() => { clearInterval(t); el.remove() }, 460) }, espera);
+            };
+            setTimeout(cerrar, 5000);   // pase lo que pase, no bloquea más de 5 s
+            el.addEventListener('click', cerrar);
+            return { cerrar };
+        })();
         const catLabel = c => c === OTROS || c === 'Otros / Promociones' ? 'Otros' : c;
 
         /* ================= Estado ================= */
@@ -3326,6 +4255,19 @@
         function vistaError(msg) {
             return `<div class="wrap empty fade-in"><h2>No pudimos cargar los precios</h2><p>${esc(msg)}. Revisá tu conexión y probá de nuevo.</p><button class="btn btn-primary" type="button" id="reintentar">Reintentar</button></div>`;
         }
+        // Banner de inicio. `dato`: el producto donde más se ahorra hoy (opcional)
+        function bannerHome(dato) {
+            const nCad = S.chains.length || 5;
+            const fechaTxt = S.fecha ? `Precios del ${fecha(S.fecha)}` : 'Precios actualizados a diario';
+            const deco = ['Lácteos y Huevos', 'Bebidas', 'Farmacia', 'Despensa', 'Limpieza', 'Bebé']
+                .map((c, i) => `<span style="${['right:6%;top:10%', 'right:22%;top:4%', 'right:4%;top:46%', 'right:30%;bottom:8%', 'right:14%;bottom:12%', 'right:40%;top:16%'][i]};animation-delay:-${i * 1.3}s">${CAT_ICON[c] || I.bag}</span>`).join('');
+            let datoHtml = '';
+            if (dato) {
+                const caro = dato.best.precio_oferta + dato.ahorro;
+                datoHtml = `<a class="hb-dato" href="${hrefProd(dato.k)}">${miniFoto({ img: dato.img })}<span><small>Dato de hoy</small><span class="nom">${esc(dato.nombre)}</span><span class="det num">${money(dato.best.precio_oferta)} en ${esc(dato.best.cadena)} · <b>ahorrás ${money(dato.ahorro)}</b> (${Math.round(dato.ahorro / caro * 100)}%)</span></span></a>`;
+            }
+            return `<section class="hb"><div class="hb-deco" aria-hidden="true">${deco}</div><div class="hb-txt"><span class="hb-kicker"><i></i>${esc(fechaTxt)}</span><h1>Pagá menos en el súper y la farmacia</h1><p>Comparamos cada producto en ${nCad} cadenas de Santa Cruz y te decimos dónde está más barato.</p><div class="hb-stats num"><div><b>${S.total ? int(S.total) : '35 mil'}</b><span>productos</span></div><div><b>${nCad}</b><span>cadenas</span></div><div><b>${S.ofertas ? int(S.ofertas) : '—'}</b><span>ofertas hoy</span></div></div><div class="hb-ctas"><a class="hb-btn blanco" href="#/lista">${I_LISTA}Armá tu lista</a><a class="hb-btn vidrio" href="${hrefBuscar({ oferta: true, orden: 'descuento' })}">${I.tag}Ver ofertas</a></div></div>${datoHtml}</section>`;
+        }
         function heroHome() {
             const nCad = S.chains.length || 5;
             const fechaTxt = S.fecha ? `Precios del ${fecha(S.fecha)}` : 'Precios actualizados a diario';
@@ -3333,7 +4275,7 @@
             return `<section class="hero"><h1>Compará precios en ${nCad} cadenas de Santa Cruz</h1><p>${esc(fechaTxt)} · ${esc(cad)}</p></section>`;
         }
         function esqueletoHome() {
-            return `<div class="wrap">${heroHome()}<div class="rail cats" aria-hidden="true">${Array.from({ length: 8 }, () => '<div class="cat"><div class="cat-ico sk"></div><div class="sk" style="height:10px;width:56px"></div></div>').join('')}</div>${skRail('Ofertas de hoy')}${skRail('Los más comparados')}</div>`;
+            return `<div class="wrap">${bannerHome()}<div class="rail cats" aria-hidden="true" style="margin-top:28px">${Array.from({ length: 8 }, () => '<div class="cat"><div class="cat-ico sk"></div><div class="sk" style="height:10px;width:56px"></div></div>').join('')}</div>${skRail('Ofertas de hoy')}${skRail('Los más comparados')}</div>`;
         }
         async function vistaHome() {
             if (!S.ready) await cargarResumen();
@@ -3347,9 +4289,12 @@
             ]);
             const vistos = new Set();
             const tomar = (rows, n) => { const out = []; for (const r of rows) { if (vistos.has(r.k)) continue; out.push(aGrupo(r)); vistos.add(r.k); if (out.length >= n) break } return out };
-            const tiles = [`<a class="cat hot" href="${hrefBuscar({ oferta: true, orden: 'descuento' })}"><span class="cat-ico">${I.tag}</span>Ofertas</a>`]
-                .concat(S.cats.map(c => `<a class="cat" href="${hrefBuscar({ cat: c })}"><span class="cat-ico">${catIcon(c)}</span>${esc(catLabel(c))}</a>`));
-            let html = `<div class="wrap fade-in">${heroHome()}${ctaLista()}<nav class="rail cats" aria-label="Categorías">${tiles.join('')}</nav>`;
+            const tiles = [`<a class="cat hot" href="${hrefBuscar({ oferta: true, orden: 'descuento' })}"><span class="cat-ico">${I.tag}</span><span>Ofertas<span class="cat-n num">${int(S.ofertas)}</span></span></a>`]
+                .concat(S.cats.map(c => `<a class="cat" href="${hrefBuscar({ cat: c })}"><span class="cat-ico">${catIcon(c)}</span><span>${esc(catLabel(c))}<span class="cat-n num">${int(S.catCount[c] || 0)}</span></span></a>`));
+            // Dato de hoy: entre los más comparados, el de mayor ahorro en % (con precio razonable y foto)
+            const dato = comparados.data.map(aGrupo).filter(g => g.img && g.best.precio_oferta >= 5 && g.ahorro >= 1)
+                .sort((a, b) => b.ahorro / (b.best.precio_oferta + b.ahorro) - a.ahorro / (a.best.precio_oferta + a.ahorro))[0];
+            let html = `<div class="wrap fade-in">${bannerHome(dato)}<section class="section cats-sec" aria-labelledby="cats-h"><div class="section-head"><div><h2 id="cats-h">Categorías</h2></div><span class="rail-ctrl"><button class="rail-btn" type="button" data-rail="cats-rail" data-dir="-1" aria-label="Categorías anteriores">${I.back}</button><button class="rail-btn" type="button" data-rail="cats-rail" data-dir="1" aria-label="Más categorías">${I.fwd}</button></span></div><nav class="rail cats" id="cats-rail" aria-label="Categorías">${tiles.join('')}</nav></section>`;
             html += rail('Ofertas de hoy', `${int(S.ofertas)} productos con descuento`, tomar(ofertas.data, 16), hrefBuscar({ oferta: true, orden: 'descuento' }));
             html += rail('Los más comparados', 'Están en 3 o más cadenas: acá es donde más se ahorra', tomar(comparados.data, 16), hrefBuscar({ multi: true, orden: 'ahorro' }));
             principales.forEach((c, i) => { html += rail(c, `${int(S.catCount[c])} productos`, tomar(porCat[i].data, 12), hrefBuscar({ cat: c })) });
@@ -3516,6 +4461,7 @@
 
         /* ================= Lista de compras con IA ================= */
         const I_LISTA = ic('<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/>', 1.8);
+        const I_CARRO = ic('<path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.5 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/>', 1.8);
         const I_MIC = ic('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', 1.8);
         const L = { texto: '', res: null, abierto: -1, cargando: false, error: '' };
         try { L.texto = localStorage.getItem('pi_lista_texto') || ''; L.res = JSON.parse(localStorage.getItem('pi_lista_res') || 'null') } catch (e) { }
@@ -3601,7 +4547,7 @@
             return `<section class="p-block" id="planes-sec"><h2>Dónde te conviene</h2><p class="planes-nota">${nota}</p><div class="planes" aria-label="Comparación por cadena">${html}</div>${toggle}<p class="p-note">Tocá cualquier producto para cambiarlo, ajustar la cantidad o quitarlo.${S.fecha ? ` Precios del ${esc(fecha(S.fecha))}.` : ''}</p></section>`;
         }
         function htmlResultadoLista() {
-            if (L.cargando) return `<p class="p-note" style="margin-top:20px">Buscando tus productos en ${S.chains.length || 5} cadenas…</p><div class="planes" aria-hidden="true">${'<div class="plan sk" style="height:420px"></div>'.repeat(3)}</div>`;
+            if (L.cargando) return htmlArmando();
             if (L.error) return `<div class="verdict neutral" style="margin-top:16px">${I.info}<span>${esc(L.error)}</span></div>`;
             if (!L.res) return '';
             const items = L.res.items;
@@ -3612,18 +4558,48 @@
         function vistaLista() {
             const hayVoz = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
             const ejemplos = ['Leche Pil, pan, huevos y café', '2 arroz Grano de Oro, aceite Fino y azúcar', 'Pañales Huggies G, toallitas y shampoo Johnson'];
-            return `<div class="wrap fade-in"><div class="res-head" style="display:block"><a class="crumb" href="#/">${I.back.replace('<svg', '<svg width="16" height="16"')}Inicio</a><h1>Tu lista de compras</h1><p>Escribila o dictala como te salga. La buscamos en las ${S.chains.length || 5} cadenas y te decimos dónde te conviene.</p></div>
+            const deco = ['Despensa', 'Lácteos y Huevos', 'Limpieza'].map((c, i) => `<span style="${['right:5%;top:12%', 'right:20%;top:4%', 'right:10%;top:40%'][i]};animation-delay:-${i * 1.6}s">${CAT_ICON[c] || I.bag}</span>`).join('');
+            return `<div class="wrap fade-in"><a class="crumb" href="#/" style="margin-top:16px;display:inline-flex">${I.back.replace('<svg', '<svg width="16" height="16"')}Inicio</a>
+                <section class="lb"><div class="hb-deco" aria-hidden="true">${deco}</div><div class="lb-txt"><span class="hb-kicker"><i></i>Con inteligencia artificial</span><h1>¿Qué necesitás comprar?</h1><p>Escribila o dictala como te salga. La buscamos en las ${S.chains.length || 5} cadenas y te armamos el carrito más barato.</p></div>
                 <form class="lista-form" id="lista-form"><label class="sr" for="lista-texto">Qué necesitás comprar</label><textarea id="lista-texto" maxlength="800" placeholder="Ej: 2 leches Pil de litro, arroz Grano de Oro, detergente Omo, papel higiénico">${esc(L.texto)}</textarea>
-                <div class="lista-acciones"><span class="cuenta num" id="lista-cuenta">${L.texto.length}/800</span>${hayVoz ? `<button class="btn btn-secondary" type="button" id="lista-mic">${I_MIC}<span>Dictar</span></button>` : ''}<button class="btn btn-primary" type="submit" id="lista-armar">Armar mi lista</button></div></form>
+                <p class="lista-tip" id="lista-tip">${I.info}<span>Tip: separá los productos con comas para que salga más preciso.</span></p>
+                <div class="lista-acciones"><span class="cuenta num" id="lista-cuenta">${L.texto.length}/800</span>${hayVoz ? `<button class="btn btn-secondary" type="button" id="lista-mic" aria-label="Dictar la lista">${I_MIC}<span>Dictar</span></button>` : ''}<button class="btn btn-primary" type="submit" id="lista-armar">Armar mi lista</button></div></form>
                 <div class="ejemplos"><span>Probá:</span>${ejemplos.map(e => `<button class="chip" type="button" data-ejemplo="${esc(e)}">${esc(e)}</button>`).join('')}</div>
-                <button class="li-link" type="button" id="lista-agregar" style="margin-top:8px;padding-left:0">＋ O agregá productos uno por uno, eligiendo la categoría</button>
+                <button class="li-link" type="button" id="lista-agregar" style="margin-top:10px;padding-left:0">＋ O agregá productos uno por uno, eligiendo la categoría</button></section>
                 <div id="lista-res">${htmlResultadoLista()}</div></div>`;
+        }
+        // Mientras la IA arma la lista: el carrito se llena, las cadenas se recorren y los pasos avanzan
+        const PASOS_ARMANDO = ['Entendiendo tu lista', 'Buscando en las cadenas', 'Comparando precios', 'Armando el carrito más barato'];
+        function htmlArmando() {
+            const cats = ['Lácteos y Huevos', 'Despensa', 'Bebidas', 'Limpieza', 'Snacks y Dulces', 'Farmacia'];
+            const cae = cats.map((c, i) => `<span class="arm-cae" style="--x:${[-70, 60, -30, 80, -80, 30][i]}px;--r:${[-18, 14, -8, 20, -12, 10][i]}deg;animation-delay:${i * .4}s">${CAT_ICON[c] || I.bag}</span>`).join('');
+            const pedido = (L.texto || '').split(/[,;\n]+|\s+y\s+/i).map(x => x.trim()).filter(Boolean).slice(0, 12);
+            const cadenas = (S.chains.length ? S.chains : ['Amarket', 'Farmacias Chavez', 'Farmacorp', 'Fidalga', 'Hipermaxi']);
+            return `<div class="armando" role="status" aria-live="polite"><div class="arm-escena" aria-hidden="true">${cae}<span class="arm-carro">${I_CARRO}</span></div>
+                <div class="arm-cadenas" id="arm-cadenas" aria-hidden="true">${cadenas.map(c => `<span>${esc(c)}</span>`).join('')}</div>
+                <ol class="arm-pasos" id="arm-pasos">${PASOS_ARMANDO.map((p, i) => `<li class="${i === 0 ? 'activo' : ''}"><i></i>${p}…</li>`).join('')}</ol>
+                ${pedido.length ? `<div class="arm-pedido" aria-hidden="true">${pedido.map((x, i) => `<span style="animation-delay:${.15 + i * .18}s">${esc(x)}</span>`).join('')}</div>` : ''}</div>`;
+        }
+        let armandoT = null;
+        function animarArmando() {
+            clearInterval(armandoT);
+            let tick = 0;
+            armandoT = setInterval(() => {
+                tick++;
+                const cads = document.querySelectorAll('#arm-cadenas span');
+                cads.forEach((c, i) => c.classList.toggle('on', i === tick % cads.length));
+                const paso = Math.min(PASOS_ARMANDO.length - 1, Math.floor(tick / 3));   // un paso cada ~1,5 s; el último espera a la IA
+                document.querySelectorAll('#arm-pasos li').forEach((li, i) => { li.className = i < paso ? 'hecho' : i === paso ? 'activo' : '' });
+                if (!document.getElementById('arm-pasos')) clearInterval(armandoT);
+            }, 500);
         }
         function pintarResultadoLista() { const el = $('#lista-res'); if (el) { el.innerHTML = htmlResultadoLista(); wireResultadoLista() } }
         async function armarLista() {
             const ta = $('#lista-texto'); const texto = ta.value.trim();
             if (texto.length < 2) { ta.focus(); return }
-            L.texto = texto; L.cargando = true; L.error = ''; L.abierto = -1; L.expandido = false; pintarResultadoLista();
+            L.texto = texto; L.cargando = true; L.error = ''; L.abierto = -1; L.expandido = false; pintarResultadoLista(); animarArmando();
+            const t0 = Date.now();
+            const res0 = $('#lista-res'); if (res0) res0.scrollIntoView({ behavior: 'smooth', block: 'start' });
             if (!S.ready) await cargarResumen().catch(() => { });
             $('#lista-armar').disabled = true;
             try {
@@ -3635,6 +4611,11 @@
             } catch (e) {
                 L.error = /Failed to fetch|NetworkError|Load failed/i.test(e.message) ? 'No pudimos conectarnos. Revisá tu conexión y probá de nuevo.' : e.message;
             }
+            // que la animación se alcance a ver (si la IA respondió muy rápido) y cerrar todos los pasos
+            const falta = 1800 - (Date.now() - t0); if (falta > 0) await new Promise(r => setTimeout(r, falta));
+            document.querySelectorAll('#arm-pasos li').forEach(li => li.className = 'hecho');
+            await new Promise(r => setTimeout(r, 350));
+            clearInterval(armandoT);
             L.cargando = false; $('#lista-armar') && ($('#lista-armar').disabled = false);
             pintarResultadoLista();
             const el = $('#lista-res'); if (el && L.res && !L.error) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3795,7 +4776,13 @@
         let reconocedor = null;
         function wireLista() {
             const ta = $('#lista-texto');
-            ta.oninput = () => { L.texto = ta.value; $('#lista-cuenta').textContent = `${ta.value.length}/800`; guardarLista() };
+            const tip = $('#lista-tip');
+            ta.oninput = () => {
+                L.texto = ta.value; $('#lista-cuenta').textContent = `${ta.value.length}/800`; guardarLista();
+                // muchas palabras y ninguna coma: sugerir separarlas
+                if (tip) tip.classList.toggle('on', ta.value.trim().split(/\s+/).length >= 4 && !/[,;\n]/.test(ta.value));
+            };
+            ta.oninput();
             $('#lista-form').onsubmit = e => { e.preventDefault(); armarLista() };
             document.querySelectorAll('[data-ejemplo]').forEach(b => b.onclick = () => { ta.value = b.dataset.ejemplo; ta.oninput(); armarLista() });
             const mic = $('#lista-mic');
@@ -3836,11 +4823,13 @@
             } catch (e) {
                 if (seq !== renderSeq) return;
                 app.innerHTML = vistaError(e.message);
+                SPLASH.cerrar();
                 $('#reintentar').onclick = () => render();
                 return;
             }
             if (seq !== renderSeq) return;
             app.innerHTML = html;
+            SPLASH.cerrar();
             document.body.classList.toggle('has-buybar', r.view === 'p' && !!$('#buybar'));
             if (r.view === 'p' && S._prod && S._prod.k === r.key) document.title = `${S._prod.nombre} — Price Intelligence`;
             else if (r.view === 'r') document.title = `${r.q ? r.q : r.cat ? catLabel(r.cat) : 'Productos'} — Price Intelligence`;
