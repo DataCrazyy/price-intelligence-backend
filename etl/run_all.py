@@ -247,6 +247,17 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
 
         # La página web lee de Supabase (tabla web_productos), no del JSON.
         # Si todavía no se corrió db/migracion_web.sql, avisa y sigue.
+        # Fotos lentas (Hipermaxi/Chávez) sin equivalente en Shopify: copia propia en Supabase Storage
+        log("Copiando fotos nuevas de Hipermaxi/Chávez ...")
+        try:
+            import espejar_fotos
+            r = espejar_fotos.espejar()
+            log(f"  {r['copiadas']} copiadas, {r['pendientes']} pendientes")
+        except SystemExit as e:
+            log(f"  ADVERTENCIA: no se copiaron fotos ({e}).")
+        except Exception as e:
+            log(f"  ADVERTENCIA: no se pudieron copiar fotos ({e}). ¿Corriste db/migracion_fotos.sql en Supabase?")
+
         log("Publicando web_productos para la página ...")
         try:
             import publicar_web

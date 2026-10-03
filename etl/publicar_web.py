@@ -34,6 +34,7 @@ import taxonomia
 
 load_dotenv()
 DATABASE_URL = os.environ.get("DATABASE_URL")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://dxdmstnkgqpndbbqkwct.supabase.co").rstrip("/")
 CATEGORIAS_JS = Path(__file__).resolve().parent.parent / "docs" / "categorias.js"
 
 
@@ -83,7 +84,9 @@ def origen_img(url):
             break
         resto = m.group(1)
         u = resto if re.match(r"^https?://", resto, re.I) else unquote(resto.split("&")[0])
-    return None if not u or u.startswith("/") else u
+    if not u or u.startswith("/") or u.lower().startswith("data:"):   # relativa o "sin foto" incrustada
+        return None
+    return u
 
 
 def norm_busqueda(texto):
@@ -121,11 +124,35 @@ def leer(conn):
     if cur.fetchone()["hay"]:
         cur.execute("SELECT k, cat, sub FROM producto_categoria")
         clasif = {r["k"]: (r["cat"], r["sub"]) for r in cur.fetchall() if taxonomia.valida(r["cat"], r["sub"])}
+    # Fotos copiadas a Supabase Storage (etl/espejar_fotos.py)
+    espejo = {}
+    cur.execute("SELECT to_regclass('foto_espejo') IS NOT NULL AS hay")
+    if cur.fetchone()["hay"]:
+        cur.execute("SELECT url_origen, ruta, ok, error FROM foto_espejo WHERE ok OR error LIKE '404%%'")
+        for r in cur.fetchall():
+            # 404 = la cadena ya no tiene esa foto: mejor el ícono de la categoría que una imagen rota
+            espejo[r["url_origen"]] = r["ruta"] if r["ok"] else None
+    clasif["__espejo__"] = espejo
     return filas, hist, (fecha.isoformat() if fecha else None), cadenas, clasif
 
 
+def elegir_img(urls, espejo):
+    """Qué foto mostrar: primero las de Shopify (Amarket, Fidalga, Farmacorp: cargan
+    rápido); si no hay, nuestra copia en Storage; si no, la original."""
+    urls = [u for u in (origen_img(x) for x in urls) if u]
+    rapida = next((u for u in urls if "cdn.shopify.com" in u), None)
+    if rapida:
+        return rapida
+    for u in sorted(urls):
+        if espejo.get(u):
+            return f"{SUPABASE_URL}/storage/v1/object/public/fotos/{espejo[u]}_m.webp"
+    vivas = [u for u in urls if not (u in espejo and espejo[u] is None)]
+    return vivas[0] if vivas else None
+
+
 def calcular(filas, hist, fecha, macro_de, otros, clasif=None):
-    clasif = clasif or {}
+    clasif = dict(clasif or {})
+    espejo = clasif.pop("__espejo__", {})
     grupos = defaultdict(list)
     for f in filas:
         grupos[f["k"]].append(f)
@@ -167,7 +194,7 @@ def calcular(filas, hist, fecha, macro_de, otros, clasif=None):
         ahorro = round(worst["precio"] - best["precio"], 2)
         n = len(lst)
         nombre = (best["nombre"] or "").strip()
-        img = next((u for u in (origen_img(x["imagen"]) for x in lst) if u), None)
+        img = elegir_img([x["imagen"] for x in lst], espejo)
 
         historial = []
         for x in lst:

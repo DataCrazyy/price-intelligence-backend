@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://images.weserv.nl" crossorigin>
+    <link rel="preconnect" href="https://dxdmstnkgqpndbbqkwct.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.shopify.com">
     <link rel="dns-prefetch" href="https://images.weserv.nl">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -4182,7 +4183,7 @@
                 if (/^https?:\/\//i.test(resto)) u = resto;                         // sin codificar: es todo el resto
                 else { u = decodeURIComponent(resto.split('&')[0]) }
             }
-            if (u.startsWith('/')) return '';                                          // ruta relativa de otra web: no sirve
+            if (u.startsWith('/') || /^data:/i.test(u)) return '';                     // ruta relativa de otra web o "sin foto" incrustada
             return u;
         }
         function imgUrl(url, w) {
@@ -4190,6 +4191,8 @@
             if (!url) return '';
             try {
                 const u = new URL(url);
+                // Nuestra copia en Supabase Storage (etl/espejar_fotos.py): versión chica para listas, grande para la ficha
+                if (/\/storage\/v1\/object\/public\/fotos\//.test(u.pathname)) return w <= 200 ? url.replace(/_m\.webp$/, '_s.webp') : url;
                 if (/(^|\.)cdn\.shopify\.com$/i.test(u.hostname)) { u.searchParams.set('width', w); return u.toString() }
                 if (!/^https?:$/i.test(u.protocol)) return url;
                 return `https://images.weserv.nl/?url=${encodeURIComponent(u.href.replace(/^https?:\/\//i, ''))}&w=${w}&q=75&output=webp`;
