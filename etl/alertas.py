@@ -206,7 +206,7 @@ def revisar():
 
         if cumple:
             direccion = "subió" if variacion_pct > 0 else "bajó"
-            asunto = f"[Price Intelligence] {a['producto_nombre']} {direccion} en {a['cadena']}"
+            asunto = f"[Precios Claros] {a['producto_nombre']} {direccion} en {a['cadena']}"
             cuerpo = (
                 f"{a['producto_nombre']}\n"
                 f"Cadena: {a['cadena']}\n"

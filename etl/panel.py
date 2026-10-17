@@ -299,11 +299,13 @@ HTML = """
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Price Intelligence — Panel</title>
+<title>Precios Claros — Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0d0f14; --panel: #161a22; --panel-2: #1d212b; --border: #2a2f3a;
-    --texto: #eef0f4; --muted: #8d93a3; --primary: #5b7cfa; --primary-2: #4364e0;
+    --bg: #02130F; --panel: #0B231D; --panel-2: #133229; --border: #1E3E35;
+    --texto: #EEF5F2; --muted: #8FA8A0; --primary: #12B886; --primary-2: #0B8A65;
     --green: #34c77b; --green-bg: rgba(52,199,123,.12);
     --red: #ff6161; --red-bg: rgba(255,97,97,.12);
     --amber: #f5a623; --amber-bg: rgba(245,166,35,.12);
@@ -311,10 +313,11 @@ HTML = """
   }
   * { box-sizing: border-box; }
   body {
-    font-family: -apple-system, "Segoe UI", system-ui, sans-serif; max-width: 1040px; margin: 0 auto;
+    font-family: Inter, -apple-system, "Segoe UI", system-ui, sans-serif; max-width: 1040px; margin: 0 auto;
     padding: 28px 20px 60px; background: var(--bg); color: var(--texto); line-height: 1.45;
   }
-  h1 { font-size: 1.5rem; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+  h1 { font-family: Sora, Inter, sans-serif; font-size: 1.5rem; letter-spacing: -.02em; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+  h1 .by { font-family: Inter, sans-serif; font-size: .75rem; font-weight: 600; letter-spacing: 0; color: #63E6BE; }
   .subtitulo { color: var(--muted); font-size: .92rem; margin: 0 0 22px; }
 
   .franja-estado {
@@ -399,7 +402,7 @@ HTML = """
   }
   .pill.ok, .pill.ok_con_errores { background: var(--green-bg); color: var(--green); }
   .pill.error { background: var(--red-bg); color: var(--red); }
-  .pill.en_progreso { background: rgba(91,124,250,.15); color: var(--primary); }
+  .pill.en_progreso { background: rgba(18,184,134,.15); color: var(--primary); }
 
   #log {
     background: #000; color: #7fffa0; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .78rem;
@@ -410,7 +413,7 @@ HTML = """
 </style>
 </head>
 <body>
-  <h1>🧭 Price Intelligence — Panel</h1>
+  <h1><svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 32) rotate(-18) scale(.9) translate(-32 -32)"><path d="M4 32 L19 13 H55 a5 5 0 0 1 5 5 V46 a5 5 0 0 1 -5 5 H19 Z M14.5 32 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z" fill="#12B886" fill-rule="evenodd"/><rect x="25" y="23" width="3" height="18" rx="1.5" fill="#fff"/><rect x="30" y="23" width="1.6" height="18" rx=".8" fill="#fff"/><rect x="33.6" y="23" width="4" height="18" rx="2" fill="#fff"/><rect x="39.6" y="23" width="2" height="18" rx="1" fill="#fff"/><rect x="43.6" y="23" width="3.4" height="18" rx="1.7" fill="#fff"/><rect x="49" y="23" width="1.8" height="18" rx=".9" fill="#fff"/><circle cx="14.5" cy="32" r="5.6" fill="none" stroke="#FFA94D" stroke-width="2.2"/></g></svg>Precios Claros — Panel <span class="by">by prometeo</span></h1>
   <p class="subtitulo">Scraping, matching y monitoreo del pipeline completo, sin pasar por la terminal.</p>
 
   <div class="franja-estado" id="franja-estado">

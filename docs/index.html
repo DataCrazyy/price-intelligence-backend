@@ -9,31 +9,34 @@
     <link rel="dns-prefetch" href="https://cdn.shopify.com">
     <link rel="dns-prefetch" href="https://images.weserv.nl">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <title>Price Intelligence — Compará precios en Santa Cruz</title>
+    <title>Precios Claros — Compará precios en Santa Cruz</title>
     <meta name="description" content="Compará precios de supermercados y farmacias de Santa Cruz, Bolivia: Fidalga, Hipermaxi, Amarket, Farmacorp y Farmacias Chávez.">
-    <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%235B4BF5'/%3E%3Cpath d='M5 18v-5M10 18V9M15 18V6M20 18v-7' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#F4F8F6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#02130F" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate%2832 32%29 rotate%28-18%29 scale%28.9%29 translate%28-32 -32%29%22%3E%3Cpath d=%22M4 32 L19 13 H55 a5 5 0 0 1 5 5 V46 a5 5 0 0 1 -5 5 H19 Z M14.5 32 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z%22 fill=%22%2312B886%22 fill-rule=%22evenodd%22/%3E%3Crect x=%2225%22 y=%2223%22 width=%223%22 height=%2218%22 rx=%221.5%22 fill=%22%23fff%22/%3E%3Crect x=%2230%22 y=%2223%22 width=%221.6%22 height=%2218%22 rx=%22.8%22 fill=%22%23fff%22/%3E%3Crect x=%2233.6%22 y=%2223%22 width=%224%22 height=%2218%22 rx=%222%22 fill=%22%23fff%22/%3E%3Crect x=%2239.6%22 y=%2223%22 width=%222%22 height=%2218%22 rx=%221%22 fill=%22%23fff%22/%3E%3Crect x=%2243.6%22 y=%2223%22 width=%223.4%22 height=%2218%22 rx=%221.7%22 fill=%22%23fff%22/%3E%3Crect x=%2249%22 y=%2223%22 width=%221.8%22 height=%2218%22 rx=%22.9%22 fill=%22%23fff%22/%3E%3Ccircle cx=%2214.5%22 cy=%2232%22 r=%225.6%22 fill=%22none%22 stroke=%22%23FFA94D%22 stroke-width=%222.2%22/%3E%3C/g%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         /* ============ Tokens (ver "Propuesta de rediseño": Sistema visual) ============ */
         :root {
-            --bg: #F5F5F7;
+            --bg: #F4F8F6;
             --surface: #FFFFFF;
-            --surface-2: #EDEDF0;
-            --text: #1D1D1F;
-            --text-2: #6E6E73;
-            --line: #E5E5EA;
-            --line-strong: #C7C7CC;
-            --accent: #5B4BF5;
-            --accent-press: #4A3AE0;
-            --accent-soft: #EEEBFF;
+            --surface-2: #E8F1ED;
+            --text: #10211C;
+            --text-2: #5E6B66;
+            --line: #E0EAE5;
+            --line-strong: #C3D3CC;
+            --accent: #0B8A65;
+            --accent-press: #087556;
+            --accent-soft: #DDF5EC;
+            --spark: #FFA94D;
+            --ink: #03201A;
+            --font-display: Sora, Inter, -apple-system, "Segoe UI", sans-serif;
             --on-accent: #FFFFFF;
             --good: #0A7A3E;
             --good-soft: #E7F5EC;
-            --glass: rgba(245, 245, 247, .82);
+            --glass: rgba(244, 248, 246, .84);
             --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 1px 3px rgba(0, 0, 0, .06);
             --shadow-lg: 0 10px 30px rgba(0, 0, 0, .10);
             --thumb: #FFFFFF;
@@ -48,20 +51,20 @@
 
         @media (prefers-color-scheme: dark) {
             :root:not([data-theme="light"]) {
-                --bg: #000000;
-                --surface: #1C1C1E;
-                --surface-2: #2C2C2E;
+                --bg: #02130F;
+                --surface: #0B231D;
+                --surface-2: #133229;
                 --text: #F5F5F7;
-                --text-2: #8E8E93;
-                --line: #38383A;
-                --line-strong: #48484A;
-                --accent: #A79BFF;
-                --accent-press: #BDB3FF;
-                --accent-soft: #2A2550;
-                --on-accent: #000000;
+                --text-2: #8FA8A0;
+                --line: #1E3E35;
+                --line-strong: #2D5247;
+                --accent: #63E6BE;
+                --accent-press: #96F2D7;
+                --accent-soft: #08463A;
+                --on-accent: #03201A;
                 --good: #30D158;
                 --good-soft: #0F2A18;
-                --glass: rgba(0, 0, 0, .72);
+                --glass: rgba(2, 19, 15, .76);
                 --shadow: none;
                 --shadow-lg: 0 10px 30px rgba(0, 0, 0, .6);
                 color-scheme: dark;
@@ -69,20 +72,20 @@
         }
 
         :root[data-theme="dark"] {
-            --bg: #000000;
-            --surface: #1C1C1E;
-            --surface-2: #2C2C2E;
+            --bg: #02130F;
+            --surface: #0B231D;
+            --surface-2: #133229;
             --text: #F5F5F7;
-            --text-2: #8E8E93;
-            --line: #38383A;
-            --line-strong: #48484A;
-            --accent: #A79BFF;
-            --accent-press: #BDB3FF;
-            --accent-soft: #2A2550;
-            --on-accent: #000000;
+            --text-2: #8FA8A0;
+            --line: #1E3E35;
+            --line-strong: #2D5247;
+            --accent: #63E6BE;
+            --accent-press: #96F2D7;
+            --accent-soft: #08463A;
+            --on-accent: #03201A;
             --good: #30D158;
             --good-soft: #0F2A18;
-            --glass: rgba(0, 0, 0, .72);
+            --glass: rgba(2, 19, 15, .76);
             --shadow: none;
             --shadow-lg: 0 10px 30px rgba(0, 0, 0, .6);
             color-scheme: dark;
@@ -218,17 +221,57 @@
         }
 
         .brand-mark {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: var(--accent);
+            width: 36px;
+            height: 36px;
             display: grid;
-            place-items: center
+            place-items: center;
+            flex: none;
+            transition: transform .4s var(--ease)
+        }
+
+        .brand:hover .brand-mark {
+            transform: translateY(-2px) scale(1.05)
         }
 
         .brand-mark svg {
-            width: 17px;
-            height: 17px
+            width: 100%;
+            height: 100%
+        }
+
+        .brand-txt {
+            display: inline-flex;
+            flex-direction: column;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 19px;
+            letter-spacing: -.03em;
+            line-height: 1;
+            color: var(--ink)
+        }
+
+        .brand-by {
+            font-family: Inter, sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0;
+            color: var(--accent);
+            margin-top: 3px
+        }
+
+        :root[data-theme="dark"] .brand-txt {
+            color: var(--text)
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) .brand-txt {
+                color: var(--text)
+            }
+        }
+
+        h1,
+        h2,
+        .sp-marca {
+            font-family: var(--font-display)
         }
 
         .search {
@@ -2965,10 +3008,10 @@
             padding: 22px 20px 20px;
             color: #fff;
             background:
-                radial-gradient(120% 120% at 100% 0%, rgba(160, 145, 255, .55) 0%, transparent 55%),
-                radial-gradient(90% 90% at 0% 100%, rgba(40, 25, 170, .55) 0%, transparent 60%),
-                linear-gradient(135deg, #4636E3 0%, #5B4BF5 50%, #7656FF 100%);
-            box-shadow: 0 18px 40px -18px rgba(70, 54, 227, .55)
+                radial-gradient(120% 120% at 100% 0%, rgba(99, 230, 190, .45) 0%, transparent 55%),
+                radial-gradient(90% 90% at 0% 100%, rgba(3, 32, 26, .6) 0%, transparent 60%),
+                linear-gradient(135deg, #087556 0%, #0B8A65 50%, #12B886 100%);
+            box-shadow: 0 18px 40px -18px rgba(11, 138, 101, .5)
         }
 
         .hb-txt {
@@ -3074,12 +3117,12 @@
 
         .hb-btn.blanco {
             background: #fff;
-            color: #4636E3;
+            color: #087556;
             box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .35)
         }
 
         .hb-btn.blanco:hover {
-            background: #F3F1FF
+            background: #EFFAF6
         }
 
         .hb-btn.vidrio {
@@ -3158,7 +3201,7 @@
             font-weight: 700;
             letter-spacing: .04em;
             text-transform: uppercase;
-            color: #4636E3
+            color: #087556
         }
 
         .hb-dato .nom {
@@ -3345,8 +3388,8 @@
             justify-content: center;
             gap: 28px;
             background:
-                radial-gradient(80% 60% at 50% 35%, rgba(150, 135, 255, .55), transparent 70%),
-                linear-gradient(160deg, #3F2FD8 0%, #5B4BF5 55%, #7656FF 100%);
+                radial-gradient(80% 60% at 50% 35%, rgba(99, 230, 190, .4), transparent 70%),
+                linear-gradient(160deg, #055C43 0%, #0B8A65 55%, #12B886 100%);
             color: #fff;
             transition: opacity .45s ease, transform .45s ease
         }
@@ -3392,7 +3435,7 @@
 
         .sp-anillo span.on {
             background: #fff;
-            color: #5B4BF5
+            color: #0B8A65
         }
 
         @keyframes girar {
@@ -3408,7 +3451,7 @@
             margin: -56px;
             border-radius: 34px;
             background: #fff;
-            color: #5B4BF5;
+            color: #0B8A65;
             display: grid;
             place-items: center;
             box-shadow: 0 20px 50px -14px rgba(20, 10, 120, .6)
@@ -3435,7 +3478,11 @@
         }
 
         .sp-marca .brand-mark {
-            background: rgba(255, 255, 255, .2)
+            background: #fff;
+            border-radius: 12px;
+            padding: 4px;
+            width: 40px;
+            height: 40px
         }
 
         .sp-txt {
@@ -3483,10 +3530,10 @@
             padding: 20px 16px 16px;
             color: #fff;
             background:
-                radial-gradient(120% 120% at 100% 0%, rgba(160, 145, 255, .55) 0%, transparent 55%),
-                radial-gradient(90% 90% at 0% 100%, rgba(40, 25, 170, .5) 0%, transparent 60%),
-                linear-gradient(135deg, #4636E3 0%, #5B4BF5 50%, #7656FF 100%);
-            box-shadow: 0 18px 40px -18px rgba(70, 54, 227, .55)
+                radial-gradient(120% 120% at 100% 0%, rgba(99, 230, 190, .45) 0%, transparent 55%),
+                radial-gradient(90% 90% at 0% 100%, rgba(3, 32, 26, .55) 0%, transparent 60%),
+                linear-gradient(135deg, #087556 0%, #0B8A65 50%, #12B886 100%);
+            box-shadow: 0 18px 40px -18px rgba(11, 138, 101, .5)
         }
 
         .lb .hb-deco span {
@@ -4081,7 +4128,7 @@
 <body>
     <div id="splash" aria-hidden="true">
         <div class="sp-orbita"><div class="sp-anillo" id="sp-anillo"></div><div class="sp-centro" id="sp-centro"></div></div>
-        <div class="sp-marca"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M5 18v-5M10 18V9M15 18V6M20 18v-7" /></svg></span>Price Intelligence</div>
+        <div class="sp-marca"><span class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 32) rotate(-18) scale(.9) translate(-32 -32)"><path d="M4 32 L19 13 H55 a5 5 0 0 1 5 5 V46 a5 5 0 0 1 -5 5 H19 Z M14.5 32 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z" fill="#12B886" fill-rule="evenodd"/><rect x="25" y="23" width="3" height="18" rx="1.5" fill="#fff"/><rect x="30" y="23" width="1.6" height="18" rx=".8" fill="#fff"/><rect x="33.6" y="23" width="4" height="18" rx="2" fill="#fff"/><rect x="39.6" y="23" width="2" height="18" rx="1" fill="#fff"/><rect x="43.6" y="23" width="3.4" height="18" rx="1.7" fill="#fff"/><rect x="49" y="23" width="1.8" height="18" rx=".9" fill="#fff"/><circle cx="14.5" cy="32" r="5.6" fill="none" stroke="#FFA94D" stroke-width="2.2"/></g></svg></span>Precios Claros</div>
         <div class="sp-txt" id="sp-txt">Buscando los mejores precios…</div>
         <div class="sp-barra"><span></span></div>
     </div>
@@ -4097,9 +4144,9 @@
     <a class="sr" href="#app">Saltar al contenido</a>
     <header class="header">
         <div class="wrap header-in">
-            <a class="brand" href="#/" aria-label="Price Intelligence, inicio">
-                <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M5 18v-5M10 18V9M15 18V6M20 18v-7" /></svg></span>
-                <span>Price Intelligence</span>
+            <a class="brand" href="#/" aria-label="Precios Claros, inicio">
+                <span class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><g transform="translate(32 32) rotate(-18) scale(.9) translate(-32 -32)"><path d="M4 32 L19 13 H55 a5 5 0 0 1 5 5 V46 a5 5 0 0 1 -5 5 H19 Z M14.5 32 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z" fill="#12B886" fill-rule="evenodd"/><rect x="25" y="23" width="3" height="18" rx="1.5" fill="#fff"/><rect x="30" y="23" width="1.6" height="18" rx=".8" fill="#fff"/><rect x="33.6" y="23" width="4" height="18" rx="2" fill="#fff"/><rect x="39.6" y="23" width="2" height="18" rx="1" fill="#fff"/><rect x="43.6" y="23" width="3.4" height="18" rx="1.7" fill="#fff"/><rect x="49" y="23" width="1.8" height="18" rx=".9" fill="#fff"/><circle cx="14.5" cy="32" r="5.6" fill="none" stroke="#FFA94D" stroke-width="2.2"/></g></svg></span>
+                <span class="brand-txt">Precios Claros<span class="brand-by">by prometeo</span></span>
             </a>
             <a class="mi-lista" href="#/lista" aria-label="Mi lista de compras"><span class="mi-lista-ico"></span><span class="mi-lista-txt">Mi lista</span><span class="mi-lista-n num" id="mi-lista-n" hidden></span></a>
             <form class="search" id="search-form" role="search" autocomplete="off">
@@ -4121,7 +4168,7 @@
             <div class="footer-grid">
                 <div>
                     <h2>Quiénes estamos detrás</h2>
-                    <p>Price Intelligence es un proyecto de Prometeo Tech para que en Santa Cruz compares precios con datos reales.</p>
+                    <p>Precios Claros es un proyecto de Prometeo para que en Santa Cruz compares precios con datos reales.</p>
                     <div class="team">
                         <a class="person" href="https://www.linkedin.com/in/davidarostegui/" target="_blank" rel="noopener"><img src="./assets/david.jpg" alt="" loading="lazy" width="48" height="48"><span><b>David Arostegui Enriquez</b><span>Cofundador · LinkedIn</span></span></a>
                         <a class="person" href="https://www.linkedin.com/in/diego-omonte-278365224/" target="_blank" rel="noopener"><img src="./assets/diego.jpeg" alt="" loading="lazy" width="48" height="48"><span><b>Diego Omonte Cespedes</b><span>Cofundador · LinkedIn</span></span></a>
@@ -4131,7 +4178,7 @@
                     <h2>¿Una consulta o sugerencia?</h2>
                     <p>Escribinos y te respondemos directo.</p>
                     <div class="footer-actions">
-                        <a class="btn btn-wa" href="https://wa.me/59178233445?text=Hola%2C%20tengo%20una%20consulta%20sobre%20Price%20Intelligence" target="_blank" rel="noopener">
+                        <a class="btn btn-wa" href="https://wa.me/59178233445?text=Hola%2C%20tengo%20una%20consulta%20sobre%20Precios%20Claros" target="_blank" rel="noopener">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 20l1.3-4.1A7.9 7.9 0 1 1 8.6 19L4 20Z" /><path d="M9 10.5c0 3 2.5 5.5 5.5 5.5" stroke-linecap="round" /></svg>
                             Escribir por WhatsApp</a>
                         <button class="btn btn-secondary" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">
@@ -4141,7 +4188,7 @@
                     </div>
                 </div>
             </div>
-            <p class="fine" id="fine">Los precios se toman de los sitios web de cada cadena y pueden variar en tienda. Price Intelligence no vende productos. Registramos de forma anónima qué se busca y qué productos se abren, para mejorar el sitio; no guardamos datos personales.</p>
+            <p class="fine" id="fine">Los precios se toman de los sitios web de cada cadena y pueden variar en tienda. Precios Claros no vende productos. Registramos de forma anónima qué se busca y qué productos se abren, para mejorar el sitio; no guardamos datos personales.</p>
         </div>
     </footer>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -4645,7 +4692,7 @@
             const W = 640, H = 220, L = 56, R = 12, T = 12, B = 28;
             const ps = pts.map(p => p.p), lo = Math.min(...ps), hi = Math.max(...ps), span = (hi - lo) || 1;
             const x = f => L + fechas.indexOf(f) * (W - L - R) / (fechas.length - 1), y = v => T + (hi - v) * (H - T - B) / span;
-            const colores = ['#5B4BF5', '#0A7A3E', '#C77700', '#C9341F', '#0071E3'];
+            const colores = ['#0B8A65', '#3B5BDB', '#E8590C', '#C9341F', '#7C4DFF'];
             const porCad = {};
             pts.forEach(p => (porCad[p.c] ??= []).push(p));
             let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Historial de precios por cadena">`;
@@ -4894,7 +4941,7 @@
             if (comp) comp.onclick = () => {
                 const t = compararLista(items);
                 const lineas = items.map((it, i) => { const l = t.mejores[i]; return l ? `• ${it.cantidad > 1 ? it.cantidad + ' × ' : ''}${it.elegido.nombre} — ${money(l.p * it.cantidad)} en ${l.c}` : null }).filter(Boolean);
-                const texto = `Mi lista de compras (${fecha(S.fecha)}):\n${lineas.join('\n')}\n\nMejor carrito: ${money(t.comb)}` + (t.caro - t.comb >= 0.5 ? ` (ahorro ${money(t.caro - t.comb)})` : '') + (t.completa ? `\nTodo en ${t.completa.c}: ${money(t.completa.total)}` : '') + `\n\nArmada con Price Intelligence: ${location.origin}${location.pathname}#/lista`;
+                const texto = `Mi lista de compras (${fecha(S.fecha)}):\n${lineas.join('\n')}\n\nMejor carrito: ${money(t.comb)}` + (t.caro - t.comb >= 0.5 ? ` (ahorro ${money(t.caro - t.comb)})` : '') + (t.completa ? `\nTodo en ${t.completa.c}: ${money(t.completa.total)}` : '') + `\n\nArmada con Precios Claros: ${location.origin}${location.pathname}#/lista`;
                 registrar('compartir', { extra: { lista: true } });
                 window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
             };
@@ -5133,10 +5180,10 @@
             app.innerHTML = html;
             SPLASH.cerrar();
             document.body.classList.toggle('has-buybar', r.view === 'p' && !!$('#buybar'));
-            if (r.view === 'p' && S._prod && S._prod.k === r.key) document.title = `${S._prod.nombre} — Price Intelligence`;
-            else if (r.view === 'r') document.title = `${r.q ? r.q : r.cat ? catLabel(r.cat) : 'Productos'} — Price Intelligence`;
-            else if (r.view === 'lista') document.title = 'Tu lista de compras — Price Intelligence';
-            else document.title = 'Price Intelligence — Compará precios en Santa Cruz';
+            if (r.view === 'p' && S._prod && S._prod.k === r.key) document.title = `${S._prod.nombre} — Precios Claros`;
+            else if (r.view === 'r') document.title = `${r.q ? r.q : r.cat ? catLabel(r.cat) : 'Productos'} — Precios Claros`;
+            else if (r.view === 'lista') document.title = 'Tu lista de compras — Precios Claros';
+            else document.title = 'Precios Claros — Compará precios en Santa Cruz';
             wire(r);
             if (r.view === 'lista') wireLista();
             registrarVista(r);

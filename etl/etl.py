@@ -1656,7 +1656,7 @@ def backfill_categoria_madre(dry_run: bool = False, backup_path: str = None) -> 
 # =========================================================================
 
 def main():
-    ap = argparse.ArgumentParser(description="ETL Price Intelligence → Postgres")
+    ap = argparse.ArgumentParser(description="ETL Precios Claros → Postgres")
     sub = ap.add_subparsers(dest="comando", required=True)
 
     p1 = sub.add_parser("cargar-json")

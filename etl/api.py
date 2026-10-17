@@ -36,7 +36,7 @@ from auth import requerir_api_key
 EXPORT_PATH = Path(__file__).parent.parent.parent / "data" / "precios.json"
 
 app = FastAPI(
-    title="Price Intelligence API",
+    title="Precios Claros API",
     version="0.2.0",
     description="Fase 1: sirve/regenera precios.json desde Postgres. Fase 3: acceso autenticado por cliente, con rate limit.",
 )
