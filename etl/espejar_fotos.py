@@ -40,6 +40,9 @@ SERVICIO = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABA
 BUCKET = "fotos"
 TAMANOS = {"s": 160, "m": 480}          # sufijo -> ancho/alto máximo
 HILOS = 8
+# Tope de Storage para las fotos. El plan gratis de Supabase trae 1 GB de Storage
+# en total: se deja margen. Se cambia con FOTOS_TOPE_MB en el .env (ej. en plan Pro).
+TOPE_MB = float(os.environ.get("FOTOS_TOPE_MB", 850))
 MAX_INTENTOS = 3
 NAVEGADOR = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                            "Chrome/128.0 Safari/537.36", "Accept": "image/avif,image/webp,image/*,*/*;q=0.8"}
@@ -108,6 +111,27 @@ def fotos_a_copiar(conn):
     hechas = {r["url_origen"]: r for r in cur.fetchall()}
     return [u for u in sorted(elegidas)
             if u not in hechas or (not hechas[u]["ok"] and hechas[u]["intentos"] < MAX_INTENTOS)]
+
+
+def uso_storage_mb(conn):
+    """MB usados en TODO el Storage del proyecto (todos los buckets). Si no se puede
+    leer storage.objects, se estima con lo que anotamos en foto_espejo."""
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT coalesce(sum((metadata->>'size')::bigint), 0) FROM storage.objects")
+        return float(cur.fetchone()[0]) / 1048576
+    except Exception:
+        conn.rollback()
+        cur.execute("SELECT coalesce(sum(bytes), 0) FROM foto_espejo WHERE ok")
+        return float(cur.fetchone()[0]) / 1048576
+
+
+def kb_por_foto(conn):
+    """Promedio real de lo que ocupa cada foto copiada (las dos versiones WebP juntas)."""
+    cur = conn.cursor()
+    cur.execute("SELECT avg(bytes) FROM foto_espejo WHERE ok AND bytes > 0")
+    prom = cur.fetchone()[0]
+    return float(prom) / 1024 if prom else 35.0
 
 
 def anotar(conn, filas):
@@ -193,8 +217,17 @@ def espejar(limite=None, dry_run=False, hilos=HILOS):
         falta = fotos_a_copiar(conn)
         if limite:
             falta = falta[:limite]
+        kb = kb_por_foto(conn)
+        usado = uso_storage_mb(conn)
         print(f"[fotos] {len(falta)} fotos de Hipermaxi/Chávez por copiar"
-              f" (~{len(falta) * 35 / 1024:.0f} MB en Storage)")
+              f" (~{len(falta) * kb / 1024:.0f} MB en Storage). Storage usado: {usado:.0f} MB "
+              f"de un tope de {TOPE_MB:.0f} MB (plan gratis: 1 GB).")
+        cupo = int(max(0.0, TOPE_MB - usado) * 1024 / kb)
+        if len(falta) > cupo:
+            print(f"[fotos] ADVERTENCIA: solo entran ~{cupo} fotos más antes del tope; se copian esas y "
+                  f"{len(falta) - cupo} quedan pendientes (la web usa la foto original del sitio). "
+                  f"Para subir el tope: FOTOS_TOPE_MB en el .env.")
+            falta = falta[:cupo]
         if dry_run or not falta:
             return {"copiadas": 0, "pendientes": len(falta)}
         if not SERVICIO:

@@ -49,7 +49,18 @@ DATABASE_URL = os.environ.get(
 
 
 def get_conn():
-    return psycopg2.connect(DATABASE_URL)
+    # keepalives: que una conexion ociosa unos segundos (mientras se scrapea o
+    # se calcula) no la corte el pooler de Supabase o la red; mismo criterio
+    # que publicar_web.conectar().
+    return psycopg2.connect(DATABASE_URL, connect_timeout=20, keepalives=1,
+                            keepalives_idle=30, keepalives_interval=10, keepalives_count=5)
+
+
+# Errores de CONEXION (no de datos): se cayo la red o el servidor cerro la
+# conexion. Ante estos no sirve seguir producto por producto -- todo lo que
+# venga despues falla con "cursor already closed" --, hay que reconectar.
+ERRORES_CONEXION = (psycopg2.OperationalError, psycopg2.InterfaceError)
+INTENTOS_CARGA = int(os.environ.get("CARGA_INTENTOS", 3))
 
 
 # =========================================================================
@@ -951,6 +962,27 @@ def cargar_excel(path: str, cadena_nombre: str = None, pais: str = "BO"):
 
 
 def cargar_resultado(resultado, pais: str = "BO", etiqueta: str = None) -> dict:
+    """Carga un ScrapeResult a Postgres (ver _cargar_resultado_intento). Si se
+    corta la conexion a mitad de camino, la transaccion no llego a confirmarse
+    (no queda nada a medias), asi que se reconecta y se reintenta la categoria
+    entera, hasta INTENTOS_CARGA veces. Si igual falla, levanta el error para
+    que run_all.py lo registre y siga con la siguiente categoria."""
+    for intento in range(1, INTENTOS_CARGA + 1):
+        try:
+            return _cargar_resultado_intento(resultado, pais, etiqueta)
+        except ERRORES_CONEXION as e:
+            motivo = (str(e).strip().splitlines() or [type(e).__name__])[0]
+            if intento == INTENTOS_CARGA:
+                print(f"[cargar-resultado] se corto la conexion con la base ({motivo}); "
+                      f"sin mas reintentos.", file=sys.stderr)
+                raise
+            espera = 10 * intento
+            print(f"[cargar-resultado] se corto la conexion con la base ({motivo}); nada quedo a medias. "
+                  f"Reintento {intento + 1}/{INTENTOS_CARGA} en {espera}s ...", file=sys.stderr)
+            time.sleep(espera)
+
+
+def _cargar_resultado_intento(resultado, pais: str = "BO", etiqueta: str = None) -> dict:
     """Carga un ScrapeResult (el 'contrato único' de contrato.py) directo
     a Postgres -- mismo camino que cargar_excel (get_or_create_cadena ->
     find_listado -> upsert_listado -> upsert_precio_actual -> historial),
@@ -969,11 +1001,49 @@ def cargar_resultado(resultado, pais: str = "BO", etiqueta: str = None) -> dict:
     se guardaba) -- el panel no podía mostrar qué cadena/categoría fue
     cada corrida exitosa, solo las que fallaban."""
     conn = get_conn()
+    try:
+        return _cargar_en_conexion(conn, resultado, pais, etiqueta)
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+
+def _cargar_en_conexion(conn, resultado, pais, etiqueta):
     cur = conn.cursor()
     cadena_id = get_or_create_cadena(cur, resultado.cadena, pais)
     run_id = start_agent_run(cur, "scraper", cadena_id=cadena_id, fuente_metodo=etiqueta or resultado.fuente)
-    procesados, errores = 0, len(resultado.errores)
+    t0 = time.time()
 
+    # Carga por lotes (unas pocas consultas por categoria). Si algo falla, se
+    # deshace solo el lote y se reintenta con la carga fila a fila de siempre.
+    cur.execute("SAVEPOINT carga_lote")
+    try:
+        procesados, errores = _cargar_resultado_lote(cur, resultado, cadena_id, run_id)
+        cur.execute("RELEASE SAVEPOINT carga_lote")
+        modo = "lote"
+    except ERRORES_CONEXION:
+        raise  # conexion caida: lo maneja cargar_resultado (reconecta y reintenta)
+    except Exception as e:
+        cur.execute("ROLLBACK TO SAVEPOINT carga_lote")
+        print(f"[cargar-resultado] la carga por lotes fallo ({e}); se carga fila a fila.", file=sys.stderr)
+        procesados, errores = _cargar_resultado_fila_a_fila(cur, resultado, cadena_id, run_id, pais)
+        modo = "fila a fila"
+    errores += len(resultado.errores)
+
+    finish_agent_run(cur, run_id, "ok" if errores == 0 else "ok_con_errores", procesados, errores)
+    conn.commit()
+    cur.close()
+    print(f"cargar-resultado ({resultado.cadena}): {procesados} productos cargados, {errores} errores "
+          f"[{modo}, {time.time() - t0:.1f}s]")
+    return {"cadena": resultado.cadena, "procesados": procesados, "errores": errores}
+
+
+def _cargar_resultado_fila_a_fila(cur, resultado, cadena_id, run_id, pais: str = "BO"):
+    """Carga original, producto por producto (5-6 consultas a la base por
+    producto). Queda como respaldo si la carga por lotes falla."""
+    procesados, errores = 0, 0
     for p in resultado.productos:
         try:
             categoria = canonicalizar_categoria(p.categoria)
@@ -1017,16 +1087,129 @@ def cargar_resultado(resultado, pais: str = "BO", etiqueta: str = None) -> dict:
             upsert_precio_actual(cur, listado_id, precio_regular, precio_oferta, run_id)
             insert_historial_si_cambio(cur, listado_id, date.today().isoformat(), precio_regular, precio_oferta, run_id)
             procesados += 1
+        except ERRORES_CONEXION:
+            raise
         except Exception as e:
             errores += 1
             print(f"[error] {p.nombre}: {e}", file=sys.stderr)
 
-    finish_agent_run(cur, run_id, "ok" if errores == 0 else "ok_con_errores", procesados, errores)
-    conn.commit()
-    cur.close()
-    conn.close()
-    print(f"cargar-resultado ({resultado.cadena}): {procesados} productos cargados, {errores} errores")
-    return {"cadena": resultado.cadena, "procesados": procesados, "errores": errores}
+    return procesados, errores
+
+
+def _cargar_resultado_lote(cur, resultado, cadena_id, run_id):
+    """Misma carga que _cargar_resultado_fila_a_fila, pero en lotes: en vez de
+    5-6 viajes a Supabase por producto (~3.000 para una categoria de 500, varios
+    minutos), hace unas 10 consultas por categoria. Respeta las mismas reglas:
+    - listado ya conocido: NO se toca su producto_id (solo matchear() lo cambia);
+      se refrescan marca/categoria/subcategoria del producto con COALESCE.
+    - listado nuevo: get_or_create del producto por producto_clave y listado
+      con match_metodo='pendiente'.
+    - historial: fila nueva solo si cambio el precio regular o el de oferta.
+    Si un codigo viene repetido en la misma categoria, gana el ultimo (igual que
+    fila a fila, donde el ultimo pisaba al anterior)."""
+    E = psycopg2.extras.execute_values
+    errores, procesados = 0, 0
+    filas = {}
+    sucursales = {}
+    for p in resultado.productos:
+        try:
+            categoria = canonicalizar_categoria(p.categoria)
+            subcategoria = canonicalizar_categoria(p.subcategoria) or categoria
+            categoria = categoria_madre_canonica(categoria, subcategoria) or categoria
+            marca = p.marca or extract_brand(normalize(p.nombre))
+            sucursal_id = None
+            if p.sucursal:
+                if p.sucursal not in sucursales:
+                    sucursales[p.sucursal] = get_or_create_sucursal(cur, cadena_id, p.sucursal, p.ciudad)
+                sucursal_id = sucursales[p.sucursal]
+            codigo = p.codigo_articulo.strip()
+            precio_oferta = p.precio_oferta
+            precio_regular = p.precio_regular if p.precio_regular >= precio_oferta else precio_oferta
+            precio_regular, precio_oferta = _validar_precios(precio_regular, precio_oferta)
+            filas[codigo] = {"codigo": codigo, "nombre": p.nombre, "marca": marca, "categoria": categoria,
+                             "subcategoria": subcategoria, "sucursal_id": sucursal_id, "url": p.url,
+                             "imagen": p.imagen, "pr": precio_regular, "po": precio_oferta}
+            procesados += 1
+        except ERRORES_CONEXION:
+            raise
+        except Exception as e:
+            errores += 1
+            print(f"[error] {p.nombre}: {e}", file=sys.stderr)
+    if not filas:
+        return procesados, errores
+
+    # 1) que listados ya existen (una sola consulta)
+    cur.execute("SELECT codigo_cadena, id::text, producto_id::text FROM listados "
+                "WHERE cadena_id = %s AND codigo_cadena = ANY(%s)", (cadena_id, list(filas)))
+    existentes = {c: (lid, pid) for c, lid, pid in cur.fetchall()}
+    viejos = [f for c, f in filas.items() if c in existentes]
+    nuevos = [f for c, f in filas.items() if c not in existentes]
+    lid = {c: v[0] for c, v in existentes.items()}
+
+    if viejos:
+        # productos de listados conocidos: refrescar marca/categoria/subcategoria
+        por_producto = {existentes[f["codigo"]][1]: (existentes[f["codigo"]][1], f["marca"], f["categoria"], f["subcategoria"]) for f in viejos}
+        E(cur, "UPDATE productos p SET marca = COALESCE(v.marca, p.marca), "
+               "categoria = COALESCE(v.categoria, p.categoria), "
+               "subcategoria = COALESCE(v.subcategoria, p.subcategoria), actualizado_en = now() "
+               "FROM (VALUES %s) AS v(id, marca, categoria, subcategoria) WHERE p.id = v.id",
+          list(por_producto.values()), template="(%s::uuid, %s::text, %s::text, %s::text)", page_size=500)
+        # y los datos del listado (sin tocar producto_id)
+        E(cur, "UPDATE listados l SET sucursal_id = v.sucursal_id, nombre_original = v.nombre, "
+               "url = v.url, imagen = v.imagen, activo = TRUE, actualizado_en = now() "
+               "FROM (VALUES %s) AS v(id, sucursal_id, nombre, url, imagen) WHERE l.id = v.id",
+          [(existentes[f["codigo"]][0], f["sucursal_id"], f["nombre"], f["url"], f["imagen"]) for f in viejos],
+          template="(%s::uuid, %s::integer, %s::text, %s::text, %s::text)", page_size=500)
+
+    if nuevos:
+        slug = slugify(resultado.cadena)
+        for f in nuevos:
+            f["clave"] = f"{slug}-{f['codigo']}"
+        cur.execute("SELECT producto_clave, id::text FROM productos WHERE producto_clave = ANY(%s)",
+                    ([f["clave"] for f in nuevos],))
+        pid_clave = dict(cur.fetchall())
+        ya = [f for f in nuevos if f["clave"] in pid_clave]
+        if ya:
+            E(cur, "UPDATE productos p SET nombre = v.nombre, marca = v.marca, categoria = v.categoria, "
+                   "subcategoria = v.subcategoria, actualizado_en = now() "
+                   "FROM (VALUES %s) AS v(id, nombre, marca, categoria, subcategoria) WHERE p.id = v.id",
+              [(pid_clave[f["clave"]], f["nombre"], f["marca"], f["categoria"], f["subcategoria"]) for f in ya],
+              template="(%s::uuid, %s::text, %s::text, %s::text, %s::text)", page_size=500)
+        faltan = [f for f in nuevos if f["clave"] not in pid_clave]
+        if faltan:
+            creados = E(cur, "INSERT INTO productos (producto_clave, nombre, marca, categoria, subcategoria) "
+                             "VALUES %s RETURNING producto_clave, id::text",
+                        [(f["clave"], f["nombre"], f["marca"], f["categoria"], f["subcategoria"]) for f in faltan],
+                        page_size=500, fetch=True)
+            pid_clave.update(dict(creados))
+        insertados = E(cur, "INSERT INTO listados (producto_id, cadena_id, sucursal_id, codigo_cadena, "
+                            "nombre_original, url, imagen, match_metodo) VALUES %s RETURNING codigo_cadena, id::text",
+                       [(pid_clave[f["clave"]], cadena_id, f["sucursal_id"], f["codigo"], f["nombre"], f["url"],
+                         f["imagen"], "pendiente") for f in nuevos],
+                       template="(%s::uuid, %s, %s, %s, %s, %s, %s, %s)", page_size=500, fetch=True)
+        lid.update(dict(insertados))
+
+    # 2) precio actual de todos
+    E(cur, "INSERT INTO precios (listado_id, precio_regular, precio_oferta, agente_run_id) VALUES %s "
+           "ON CONFLICT (listado_id) DO UPDATE SET precio_regular = EXCLUDED.precio_regular, "
+           "precio_oferta = EXCLUDED.precio_oferta, capturado_en = now(), agente_run_id = EXCLUDED.agente_run_id",
+      [(lid[c], f["pr"], f["po"], run_id) for c, f in filas.items()],
+      template="(%s::uuid, %s, %s, %s::uuid)", page_size=500)
+
+    # 3) historial: solo los que cambiaron respecto a su ultima captura
+    cur.execute("SELECT DISTINCT ON (listado_id) listado_id::text, precio_regular, precio_oferta "
+                "FROM historial_precios WHERE listado_id = ANY(%s::uuid[]) ORDER BY listado_id, fecha DESC",
+                ([lid[c] for c in filas],))
+    ultimo = {r[0]: (float(r[1]), float(r[2])) for r in cur.fetchall()}
+    hoy = date.today().isoformat()
+    cambios = [(lid[c], hoy, f["pr"], f["po"], run_id) for c, f in filas.items()
+               if ultimo.get(lid[c]) != (float(f["pr"]), float(f["po"]))]
+    if cambios:
+        E(cur, "INSERT INTO historial_precios (listado_id, fecha, precio_regular, precio_oferta, agente_run_id) "
+               "VALUES %s ON CONFLICT (listado_id, fecha) DO UPDATE "
+               "SET precio_regular = EXCLUDED.precio_regular, precio_oferta = EXCLUDED.precio_oferta",
+          cambios, template="(%s::uuid, %s::date, %s, %s, %s::uuid)", page_size=500)
+    return procesados, errores
 
 
 # =========================================================================
@@ -1207,6 +1390,25 @@ def matchear(min_score: int = MIN_SCORE, ambiguo_min: int = AMBIGUO_MIN, max_llm
             time.sleep(espera)
 
 
+def _vetos_manuales(cur) -> set:
+    """Pares que alguien SEPARÓ a mano desde el panel (match_revisiones_llm con
+    decision=false y razon 'manual…'). matchear() los saltea siempre, aunque el
+    puntaje fuzzy diga que son el mismo producto. Se cargan una sola vez por
+    corrida (en ambos órdenes) para no consultar la base por cada par."""
+    try:
+        cur.execute("SELECT producto_clave_a, producto_clave_b FROM match_revisiones_llm "
+                    "WHERE decision = FALSE AND razon LIKE 'manual%%'")
+    except Exception:
+        cur.connection.rollback()
+        return set()
+    vetos = set()
+    for f in cur.fetchall():
+        a, b = (f["producto_clave_a"], f["producto_clave_b"]) if isinstance(f, dict) else (f[0], f[1])
+        vetos.add((a, b))
+        vetos.add((b, a))
+    return vetos
+
+
 def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
     estado = estado if estado is not None else {}
     """Recorre los PRODUCTOS que hoy sólo tienen listados de UNA sola
@@ -1251,25 +1453,40 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
         run_id = start_agent_run(cur, "matching", fuente_metodo=f"max_llm={max_llm} agrupar={agrupar}")
         conn.commit()
     cat_ia = _categorias_propias(cur)
+    vetos = _vetos_manuales(cur)
     cur.execute("SELECT id, nombre FROM cadenas")
     nombre_cadena = {r["id"]: r["nombre"] for r in cur.fetchall()}
 
+    # Candidatos: los productos SUELTOS (una sola cadena) y también los GRUPOS
+    # (ya cruzados entre 2+ cadenas) a los que todavía les falta alguna cadena.
+    # Antes solo entraban los sueltos: en cuanto dos cadenas se unían, ese
+    # producto salía del pool y la tercera cadena que llegaba después ya no
+    # tenía contra qué compararse (quedaba "Solo en Hipermaxi" para siempre).
+    # Cada grupo participa con UN representante (el nombre de su producto y el
+    # precio promedio), y dos grupos nunca se comparan entre sí (ver el bucle):
+    # así sumar los grupos casi no agrega trabajo.
+    cur.execute("SELECT count(DISTINCT cadena_id) AS n FROM listados WHERE activo = TRUE")
+    total_cadenas = cur.fetchone()["n"] or 0
     cur.execute(
         """
         SELECT p.id AS producto_id, p.producto_clave, p.nombre, p.marca, p.categoria,
                p.subcategoria, p.creado_en,
                MIN(l.cadena_id) AS cadena_id,
+               array_agg(DISTINCT l.cadena_id) AS cadenas,
                AVG(pr.precio_oferta) AS precio_oferta
         FROM productos p
         JOIN listados l ON l.producto_id = p.id AND l.activo = TRUE
         LEFT JOIN precios pr ON pr.listado_id = l.id
         GROUP BY p.id, p.producto_clave, p.nombre, p.marca, p.categoria, p.subcategoria, p.creado_en
-        HAVING count(DISTINCT l.cadena_id) = 1
+        HAVING count(DISTINCT l.cadena_id) < %s
         ORDER BY p.creado_en ASC
-        """
+        """,
+        (max(total_cadenas, 2),),
     )
     candidatos = cur.fetchall()
     for r in candidatos:
+        r["_cadenas"] = set(r["cadenas"])
+        r["_grupo"] = len(r["_cadenas"]) > 1
         r["_norm"] = normalize(r["nombre"])
         # normalize() (misma funcion que ya usa "_norm") evita que dos
         # vendors iguales con distinta mayuscula/acento entre tiendas Shopify
@@ -1349,6 +1566,7 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
     procesados_global = 0
     categoria_en_curso = None
     bloqueados = 0          # pares que la categoría propia separó (modo "cadena")
+    fusiones_a_grupos = 0   # sueltos que se sumaron a un grupo ya existente
     fusiones_prueba = []    # modo prueba: lo que se fusionaría
     dudosos_sin_revisar = 0
 
@@ -1360,10 +1578,14 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
                     procesados_global += 1
                     continue
                 for b in grupo[i + 1:]:
+                    if a["producto_id"] in resueltos:
+                        break  # "a" era suelto y ya se sumó a un grupo
                     if b["producto_id"] in resueltos:
                         continue
-                    if a["cadena_id"] == b["cadena_id"]:
-                        continue  # nunca comparar dos productos de la MISMA cadena
+                    if a["_grupo"] and b["_grupo"]:
+                        continue  # dos grupos no se comparan entre sí (solo sueltos contra grupos)
+                    if a["_cadenas"] & b["_cadenas"]:
+                        continue  # misma cadena, o el grupo ya tiene un producto de esa cadena
                     # Chequeo barato de precio ANTES del fuzzy-text (que es
                     # lo más caro de _score): si un producto cuesta varias
                     # veces más que el otro, casi seguro no es el mismo
@@ -1379,6 +1601,8 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
                     if agrupar == "ia" and a["_cat_ia"] and b["_cat_ia"] and a["_cat_ia"] != b["_cat_ia"]:
                         bloqueados += 1
                         continue  # la IA los ubicó en categorías distintas: no son el mismo producto
+                    if (a["producto_clave"], b["producto_clave"]) in vetos:
+                        continue  # alguien los separó a mano desde el panel: nunca volver a unirlos
                     score = _score(a, b)
 
                     decision, confianza, metodo = None, None, "fuzzy"
@@ -1419,34 +1643,49 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
                     if not decision:
                         continue
 
+                    # Quién queda: si uno de los dos ya es un grupo, el suelto se
+                    # suma al grupo; si los dos son sueltos, queda el más antiguo ("a").
+                    destino, origen = (b, a) if (b["_grupo"] and not a["_grupo"]) else (a, b)
+                    tipo_fusion = "suelto + grupo" if destino["_grupo"] else "suelto + suelto"
+                    if destino["_grupo"]:
+                        fusiones_a_grupos += 1
+
                     if prueba:
                         fusiones_prueba.append({
-                            "categoria_propia": a["_cat_ia"] or "", "subcategoria_propia": a["_sub_ia"] or "",
-                            "producto_a": a["nombre"], "cadena_a": nombre_cadena.get(a["cadena_id"], ""),
-                            "producto_b": b["nombre"], "cadena_b": nombre_cadena.get(b["cadena_id"], ""),
+                            "tipo": tipo_fusion,
+                            "categoria_propia": destino["_cat_ia"] or "", "subcategoria_propia": destino["_sub_ia"] or "",
+                            "producto_a": destino["nombre"],
+                            "cadena_a": ", ".join(sorted(nombre_cadena.get(c, "") for c in destino["_cadenas"])),
+                            "producto_b": origen["nombre"],
+                            "cadena_b": ", ".join(sorted(nombre_cadena.get(c, "") for c in origen["_cadenas"])),
                             "puntaje": round(score, 1), "metodo": metodo,
                             # antes se agrupaba por la categoría de cada cadena: si era distinta, este par nunca se comparaba
                             "nuevo_gracias_a_categorias": "si" if (a["categoria"] or "") != (b["categoria"] or "") else "",
-                            "categoria_cadena_a": a["categoria"] or "", "categoria_cadena_b": b["categoria"] or "",
-                            "clave_a": a["producto_clave"], "clave_b": b["producto_clave"],
+                            "categoria_cadena_a": destino["categoria"] or "", "categoria_cadena_b": origen["categoria"] or "",
+                            "clave_a": destino["producto_clave"], "clave_b": origen["producto_clave"],
                         })
-                        resueltos.add(b["producto_id"])
+                        destino["_cadenas"] |= origen["_cadenas"]
+                        destino["_grupo"] = True
+                        resueltos.add(origen["producto_id"])
                         fusiones += 1
                         continue
 
-                    # "a" es el canónico (el más antiguo): re-apunta TODOS los
-                    # listados activos de "b" a producto_id de "a" (no sólo uno --
-                    # "b" puede traer varios, de una limpieza interna previa).
+                    # "destino" es el canónico: re-apunta TODOS los listados
+                    # activos de "origen" a su producto_id (no sólo uno --
+                    # "origen" puede traer varios, de una limpieza interna previa).
                     cur.execute(
                         "UPDATE listados SET producto_id=%s, match_metodo=%s, "
                         "match_confidence=%s WHERE producto_id=%s AND activo=TRUE",
-                        (a["producto_id"], metodo, confianza, b["producto_id"]),
+                        (destino["producto_id"], metodo, confianza, origen["producto_id"]),
                     )
-                    cur.execute(
-                        "UPDATE listados SET match_metodo=%s, match_confidence=1.0 "
-                        "WHERE producto_id=%s AND match_metodo <> %s",
-                        (metodo, a["producto_id"], metodo),
-                    )
+                    if not destino["_grupo"]:
+                        # dos sueltos: el canónico también queda marcado con el método
+                        # (a un grupo existente no se le pisa lo que ya tenía, ej. 'manual')
+                        cur.execute(
+                            "UPDATE listados SET match_metodo=%s, match_confidence=1.0 "
+                            "WHERE producto_id=%s AND match_metodo <> %s",
+                            (metodo, destino["producto_id"], metodo),
+                        )
                     # Nota: como ahora se compara SOLO dentro del bucket de "a",
                     # "b" se resuelve acá dentro de la misma pasada del bucket
                     # -- no vuelve a aparecer como candidato en ningún otro
@@ -1454,10 +1693,12 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
                     # (su propia categoría), así que no hace falta "sacarlo de
                     # la lista" a mano: el chequeo `resueltos` de arriba ya
                     # lo cubre para el resto de ESTE bucket.
-                    cur.execute("SELECT count(*) AS n FROM listados WHERE producto_id=%s", (b["producto_id"],))
+                    cur.execute("SELECT count(*) AS n FROM listados WHERE producto_id=%s", (origen["producto_id"],))
                     if cur.fetchone()["n"] == 0:
-                        cur.execute("DELETE FROM productos WHERE id=%s", (b["producto_id"],))
-                    resueltos.add(b["producto_id"])
+                        cur.execute("DELETE FROM productos WHERE id=%s", (origen["producto_id"],))
+                    destino["_cadenas"] |= origen["_cadenas"]
+                    destino["_grupo"] = True
+                    resueltos.add(origen["producto_id"])
                     fusiones += 1
 
                 procesados_global += 1
@@ -1516,7 +1757,7 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
     if prueba:
         import csv
         ruta = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prueba_matcheo.csv")
-        columnas = ["categoria_propia", "subcategoria_propia", "producto_a", "cadena_a", "producto_b", "cadena_b",
+        columnas = ["tipo", "categoria_propia", "subcategoria_propia", "producto_a", "cadena_a", "producto_b", "cadena_b",
                     "puntaje", "metodo", "nuevo_gracias_a_categorias", "categoria_cadena_a", "categoria_cadena_b",
                     "clave_a", "clave_b"]
         with open(ruta, "w", newline="", encoding="utf-8-sig") as f:   # utf-8-sig: Excel lo abre con tildes
@@ -1525,13 +1766,16 @@ def _matchear(min_score, ambiguo_min, max_llm, prueba, agrupar, estado=None):
             for x in sorted(fusiones_prueba, key=lambda x: (x["nuevo_gracias_a_categorias"] != "si", x["categoria_propia"], -x["puntaje"])):
                 w.writerow(x)
         nuevas = sum(1 for x in fusiones_prueba if x["nuevo_gracias_a_categorias"])
-        print(f"\n[PRUEBA] No se escribió nada. Se fusionarían {fusiones} productos; "
+        print(f"\n[PRUEBA] No se escribió nada. Se fusionarían {fusiones} productos "
+              f"({fusiones_a_grupos} sueltos se sumarían a un grupo que ya existía); "
               f"{nuevas} de esos pares antes ni se comparaban (estaban en categorías distintas según la cadena).")
         print(f"[PRUEBA] {dudosos_sin_revisar} pares dudosos se le preguntarían al LLM (en la corrida real, hasta {max_llm} por vez).")
         print(f"[PRUEBA] Revisá: {ruta}")
-        return {"fusiones": fusiones, "nuevas": nuevas, "bloqueados": bloqueados, "dudosos": dudosos_sin_revisar}
+        return {"fusiones": fusiones, "a_grupos": fusiones_a_grupos, "nuevas": nuevas, "bloqueados": bloqueados,
+                "dudosos": dudosos_sin_revisar}
 
-    print(f"matchear: {fusiones} productos fusionados entre cadenas ({llm_usados} consultas nuevas al LLM"
+    print(f"matchear: {fusiones} productos fusionados entre cadenas ({fusiones_a_grupos} sumados a un grupo existente; "
+          f"{llm_usados} consultas nuevas al LLM"
           f"{f', {llm_pospuestos} pares pospuestos por el tope de esta corrida' if llm_pospuestos else ''})")
 
     desactivados = desactivar_duplicados_por_cadena()
@@ -1690,6 +1934,10 @@ def main():
     elif args.comando == "cargar-excel":
         cargar_excel(args.path, args.cadena, args.pais)
     elif args.comando == "matchear":
+        if not args.prueba:
+            import candados  # que no corra a la vez que el matching/publicación de otro equipo
+            if not candados.esperar("procesar", "Matching (desde la terminal)", "matching"):
+                sys.exit("Otro equipo sigue procesando; probá más tarde.")
         matchear(max_llm=args.max_llm if args.max_llm is not None else MAX_LLM_POR_CORRIDA,
                  prueba=args.prueba, agrupar=args.agrupar)
     elif args.comando == "backfill-categoria-madre":

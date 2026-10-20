@@ -17,7 +17,7 @@
 //   LISTA_LIMITE_HORA   opcional, listas por persona por hora (20)
 //   LISTA_LIMITE_DIA    opcional, listas en total por día (300)
 //   LISTA_ORIGENES      opcional, sitios que pueden usarla, separados por coma
-//                       (por defecto https://datacrazyy.github.io; localhost siempre)
+//                       (por defecto preciosclaros.techprometeo.com y datacrazyy.github.io; localhost siempre)
 
 const OPENAI_KEY = Deno.env.get("CHATGPT_API_KEY") ?? Deno.env.get("OPENAI_API_KEY") ?? "";
 const OPENAI_URL = Deno.env.get("OPENAI_URL") ?? "https://api.openai.com";          // solo para pruebas
@@ -28,7 +28,7 @@ const ANON = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const SERVICIO = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const LIMITE_HORA = Number(Deno.env.get("LISTA_LIMITE_HORA") ?? 20);
 const LIMITE_DIA = Number(Deno.env.get("LISTA_LIMITE_DIA") ?? 300);
-const ORIGENES = (Deno.env.get("LISTA_ORIGENES") ?? "https://datacrazyy.github.io").split(",").map((s) => s.trim());
+const ORIGENES = (Deno.env.get("LISTA_ORIGENES") ?? "https://preciosclaros.techprometeo.com,https://datacrazyy.github.io").split(",").map((s) => s.trim());
 const MAX_TEXTO = 800, MAX_ITEMS = 25, CANDIDATOS = 12;
 
 // ------------------------------------------------------------------ utilidades

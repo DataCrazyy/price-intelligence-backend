@@ -13,12 +13,20 @@ Uso:
     python run_all.py --solo Fidalga             # corre solo una cadena
     python run_all.py --sin-export               # no regenera data/precios.json (para pruebas)
     python run_all.py --solo Fidalga --limite 3  # prueba de humo: solo 3 colecciones/URLs de Fidalga
+    python run_all.py --solo "Fidalga,Amarket"   # varias cadenas, separadas por coma
+    python run_all.py --pasos scraping           # solo scrapea y carga a la base (sin matchear ni publicar)
+    python run_all.py --pasos clasificar,matching  # solo procesa lo que ya está en la base
+    python run_all.py --pasos fotos,publicar     # solo sube a la web lo que ya está matcheado
+
+Pasos, en orden: scraping (incluye la carga a la base), clasificar, matching,
+export (data/precios.json), fotos, publicar. Por defecto, todos.
 
 Pensado para programarse en Task Scheduler / cron y correr solo, sin que
 nadie esté mirando.
 """
 import argparse
 import json
+import os
 import sys
 import time
 from datetime import date
@@ -26,6 +34,7 @@ from pathlib import Path
 
 import pandas as pd
 
+import candados
 import etl
 import scraper_chavez
 import scraper_hipermaxi
@@ -43,6 +52,28 @@ NAVEGADOR_MODULOS = {
 }
 
 MAX_INTENTOS = 3
+
+PASOS = ["scraping", "clasificar", "matching", "export", "fotos", "publicar"]
+NOMBRE_PASO = {"scraping": "Scraping y carga", "clasificar": "Clasificar", "matching": "Matching",
+               "export": "Exportar precios.json", "fotos": "Fotos", "publicar": "Publicar web"}
+
+
+def _paso(nombre: str):
+    # Marcador fijo que el panel usa para saber en qué paso va la corrida.
+    log(f"== Paso: {NOMBRE_PASO[nombre]} ==")
+    candados.actualizar(detalle=NOMBRE_PASO[nombre], paso=nombre)
+
+
+def _tomar_cadena(cadena: str, salteadas: list) -> bool:
+    """Candado compartido por cadena (ver candados.py): si otra computadora ya
+    está scrapeando esta cadena, se saltea en vez de scrapearla dos veces."""
+    ok, otro = candados.tomar(f"cadena:{cadena}", f"Scraping {cadena}", "scraping")
+    if not ok:
+        hace = f", hace {otro['minutos']} min" if otro.get("minutos") is not None else ""
+        log(f"AVISO: {cadena} la está scrapeando {otro['equipo']} ({otro.get('detalle') or 'en curso'}{hace}). "
+            f"Se saltea en esta corrida.")
+        salteadas.append(f"{cadena} (la corre {otro['equipo']})")
+    return ok
 
 
 def log(msg: str):
@@ -67,6 +98,23 @@ def _registrar_ruta_fallida(cadena: str, etiqueta: str, url: str, error: str):
         conn.close()
     except Exception as e:
         log(f"  (no se pudo registrar la ruta fallida en agent_runs: {e})")
+
+
+def _cargar(cadena: str, etiqueta: str, url: str, resultado, errores: list) -> bool:
+    """Guarda en la base lo scrapeado. etl.cargar_resultado ya reconecta y
+    reintenta si se corta la conexion; si aun asi falla, se anota como ruta
+    con error (igual que un scraping fallido) y la corrida sigue con la
+    siguiente categoria en vez de caerse entera. Lo scrapeado igual queda
+    respaldado en scrapes_raw/."""
+    try:
+        etl.cargar_resultado(resultado, etiqueta=etiqueta)
+        return True
+    except Exception as e:
+        motivo = (str(e).strip().splitlines() or [type(e).__name__])[0]
+        log(f"  ERROR: no se pudo guardar {etiqueta} en la base ({motivo}). Se sigue con la siguiente.")
+        errores.append(f"{etiqueta}: carga a la base: {motivo}")
+        _registrar_ruta_fallida(cadena, etiqueta, url, f"carga a la base: {motivo}")
+        return False
 
 
 def _archivar(resultado, carpeta_hoy: Path, sufijo: str):
@@ -123,18 +171,32 @@ def _con_reintentos(cadena: str, etiqueta: str, fn):
     return None, ultimo_error
 
 
-def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = None, limite: int | None = None):
+def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = None, limite: int | None = None,
+           pasos: list[str] | None = None):
     config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    pasos = list(pasos or PASOS)
+    if not hacer_export and "export" in pasos:
+        pasos.remove("export")
+    # --solo acepta una o varias cadenas separadas por coma
+    solo = {s.strip().lower() for s in solo_cadena.split(",") if s.strip()} if solo_cadena else None
+    log(f"Pasos de esta corrida: {', '.join(NOMBRE_PASO[p] for p in pasos)}"
+        + (f" · Cadenas: {solo_cadena}" if solo_cadena else " · Cadenas: todas"))
     hoy = date.today().isoformat()
     carpeta_hoy = RAW_DIR / hoy
     carpeta_hoy.mkdir(parents=True, exist_ok=True)
 
     archivos_cargados = 0
     errores = []
+    salteadas = []
+    log(f"Equipo: {candados.equipo()}")
 
-    for chain_cfg in config.get("shopify", []):
+    if "scraping" in pasos:
+        _paso("scraping")
+    for chain_cfg in (config.get("shopify", []) if "scraping" in pasos else []):
         cadena = chain_cfg["cadena"]
-        if solo_cadena and cadena.lower() != solo_cadena.lower():
+        if solo and cadena.lower() not in solo:
+            continue
+        if not _tomar_cadena(cadena, salteadas):
             continue
 
         sitio_base = chain_cfg["sitio_base"]
@@ -150,7 +212,8 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
             colecciones = colecciones[:limite]
             log(f"  --limite {limite}: solo se corren {len(colecciones)} colección(es) de {cadena} en esta corrida")
 
-        for col in colecciones:
+        log(f"Cadena {cadena}: {len(colecciones)} categorías")
+        for n_col, col in enumerate(colecciones, 1):
             # Compatibilidad: maneja diccionarios estructurados o strings directos
             if isinstance(col, dict):
                 handle_coleccion = col["handle"]
@@ -163,7 +226,8 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
 
             url_coleccion = f"{sitio_base}/collections/{handle_coleccion}"
             etiqueta = f"{cadena}/{handle_coleccion}"
-            log(f"Scrapeando {etiqueta} ...")
+            log(f"Scrapeando {etiqueta} [{n_col}/{len(colecciones)}] ...")
+            candados.actualizar(detalle=f"Scraping {cadena} {n_col}/{len(colecciones)}")
             
             request = ScrapeRequest(
                 cadena=cadena, 
@@ -183,12 +247,14 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
 
             _archivar(resultado, carpeta_hoy, f"{handle_coleccion}_{hoy}")
             log(f"  {len(resultado.productos)} productos ({len(resultado.errores)} descartados por validación)")
-            etl.cargar_resultado(resultado)
+            if not _cargar(cadena, etiqueta, url_coleccion, resultado, errores):
+                continue
             archivos_cargados += 1
+        candados.soltar(f"cadena:{cadena}")
 
-    for chain_cfg in config.get("navegador", []):
+    for chain_cfg in (config.get("navegador", []) if "scraping" in pasos else []):
         cadena = chain_cfg["cadena"]
-        if solo_cadena and cadena.lower() != solo_cadena.lower():
+        if solo and cadena.lower() not in solo:
             continue
 
         modulo = NAVEGADOR_MODULOS.get(chain_cfg["script"])
@@ -196,15 +262,19 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
             log(f"  ERROR: no sé qué módulo usar para script '{chain_cfg['script']}' (¿falta agregarlo a NAVEGADOR_MODULOS?)")
             errores.append(f"{cadena}: script '{chain_cfg['script']}' no registrado")
             continue
+        if not _tomar_cadena(cadena, salteadas):
+            continue
 
         urls_cadena = chain_cfg["urls"]
         if limite is not None:
             urls_cadena = urls_cadena[:limite]
             log(f"  --limite {limite}: solo se corren {len(urls_cadena)} URL(s) de {cadena} en esta corrida")
 
-        for url in urls_cadena:
+        log(f"Cadena {cadena}: {len(urls_cadena)} categorías")
+        for n_url, url in enumerate(urls_cadena, 1):
             etiqueta = f"{cadena}/{url}"
-            log(f"Scrapeando {etiqueta} (navegador) ...")
+            log(f"Scrapeando {etiqueta} [{n_url}/{len(urls_cadena)}] (navegador) ...")
+            candados.actualizar(detalle=f"Scraping {cadena} {n_url}/{len(urls_cadena)}")
             request = ScrapeRequest(cadena=cadena, url=url)
 
             resultado = _con_reintentos(cadena, etiqueta, lambda: modulo.ejecutar(request))
@@ -218,15 +288,32 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
 
             _archivar(resultado, carpeta_hoy, f"{hoy}_{abs(hash(url)) % 10000}")
             log(f"  {len(resultado.productos)} productos ({len(resultado.errores)} descartados por validación)")
-            etl.cargar_resultado(resultado)
+            if not _cargar(cadena, etiqueta, url, resultado, errores):
+                continue
             archivos_cargados += 1
+        candados.soltar(f"cadena:{cadena}")
 
-    if archivos_cargados == 0:
-        log("Nada se cargó, se salta matchear/export.")
-    else:
+    despues = [p for p in pasos if p != "scraping"]
+    if "scraping" in pasos and archivos_cargados == 0 and despues:
+        log("Nada se cargó, se saltan los pasos siguientes.")
+        despues = []
+
+    if despues:
+        # Estos pasos tocan TODA la base: si otra computadora los está corriendo,
+        # se espera a que termine (candado compartido "procesar", ver candados.py).
+        espera_min = int(os.environ.get("CANDADO_ESPERA_MIN", 90))
+        if not candados.esperar("procesar", NOMBRE_PASO[despues[0]], despues[0],
+                                max_seg=espera_min * 60, avisar=log):
+            log(f"  ERROR: otro equipo sigue procesando después de {espera_min} min; "
+                f"no se corre: {', '.join(NOMBRE_PASO[p] for p in despues)}. Volvé a intentar más tarde.")
+            errores.append("procesar: otro equipo no terminó a tiempo")
+            despues = []
+
+    if "clasificar" in despues:
         # Primero se clasifican los productos nuevos: el matcheo agrupa por esas
         # categorías propias (más parejas entre cadenas que las de cada cadena).
         # La IA clasifica solo lo nuevo (centavos por corrida).
+        _paso("clasificar")
         log("Clasificando productos nuevos en categorías ...")
         try:
             import clasificar
@@ -237,17 +324,20 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
         except Exception as e:
             log(f"  ADVERTENCIA: no se pudo clasificar ({e}). ¿Corriste db/migracion_categorias.sql en Supabase?")
 
+    if "matching" in despues:
+        _paso("matching")
         log("Corriendo matchear() ...")
         etl.matchear(max_llm=max_llm if max_llm is not None else etl.MAX_LLM_POR_CORRIDA)
 
-        if hacer_export:
-            log(f"Exportando a {EXPORT_PATH} ...")
-            import export_json
-            export_json.export_json(str(EXPORT_PATH))
+    if "export" in despues:
+        _paso("export")
+        log(f"Exportando a {EXPORT_PATH} ...")
+        import export_json
+        export_json.export_json(str(EXPORT_PATH))
 
-        # La página web lee de Supabase (tabla web_productos), no del JSON.
-        # Si todavía no se corrió db/migracion_web.sql, avisa y sigue.
+    if "fotos" in despues:
         # Fotos lentas (Hipermaxi/Chávez) sin equivalente en Shopify: copia propia en Supabase Storage
+        _paso("fotos")
         log("Copiando fotos nuevas de Hipermaxi/Chávez ...")
         try:
             import espejar_fotos
@@ -258,6 +348,9 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
         except Exception as e:
             log(f"  ADVERTENCIA: no se pudieron copiar fotos ({e}). ¿Corriste db/migracion_fotos.sql en Supabase?")
 
+    if "publicar" in despues:
+        # La página web lee de Supabase (tabla web_productos), no del JSON.
+        _paso("publicar")
         log("Publicando web_productos para la página ...")
         try:
             import publicar_web
@@ -265,6 +358,9 @@ def correr(solo_cadena: str | None, hacer_export: bool, max_llm: int | None = No
         except Exception as e:
             log(f"  ADVERTENCIA: no se pudo publicar la web ({e}). ¿Corriste db/migracion_web.sql en Supabase?")
 
+    candados.soltar("procesar")
+    if salteadas:
+        log(f"Cadenas salteadas porque las estaba corriendo otro equipo: {', '.join(salteadas)}")
     log(f"Listo. Cargas: {archivos_cargados}. Errores: {len(errores)}")
     for e in errores:
         log(f"  - {e}")
@@ -283,5 +379,14 @@ if __name__ == "__main__":
     ap.add_argument("--limite", type=int, default=None,
                      help="Solo corre las primeras N colecciones/URLs de cada cadena "
                           "(para pruebas rapidas de humo -- ej: --solo Fidalga --limite 3)")
+    ap.add_argument("--pasos", default=None,
+                     help="Qué pasos correr, separados por coma: " + ", ".join(PASOS) + " (default: todos)")
     args = ap.parse_args()
-    correr(args.solo, hacer_export=not args.sin_export, max_llm=args.max_llm, limite=args.limite)
+    pasos = None
+    if args.pasos:
+        pasos = [p.strip().lower() for p in args.pasos.split(",") if p.strip()]
+        malos = [p for p in pasos if p not in PASOS]
+        if malos:
+            ap.error(f"pasos desconocidos: {', '.join(malos)} (válidos: {', '.join(PASOS)})")
+        pasos = [p for p in PASOS if p in pasos]  # siempre en el orden correcto
+    correr(args.solo, hacer_export=not args.sin_export, max_llm=args.max_llm, limite=args.limite, pasos=pasos)
