@@ -364,37 +364,94 @@ def api_uso():
 _resumen_cache = {"t": 0, "datos": None}
 
 
+def _iso(v):
+    return v.isoformat() if v else None
+
+
 @app.route("/api/resumen")
 def api_resumen():
-    """Frescura por cadena (productos activos y última captura de precio),
-    pendientes de matching y última publicación de la web. Cache de 60 s."""
+    """Estado de cada cadena y del catálogo, para la parte de arriba del panel:
+    - por cadena: productos activos, último scraping exitoso, última captura de
+      precio, errores recientes, productos NUEVOS desde el último matching (lo que
+      falta matchear), cambios de precio y productos nuevos desde la última
+      publicación (lo que falta publicar) y su portafolio según en cuántas cadenas
+      está cada producto;
+    - catálogo: productos por cantidad de cadenas (1, 2, 3…), última publicación
+      de la web y último matching. Cache de 60 s."""
     if _resumen_cache["datos"] and time.time() - _resumen_cache["t"] < 60 and not request.args.get("forzar"):
         return jsonify(_resumen_cache["datos"])
-    datos = {"cadenas": [], "pendientes_matching": None, "web_actualizada": None}
+    datos = {"cadenas": [], "cobertura": {}, "total_productos": 0, "web_actualizada": None,
+             "ultimo_matching": None, "total_cadenas": 0}
     try:
         conn = etl.get_conn()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cur.execute("""
-            SELECT c.nombre AS cadena, count(l.id) FILTER (WHERE l.activo) AS productos,
-                   max(p.capturado_en) AS ultima
-            FROM cadenas c
-            LEFT JOIN listados l ON l.cadena_id = c.id
-            LEFT JOIN precios p ON p.listado_id = l.id
-            GROUP BY c.nombre ORDER BY c.nombre
-        """)
-        datos["cadenas"] = [{"cadena": r["cadena"], "productos": r["productos"],
-                             "ultima": r["ultima"].isoformat() if r["ultima"] else None} for r in cur.fetchall()]
-        try:
-            cur.execute("SELECT count(*) AS n FROM listados WHERE match_metodo = 'pendiente' AND activo")
-            datos["pendientes_matching"] = cur.fetchone()["n"]
-        except Exception:
-            conn.rollback()
+        web = match = None
         try:
             cur.execute("SELECT actualizado_en FROM web_resumen WHERE id = 1")
             fila = cur.fetchone()
-            datos["web_actualizada"] = fila["actualizado_en"].isoformat() if fila and fila["actualizado_en"] else None
+            web = fila["actualizado_en"] if fila else None
         except Exception:
             conn.rollback()
+        cur.execute("SELECT max(finalizado_en) AS f FROM agent_runs WHERE agente_tipo = 'matching' AND estado = 'ok'")
+        match = cur.fetchone()["f"]
+        datos["web_actualizada"], datos["ultimo_matching"] = _iso(web), _iso(match)
+
+        cadenas = {}
+        cur.execute("""
+            SELECT c.nombre AS cadena, count(l.id) AS productos, max(p.capturado_en) AS ultima_captura,
+                   count(l.id) FILTER (WHERE l.creado_en > coalesce(%(match)s::timestamptz, '-infinity')) AS nuevos_sin_matchear,
+                   count(l.id) FILTER (WHERE l.creado_en > coalesce(%(web)s::timestamptz, '-infinity')) AS nuevos_sin_publicar
+            FROM cadenas c
+            JOIN listados l ON l.cadena_id = c.id AND l.activo
+            LEFT JOIN precios p ON p.listado_id = l.id
+            GROUP BY c.nombre
+        """, {"match": match, "web": web})
+        for r in cur.fetchall():
+            cadenas[r["cadena"]] = {"cadena": r["cadena"], "productos": r["productos"],
+                                    "ultima_captura": _iso(r["ultima_captura"]),
+                                    "nuevos_sin_matchear": r["nuevos_sin_matchear"] if match else r["productos"],
+                                    "cambios_sin_publicar": r["nuevos_sin_publicar"], "cobertura": {},
+                                    "ultimo_scraping": None, "errores_recientes": 0}
+        # precios que CAMBIARON después de la última publicación (historial solo guarda cambios)
+        cur.execute("""
+            SELECT c.nombre AS cadena, count(*) AS n
+            FROM historial_precios h JOIN listados l ON l.id = h.listado_id AND l.activo
+            JOIN cadenas c ON c.id = l.cadena_id
+            WHERE h.capturado_en > coalesce(%s::timestamptz, '-infinity') AND l.creado_en <= h.capturado_en - interval '1 minute'
+            GROUP BY c.nombre
+        """, (web,))
+        for r in cur.fetchall():
+            if r["cadena"] in cadenas:
+                cadenas[r["cadena"]]["cambios_sin_publicar"] += r["n"]
+        cur.execute("""
+            SELECT c.nombre AS cadena,
+                   max(ar.finalizado_en) FILTER (WHERE ar.estado IN ('ok', 'ok_con_errores')) AS ultimo,
+                   count(*) FILTER (WHERE ar.estado = 'error' AND ar.iniciado_en > now() - interval '2 days') AS errores
+            FROM agent_runs ar JOIN cadenas c ON c.id = ar.cadena_id
+            WHERE ar.agente_tipo = 'scraper'
+            GROUP BY c.nombre
+        """)
+        for r in cur.fetchall():
+            if r["cadena"] in cadenas:
+                cadenas[r["cadena"]].update(ultimo_scraping=_iso(r["ultimo"]), errores_recientes=r["errores"])
+        # portafolio: cada listado activo, según en cuántas cadenas está su producto
+        cur.execute("""
+            WITH prod AS (SELECT producto_id, count(DISTINCT cadena_id) AS n FROM listados WHERE activo GROUP BY producto_id)
+            SELECT c.nombre AS cadena, prod.n, count(*) AS cant
+            FROM listados l JOIN prod ON prod.producto_id = l.producto_id JOIN cadenas c ON c.id = l.cadena_id
+            WHERE l.activo GROUP BY c.nombre, prod.n
+        """)
+        for r in cur.fetchall():
+            if r["cadena"] in cadenas:
+                cadenas[r["cadena"]]["cobertura"][str(r["n"])] = r["cant"]
+        cur.execute("""
+            WITH prod AS (SELECT producto_id, count(DISTINCT cadena_id) AS n FROM listados WHERE activo GROUP BY producto_id)
+            SELECT n, count(*) AS cant FROM prod GROUP BY n ORDER BY n
+        """)
+        datos["cobertura"] = {str(r["n"]): r["cant"] for r in cur.fetchall()}
+        datos["total_productos"] = sum(datos["cobertura"].values())
+        datos["total_cadenas"] = len(cadenas)
+        datos["cadenas"] = sorted(cadenas.values(), key=lambda c: c["cadena"])
         cur.close()
         conn.close()
     except Exception as e:
@@ -1019,7 +1076,7 @@ main > *, .grid-main > * { min-width: 0; }
 .consola pre .l-cmd { color: var(--text-3); }
 
 /* Frescura por cadena */
-.fresh { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--s3); }
+.fresh { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s3); }
 .fresh-item { background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s4); display: grid; gap: 4px; }
 .fresh-item .top { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
 .fresh-item .n { font-weight: 700; }
@@ -1079,6 +1136,23 @@ td .err { color: var(--danger); font-size: var(--fs-xs); margin-top: 4px; max-wi
 .confirmar { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; padding: var(--s3); border-radius: var(--r-md); background: var(--danger-soft); border: 1px solid rgba(255,107,107,.3); font-size: var(--fs-sm); }
 .confirmar span { margin-right: auto; }
 
+/* Estado por cadena / cobertura */
+.fresh-item.cad { gap: 6px; }
+.fresh-item .v .u { font: 500 var(--fs-xs) var(--font-body); color: var(--text-3); letter-spacing: 0; }
+.cob { display: flex; height: 8px; border-radius: var(--r-pill); overflow: hidden; background: var(--surface-3); margin: 4px 0 2px; }
+.cob > span { height: 100%; }
+.cob-1 { background: #3A5A51; } .cob-2 { background: #0B8A65; } .cob-3 { background: #12B886; } .cob-4 { background: #63E6BE; } .cob-5 { background: var(--spark); }
+.acciones-cad { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px; }
+.accion { border: 1px solid rgba(245,184,65,.35); background: var(--warn-soft); color: var(--warn); border-radius: var(--r-pill); padding: 3px 9px; font: 600 11.5px var(--font-body); cursor: pointer; }
+.accion:hover { background: rgba(245,184,65,.22); }
+.accion.err { border-color: rgba(255,107,107,.35); background: var(--danger-soft); color: var(--danger); }
+.ok-txt { display: inline-flex; align-items: center; gap: 5px; color: var(--ok); font-size: var(--fs-xs); font-weight: 600; }
+.ok-txt svg { width: 14px; height: 14px; }
+.fresh-item.catalogo { grid-column: span 2; background: linear-gradient(180deg, rgba(18,184,134,.08), transparent), var(--surface-1); }
+.leyenda { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: var(--fs-xs); color: var(--text-2); }
+.ley { display: inline-flex; align-items: center; gap: 5px; }
+.ley i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+@media (max-width: 640px) { .fresh-item.catalogo { grid-column: auto; } }
 .uso-fila { display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: var(--s2); font-size: var(--fs-xs); color: var(--text-2); margin-top: 4px; }
 .progress.mini { height: 6px; }
 .fresh-item.uso { grid-column: span 2; }
@@ -1666,17 +1740,67 @@ $('#conf-si').addEventListener('click', async () => {
   try { await api('/api/detener', {}); toast('Deteniendo…', 'info'); } catch (e) { toast(e.message, 'error'); }
 });
 
-/* ---------------- Frescura por cadena ---------------- */
+/* ---------------- Estado por cadena y catálogo ---------------- */
+let ultimoResumen = null;
+// Los botones "Falta: …" dejan armada la corrida (no la lanzan): se revisa y se toca Iniciar.
+function prepararCorrida(acc, cadena) {
+  if (acc === 'errores') {
+    filtro = 'error'; mostrarHist = 10;
+    document.querySelectorAll('#tabs-hist .tab').forEach(x => x.setAttribute('aria-selected', x.dataset.f === 'error'));
+    renderHistorial(); document.getElementById('h-hist').scrollIntoView({behavior: 'smooth'}); return;
+  }
+  modo = acc;
+  document.querySelectorAll('input[name=modo]').forEach(i => i.checked = i.value === acc);
+  if (acc === 'scraping' && cadena) { elegidas.clear(); elegidas.add(cadena); renderChips(); }
+  if (acc === 'publicar') $('#in-fotos').checked = false;
+  actualizarPlan();
+  document.getElementById('h-nueva').scrollIntoView({behavior: 'smooth'});
+  toast(acc === 'scraping' ? `Listo para scrapear ${cadena}. Revisá y tocá "Iniciar corrida".` :
+        acc === 'matching' ? 'Listo para matchear. Revisá y tocá "Iniciar corrida".' :
+        'Listo para publicar (sin copiar fotos). Revisá y tocá "Iniciar corrida".', 'info');
+}
 async function cargarResumen(forzar) {
   try {
     const r = await api('/api/resumen' + (forzar ? '?forzar=1' : ''));
-    const items = r.cadenas.filter(c => c.productos > 0 || DATOS.cadenas.some(d => d.cadena.toLowerCase() === c.cadena.toLowerCase()));
+    ultimoResumen = r;
     const fresco = iso => { if (!iso) return ['danger', 'Sin datos']; const h = (Date.now() - new Date(iso)) / 36e5; return h < 30 ? ['ok', 'Al día'] : h < 80 ? ['warn', 'Atrasada'] : ['danger', 'Desactualizada']; };
-    let html = items.map(c => { const [t, l] = fresco(c.ultima); return `
-      <div class="fresh-item"><div class="top"><span class="n">${esc(c.cadena)}</span><span class="badge badge--${t}"><span class="dot"></span>${l}</span></div>
-      <div class="v">${fmtNum(c.productos)}</div><div class="s">productos · precios ${haceCuanto(c.ultima)}</div></div>`; }).join('');
-    html += `<div class="fresh-item kpi"><div class="top"><span class="n">Web</span>${r.pendientes_matching ? `<span class="badge badge--warn">${fmtNum(r.pendientes_matching)} sin matchear</span>` : '<span class="badge badge--ok"><span class="dot"></span>Todo matcheado</span>'}</div>
-      <div class="v" style="font-size:18px">${haceCuanto(r.web_actualizada)}</div><div class="s">última publicación</div></div>`;
+    const maxN = Math.max(2, r.total_cadenas || 5);
+    const barra = (cob, total, etiqueta) => {
+      const segs = []; for (let n = 1; n <= maxN; n++) { const v = cob[n] || 0; if (v) segs.push(`<span class="cob-${Math.min(n, 5)}" style="width:${v / total * 100}%" title="${fmtNum(v)} ${etiqueta} en ${n} cadena${n > 1 ? 's' : ''} (${Math.round(v / total * 100)}%)"></span>`); }
+      return `<div class="cob" role="img" aria-label="Distribución por cantidad de cadenas">${segs.join('')}</div>`;
+    };
+    let html = r.cadenas.map(c => {
+      const ref = c.ultimo_scraping || c.ultima_captura;
+      const [t, l] = fresco(ref);
+      const total = c.productos || 1, solos = c.cobertura['1'] || 0;
+      const comp = Math.round((total - solos) / total * 100);
+      const acciones = [];
+      if (!ref || (Date.now() - new Date(ref)) / 36e5 >= 24) acciones.push(`<button class="accion" data-acc="scraping" data-c="${esc(c.cadena)}">Scrapear</button>`);
+      if (c.nuevos_sin_matchear > 0) acciones.push(`<button class="accion" data-acc="matching">Matchear ${fmtNum(c.nuevos_sin_matchear)} nuevos</button>`);
+      if (c.cambios_sin_publicar > 0) acciones.push(`<button class="accion" data-acc="publicar">Publicar ${fmtNum(c.cambios_sin_publicar)} cambios</button>`);
+      if (c.errores_recientes) acciones.push(`<button class="accion err" data-acc="errores">${c.errores_recientes} rutas con error</button>`);
+      return `<div class="fresh-item cad">
+        <div class="top"><span class="n">${esc(c.cadena)}</span><span class="badge badge--${t}"><span class="dot"></span>${l}</span></div>
+        <div class="v">${fmtNum(c.productos)} <span class="u">productos</span></div>
+        <div class="s" title="${ref ? new Date(ref).toLocaleString('es-BO') : ''}">Scrapeado ${ref ? `${fmtFecha(ref)} · ${haceCuanto(ref)}` : 'nunca'}</div>
+        ${barra(c.cobertura, total, 'productos')}
+        <div class="s"><b class="num" style="color:var(--text)">${comp}%</b> se compara con otra cadena</div>
+        <div class="acciones-cad">${acciones.length ? `<span class="s">Falta:</span>${acciones.join('')}` : '<span class="ok-txt"><svg><use href="#i-ok"/></svg>Todo al día</span>'}</div>
+      </div>`;
+    }).join('');
+
+    // Catálogo completo
+    const tot = r.total_productos || 1;
+    const comparables = tot - (r.cobertura['1'] || 0);
+    const leyenda = []; for (let n = 1; n <= maxN; n++) { const v = r.cobertura[n] || 0; leyenda.push(`<span class="ley"><i class="cob-${Math.min(n, 5)}"></i>${n} cadena${n > 1 ? 's' : ''} <b class="num">${Math.round(v / tot * 100)}%</b> <span class="s num">${fmtNum(v)}</span></span>`); }
+    const pubPend = r.cadenas.reduce((s, c) => s + (c.cambios_sin_publicar || 0), 0) || (r.ultimo_matching && r.web_actualizada && new Date(r.ultimo_matching) > new Date(r.web_actualizada));
+    html += `<div class="fresh-item catalogo">
+      <div class="top"><span class="n">Catálogo en la web</span>${pubPend ? '<button class="accion" data-acc="publicar">Hay cambios sin publicar · Publicar</button>' : '<span class="badge badge--ok"><span class="dot"></span>Web al día</span>'}</div>
+      <div class="v">${fmtNum(r.total_productos)} <span class="u">productos · <b style="color:var(--brand-ink)">${Math.round(comparables / tot * 100)}%</b> en 2 o más cadenas</span></div>
+      ${barra(r.cobertura, tot, 'productos')}
+      <div class="leyenda">${leyenda.join('')}</div>
+      <div class="s">Web publicada ${haceCuanto(r.web_actualizada)}${r.web_actualizada ? ` (${fmtFecha(r.web_actualizada)})` : ''} · último matching ${haceCuanto(r.ultimo_matching)}</div>
+    </div>`;
     try {
       const u = await api('/api/uso' + (forzar ? '?forzar=1' : ''));
       const fila = (nombre, usado, limite) => {
@@ -1693,6 +1817,7 @@ async function cargarResumen(forzar) {
         <div class="s">${grande ? `Tabla más grande: ${esc(grande.tabla)} (${fmtNum(Math.round(grande.mb))} MB) · ` : ''}la transferencia se ve en Supabase → Usage</div></div>`;
     } catch (e) { /* sin datos de uso */ }
     $('#fresh').innerHTML = html;
+    document.querySelectorAll('#fresh [data-acc]').forEach(b => b.addEventListener('click', () => prepararCorrida(b.dataset.acc, b.dataset.c)));
   } catch (e) {
     $('#fresh').innerHTML = `<div class="fresh-item"><span class="n">No se pudo leer la base</span><span class="s">${esc(e.message)}</span></div>`;
   }
