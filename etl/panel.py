@@ -558,6 +558,32 @@ def _num(v):
     return float(v) if v is not None else None
 
 
+def _fotos_para_panel(cur, imagenes) -> dict:
+    """Misma lógica de fotos que la web (publicar_web): Hipermaxi guarda sus fotos
+    detrás de su proxy (/_next/image?url=…), que fuera de su sitio no funciona.
+    Se usa la copia propia en Supabase Storage si existe; si no, la URL real."""
+    import publicar_web
+    base = getattr(publicar_web, "SUPABASE_URL", None) or os.environ.get("SUPABASE_URL", "https://dxdmstnkgqpndbbqkwct.supabase.co")
+    origen = {img: publicar_web.origen_img(img) for img in set(i for i in imagenes if i)}
+    copias = {}
+    urls = [u for u in origen.values() if u]
+    if urls:
+        cur.execute("SAVEPOINT fotos")
+        try:
+            cur.execute("SELECT url_origen, ruta FROM foto_espejo WHERE ok AND url_origen = ANY(%s)", (urls,))
+            copias = {r["url_origen"]: r["ruta"] for r in cur.fetchall()}
+            cur.execute("RELEASE SAVEPOINT fotos")
+        except Exception:
+            cur.execute("ROLLBACK TO SAVEPOINT fotos")  # todavía no existe foto_espejo
+    salida = {}
+    for img, u in origen.items():
+        if u and u in copias:
+            salida[img] = f"{base.rstrip('/')}/storage/v1/object/public/fotos/{copias[u]}_s.webp"
+        elif u and u.lower().startswith("http"):
+            salida[img] = u
+    return salida
+
+
 @app.route("/api/match/buscar")
 def api_match_buscar():
     q = (request.args.get("q") or "").strip()
@@ -584,12 +610,14 @@ def api_match_buscar():
                 WHERE l.activo AND l.producto_id = ANY(%s::uuid[])
                 ORDER BY c.nombre, l.nombre_original
             """, (ids,))
-            for r in cur.fetchall():
+            filas = cur.fetchall()
+            fotos = _fotos_para_panel(cur, [r["imagen"] for r in filas])
+            for r in filas:
                 g = grupos.setdefault(r["producto_id"], {"producto_id": r["producto_id"], "nombre": r["producto"],
                                                          "clave": r["producto_clave"], "listados": []})
                 g["listados"].append({
                     "id": r["listado_id"], "cadena": r["cadena"], "nombre": r["nombre_original"],
-                    "imagen": r["imagen"], "url": r["url"], "codigo": r["codigo_cadena"], "metodo": r["match_metodo"],
+                    "imagen": fotos.get(r["imagen"]), "url": r["url"], "codigo": r["codigo_cadena"], "metodo": r["match_metodo"],
                     "precio": _num(r["precio_oferta"]), "precio_regular": _num(r["precio_regular"]),
                 })
         cur.close()
