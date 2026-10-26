@@ -44,6 +44,10 @@ import scraper_shopify
 
 BASE_DIR = Path(__file__).parent
 CONFIG_PATH = BASE_DIR / "config_cadenas.json"
+# Mientras corre una corrida con solo algunas categorías, config_cadenas.json
+# queda filtrado (run_all.py no recibe categorías sueltas) y el original vive acá.
+CONFIG_RESPALDO = BASE_DIR / "config_cadenas.respaldo.json"
+ZONA_HORARIA = os.environ.get("PRECIOS_TZ", "America/La_Paz")  # para "esta semana" (desde el lunes)
 
 app = Flask(__name__)
 
@@ -87,11 +91,35 @@ def intentar_iniciar_corrida() -> bool:
 
 
 def cargar_config() -> dict:
-    return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    # Si hay una corrida con categorías elegidas, la config real es el respaldo.
+    ruta = CONFIG_RESPALDO if CONFIG_RESPALDO.exists() else CONFIG_PATH
+    return json.loads(ruta.read_text(encoding="utf-8"))
 
 
 def guardar_config(cfg: dict):
     CONFIG_PATH.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _handle(x) -> str:
+    return x["handle"] if isinstance(x, dict) else x
+
+
+def _nombre_url(url: str) -> str:
+    """'…/categoria/abarrotes/aderezos' -> 'abarrotes / aderezos'."""
+    partes = [p for p in url.split("?")[0].rstrip("/").split("/")[3:] if p and p != "categoria"]
+    return " / ".join(partes[-2:]) or url
+
+
+def categorias_de(c: dict, tipo: str) -> list[dict] | None:
+    """Categorías (Shopify) o URLs (navegador) de una cadena, para elegirlas una
+    por una. None = 'todas' (auto-descubrimiento: no hay lista fija)."""
+    if tipo == "shopify":
+        cols = c.get("colecciones")
+        if not isinstance(cols, list):
+            return None
+        return [{"id": _handle(x), "nombre": (x.get("subcategoria") or x["handle"]) if isinstance(x, dict) else x,
+                 "grupo": (x.get("categoria") or "") if isinstance(x, dict) else ""} for x in cols]
+    return [{"id": u, "nombre": _nombre_url(u), "grupo": ""} for u in c.get("urls", [])]
 
 
 def cadenas_config(cfg: dict) -> list[dict]:
@@ -101,10 +129,38 @@ def cadenas_config(cfg: dict) -> list[dict]:
         cols = c.get("colecciones")
         out.append({"cadena": c["cadena"], "tipo": "shopify", "sitio_base": c.get("sitio_base"),
                     "n": len(cols) if isinstance(cols, list) else None,
-                    "colecciones": [x["handle"] if isinstance(x, dict) else x for x in cols] if isinstance(cols, list) else cols})
+                    "colecciones": [_handle(x) for x in cols] if isinstance(cols, list) else cols,
+                    "categorias": categorias_de(c, "shopify")})
     for c in cfg.get("navegador", []):
-        out.append({"cadena": c["cadena"], "tipo": "navegador", "n": len(c.get("urls", []))})
+        out.append({"cadena": c["cadena"], "tipo": "navegador", "n": len(c.get("urls", [])),
+                    "categorias": categorias_de(c, "navegador")})
     return out
+
+
+def config_filtrada(cfg: dict, categorias: dict[str, list[str]]) -> dict:
+    """Copia de la config dejando, en las cadenas de `categorias`, solo esas
+    categorías/URLs (en el mismo orden que la config)."""
+    cfg = json.loads(json.dumps(cfg))
+    for c in cfg.get("shopify", []):
+        if c["cadena"] in categorias and isinstance(c.get("colecciones"), list):
+            ids = set(categorias[c["cadena"]])
+            c["colecciones"] = [x for x in c["colecciones"] if _handle(x) in ids]
+    for c in cfg.get("navegador", []):
+        if c["cadena"] in categorias:
+            ids = set(categorias[c["cadena"]])
+            c["urls"] = [u for u in c.get("urls", []) if u in ids]
+    return cfg
+
+
+def restaurar_config():
+    """Vuelve a poner la config original si quedó filtrada por una corrida con
+    categorías elegidas (al terminar, o al abrir el panel si se cortó de golpe)."""
+    if CONFIG_RESPALDO.exists():
+        CONFIG_PATH.write_text(CONFIG_RESPALDO.read_text(encoding="utf-8"), encoding="utf-8")
+        CONFIG_RESPALDO.unlink()
+
+
+restaurar_config()
 
 
 # ---------------------------------------------------------------------------
@@ -173,16 +229,23 @@ def correr_comando(cmd: list[str], token: str):
         log(f"ERROR fatal: {e}")
         estado["progreso"]["codigo"] = -1
     finally:
+        try:
+            restaurar_config()
+        except Exception as e:
+            log(f"ERROR al restaurar config_cadenas.json (el original está en {CONFIG_RESPALDO.name}): {e}")
         estado["progreso"]["fin"] = time.time()
         _proc = None
         estado["corriendo"] = False
 
 
-def lanzar(modo: str, cadenas: list[str] | None = None, max_llm=None, limite=None, sin_export=False, sin_fotos=False):
+def lanzar(modo: str, cadenas: list[str] | None = None, max_llm=None, limite=None, sin_export=False, sin_fotos=False,
+           categorias: dict | None = None):
     """Arma el comando de run_all.py para el modo pedido y lo lanza en un
-    hilo. Quien llama ya ganó el turno con intentar_iniciar_corrida()."""
+    hilo. Quien llama ya ganó el turno con intentar_iniciar_corrida().
+    `categorias` = {cadena: [handles o URLs]} para scrapear solo esas."""
     cfg_modo = MODOS[modo]
-    disponibles = cadenas_config(cargar_config())
+    cfg = cargar_config()
+    disponibles = cadenas_config(cfg)
     cmd = [sys.executable, "-u", "run_all.py"]
     pasos = list(cfg_modo["pasos"] or PASOS)
     if sin_export and "export" in pasos:
@@ -204,17 +267,36 @@ def lanzar(modo: str, cadenas: list[str] | None = None, max_llm=None, limite=Non
     if limite is not None and "scraping" in pasos:
         cmd += ["--limite", str(limite)]
 
+    # Solo algunas categorías: run_all.py lee config_cadenas.json, así que se le
+    # deja una copia filtrada durante la corrida (la original queda en el respaldo).
+    parciales = {}
+    if categorias and "scraping" in pasos:
+        for c in disponibles:
+            if c["cadena"] not in elegidas or c["cadena"] not in categorias or c["categorias"] is None:
+                continue
+            todas = [x["id"] for x in c["categorias"]]
+            ids = [i for i in categorias[c["cadena"]] if i in set(todas)]
+            if not ids:
+                raise ValueError(f"{c['cadena']}: elegí al menos una categoría")
+            if len(ids) < len(todas):
+                parciales[c["cadena"]] = ids
+    if parciales:
+        if not CONFIG_RESPALDO.exists():
+            CONFIG_RESPALDO.write_text(CONFIG_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+        guardar_config(config_filtrada(cfg, parciales))
+
     plan_cadenas = []
     for c in disponibles:
         if c["cadena"] in elegidas and "scraping" in pasos:
-            n = c["n"]
+            n = len(parciales[c["cadena"]]) if c["cadena"] in parciales else c["n"]
             if n is not None and limite is not None:
                 n = min(n, limite)
             plan_cadenas.append({"cadena": c["cadena"], "tipo": c["tipo"], "n": n})
     _duraciones.clear()
     estado["log"] = []
     estado["progreso"] = _progreso_vacio()
-    estado["progreso"].update(modo=modo, inicio=time.time(), plan={"pasos": pasos, "cadenas": plan_cadenas})
+    estado["progreso"].update(modo=modo, inicio=time.time(), plan={"pasos": pasos, "cadenas": plan_cadenas,
+                                                                  "categorias_parciales": {k: len(v) for k, v in parciales.items()}})
     estado["token"] = uuid.uuid4().hex
     threading.Thread(target=correr_comando, args=(cmd, estado["token"]), daemon=True).start()
 
@@ -254,11 +336,21 @@ def api_correr():
         return jsonify({"error": str(e)}), 400
     if limite == 0:
         return jsonify({"error": "La prueba rápida tiene que ser de 1 categoría o más"}), 400
+    categorias = data.get("categorias")
+    if categorias is not None and not (isinstance(categorias, dict) and
+                                       all(isinstance(v, list) for v in categorias.values())):
+        return jsonify({"error": "categorias tiene que ser {cadena: [categorías]}"}), 400
     if not intentar_iniciar_corrida():
         return jsonify({"error": "Ya hay una corrida en curso"}), 409
     try:
-        lanzar(modo, data.get("cadenas"), max_llm, limite, bool(data.get("sin_export")), bool(data.get("sin_fotos")))
+        lanzar(modo, data.get("cadenas"), max_llm, limite, bool(data.get("sin_export")), bool(data.get("sin_fotos")),
+               categorias)
+    except ValueError as e:
+        restaurar_config()
+        estado["corriendo"] = False
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
+        restaurar_config()
         estado["corriendo"] = False
         return jsonify({"error": str(e)}), 500
     return jsonify({"ok": True})
@@ -364,6 +456,47 @@ def api_uso():
 _resumen_cache = {"t": 0, "datos": None}
 
 
+def _sin_esquema(u: str) -> str:
+    return re.sub(r"^https?://(www\.)?", "", (u or "").strip().lower()).split("?")[0].split("#")[0].rstrip("/")
+
+
+def _categoria_hecha(tipo: str, cid: str, rutas: list[str]) -> bool:
+    """¿Alguna ruta de agent_runs (fuente_metodo) corresponde a esta categoría?
+    Shopify: el handle es un tramo de la ruta (…/collections/<handle>/…, 'shopify:<handle>'
+    o el handle solo). Navegador: la misma URL (sin http/www, query ni / final)."""
+    if tipo == "shopify":
+        h = cid.lower()
+        return any(h in re.split(r"[/:?#\s]+", r.lower()) for r in rutas)
+    u = _sin_esquema(cid)
+    return any(_sin_esquema(r) == u for r in rutas)
+
+
+def _categorias_semana(cur) -> dict:
+    """Por cadena: qué categorías de config_cadenas.json ya tienen un scraping
+    exitoso esta semana (desde el lunes 00:00 hora de Bolivia) y cuáles faltan."""
+    cur.execute("""
+        SELECT c.nombre AS cadena, ar.fuente_metodo AS ruta
+        FROM agent_runs ar JOIN cadenas c ON c.id = ar.cadena_id
+        WHERE ar.agente_tipo = 'scraper' AND ar.estado IN ('ok', 'ok_con_errores') AND ar.fuente_metodo IS NOT NULL
+          AND ar.iniciado_en >= date_trunc('week', now() AT TIME ZONE %(tz)s) AT TIME ZONE %(tz)s
+    """, {"tz": ZONA_HORARIA})
+    rutas = {}
+    for r in cur.fetchall():
+        rutas.setdefault(r["cadena"], []).append(r["ruta"])
+    out = {}
+    for c in cadenas_config(cargar_config()):
+        if c["categorias"] is None:  # 'todas' (auto): no hay lista fija contra la cual comparar
+            continue
+        rs = rutas.get(c["cadena"], [])
+        hechas = [x["id"] for x in c["categorias"] if _categoria_hecha(c["tipo"], x["id"], rs)]
+        faltan = [x["id"] for x in c["categorias"] if x["id"] not in set(hechas)]
+        # Si hubo corridas esta semana pero ninguna ruta coincide con la config,
+        # no se puede afirmar que falta todo (puede ser otro formato de ruta).
+        out[c["cadena"]] = {"total": len(c["categorias"]), "hechas": len(hechas), "faltan": faltan,
+                            "corridas": len(rs), "reconocidas": bool(hechas) or not rs}
+    return out
+
+
 def _iso(v):
     return v.isoformat() if v else None
 
@@ -372,7 +505,7 @@ def _iso(v):
 def api_resumen():
     """Estado de cada cadena y del catálogo, para la parte de arriba del panel:
     - por cadena: productos activos, último scraping exitoso, última captura de
-      precio, errores recientes, productos NUEVOS desde el último matching (lo que
+      precio, errores recientes, categorías que faltan scrapear esta semana, productos NUEVOS desde el último matching (lo que
       falta matchear), cambios de precio y productos nuevos desde la última
       publicación (lo que falta publicar) y su portafolio según en cuántas cadenas
       está cada producto;
@@ -434,6 +567,9 @@ def api_resumen():
         for r in cur.fetchall():
             if r["cadena"] in cadenas:
                 cadenas[r["cadena"]].update(ultimo_scraping=_iso(r["ultimo"]), errores_recientes=r["errores"])
+        for nombre, sem in _categorias_semana(cur).items():
+            if nombre in cadenas:
+                cadenas[nombre]["semana"] = sem
         # portafolio: cada listado activo, según en cuántas cadenas está su producto
         cur.execute("""
             WITH prod AS (SELECT producto_id, count(DISTINCT cadena_id) AS n FROM listados WHERE activo GROUP BY producto_id)
@@ -478,6 +614,8 @@ def api_guardar_colecciones():
     data = request.get_json()
     cadena = data["cadena"]
     handles = data["handles"]
+    if CONFIG_RESPALDO.exists():
+        return jsonify({"error": "Hay una corrida con categorías elegidas en curso. Guardá la selección cuando termine."}), 409
     cfg = cargar_config()
     # Si "cadena" no coincide con ninguna entrada real, avisar en vez de
     # devolver ok sin haber guardado nada.
@@ -1124,6 +1262,14 @@ td .err { color: var(--danger); font-size: var(--fs-xs); margin-top: 4px; max-wi
 .acc-foot { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s3); flex-wrap: wrap; }
 .acc-foot .sel { color: var(--text-2); font-size: var(--fs-sm); margin-right: auto; }
 
+/* Categorías de esta corrida (desplegable por cadena en "Nueva corrida") */
+.sel-cats { display: grid; gap: var(--s2); margin-top: var(--s3); }
+.sel-cats .acc + .acc { margin-top: 0; }
+.sel-cats .acc > summary { padding: var(--s2) var(--s3); flex-wrap: wrap; }
+.sel-cats .cols { max-height: 300px; }
+.col .g { color: var(--text-3); font-size: 11.5px; }
+.col .falta { margin-left: auto; flex: none; font-size: 10.5px; font-weight: 700; color: var(--warn); background: var(--warn-soft); border-radius: var(--r-pill); padding: 2px 7px; }
+
 /* Toasts */
 .toasts { position: fixed; right: var(--s5); bottom: var(--s5); display: grid; gap: var(--s2); z-index: 50; max-width: min(420px, calc(100vw - 32px)); }
 .toast { display: flex; gap: var(--s3); align-items: flex-start; padding: var(--s3) var(--s4); border-radius: var(--r-md); background: var(--surface-3);
@@ -1264,6 +1410,7 @@ td .err { color: var(--danger); font-size: var(--fs-xs); margin-top: 4px; max-wi
         <div class="bloque" id="bloque-cadenas">
           <div class="eyebrow"><span class="paso-n">2</span>Cadenas <button class="btn btn-ghost btn-sm" style="margin-left:auto;letter-spacing:0;text-transform:none" id="btn-todas" type="button">Todas</button></div>
           <div class="chips" id="chips" role="group" aria-label="Cadenas a scrapear"></div>
+          <div class="sel-cats" id="sel-cats"></div>
           <p class="nota" id="nota-cadenas" hidden><svg><use href="#i-info"/></svg><span>Este modo trabaja sobre todo lo que ya está en la base, de todas las cadenas.</span></p>
         </div>
         <div class="bloque">
@@ -1467,6 +1614,14 @@ async function api(url, body) {
 /* ---------------- Nueva corrida ---------------- */
 let modo = 'completo';
 const elegidas = new Set(DATOS.cadenas.map(c => c.cadena));
+// Categorías elegidas para ESTA corrida, por cadena (por defecto todas). No cambia
+// config_cadenas.json: eso se hace abajo, en "Categorías por cadena".
+const catsElegidas = {};
+DATOS.cadenas.forEach(c => { if (c.categorias) catsElegidas[c.cadena] = new Set(c.categorias.map(x => x.id)); });
+const nCats = c => c.categorias ? catsElegidas[c.cadena].size : c.n;
+const faltanSemana = cadena => new Set((((ultimoResumen && ultimoResumen.cadenas) || []).find(x => x.cadena === cadena)?.semana?.faltan) || []);
+const abiertas = new Set();
+let firmaSel = '';
 
 function renderModos() {
   $('#modos').innerHTML = MODOS.map(m => `
@@ -1513,7 +1668,7 @@ function renderChips() {
   $('#chips').innerHTML = DATOS.cadenas.map(c => { const o = cadenaOcupada(c.cadena); return `
     <button type="button" class="chip" data-c="${esc(c.cadena)}" aria-pressed="${elegidas.has(c.cadena)}" ${o ? `title="La está scrapeando ${esc(o.equipo)}: si la elegís, se saltea"` : ''}>
       <span class="ck"><svg><use href="#i-check"/></svg></span>${esc(c.cadena)}
-      <span class="meta">${c.n == null ? 'auto' : c.n} ${c.tipo === 'navegador' ? 'URLs' : 'cat.'}</span>
+      <span class="meta">${c.n == null ? 'auto' : (nCats(c) < c.n ? `${nCats(c)} de ${c.n}` : c.n)} ${c.tipo === 'navegador' ? 'URLs' : 'cat.'}</span>
       ${o ? `<span class="uso">en uso: ${esc(o.equipo)}</span>` : ''}
     </button>`; }).join('');
   document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
@@ -1526,6 +1681,61 @@ $('#btn-todas').addEventListener('click', () => {
   DATOS.cadenas.forEach(c => todas ? elegidas.delete(c.cadena) : elegidas.add(c.cadena));
   renderChips(); actualizarPlan();
 });
+
+function resumenSel(c) {
+  const sel = catsElegidas[c.cadena], tot = c.categorias.length, u = c.tipo === 'navegador' ? 'URLs' : 'categorías';
+  return sel.size === tot ? `Todas las ${tot} ${u}` : `${sel.size} de ${tot} ${u}`;
+}
+function renderSelCats() {
+  const m = MODOS.find(x => x.id === modo);
+  const cads = m.cadenas && pasosDelModo().includes('scraping') ? DATOS.cadenas.filter(c => elegidas.has(c.cadena) && c.categorias) : [];
+  const firma = JSON.stringify(cads.map(c => [c.cadena, [...faltanSemana(c.cadena)].length]));
+  if (firma === firmaSel) {  // mismo contenido: solo se actualizan los contadores (no se pierde el filtro ni el scroll)
+    cads.forEach(c => { const el = document.querySelector(`#sel-cats [data-sc="${CSS.escape(c.cadena)}"]`); if (el) el.textContent = resumenSel(c); });
+    return;
+  }
+  firmaSel = firma;
+  $('#sel-cats').innerHTML = cads.map(c => {
+    const sel = catsElegidas[c.cadena], falt = faltanSemana(c.cadena), k = DATOS.cadenas.indexOf(c);
+    return `<details class="acc" data-sk="${k}" ${abiertas.has(c.cadena) ? 'open' : ''}>
+      <summary><svg class="chev"><use href="#i-chev"/></svg><span class="n">${esc(c.cadena)}</span>
+        <span class="s" data-sc="${esc(c.cadena)}">${resumenSel(c)}</span>
+        ${falt.size ? `<span class="badge badge--warn">${falt.size} sin scrapear esta semana</span>` : ''}</summary>
+      <div class="acc-body">
+        <div class="acc-tools">
+          <input class="input" type="search" placeholder="Filtrar…" data-sfiltro aria-label="Filtrar categorías de ${esc(c.cadena)}">
+          <button class="btn btn-ghost btn-sm" data-sacc="todas" type="button">Todas</button>
+          <button class="btn btn-ghost btn-sm" data-sacc="ninguna" type="button">Ninguna</button>
+          ${falt.size ? '<button class="btn btn-ghost btn-sm" data-sacc="faltan" type="button">Solo las que faltan</button>' : ''}
+        </div>
+        <div class="cols">${c.categorias.map(x => `<label class="col"><input type="checkbox" value="${esc(x.id)}" ${sel.has(x.id) ? 'checked' : ''}>
+          <span><span>${esc(x.nombre)}</span>${x.grupo ? ` <span class="g">· ${esc(x.grupo)}</span>` : ''}</span>${falt.has(x.id) ? '<span class="falta">falta esta semana</span>' : ''}</label>`).join('')}</div>
+      </div>
+    </details>`;
+  }).join('');
+  document.querySelectorAll('#sel-cats .acc').forEach(d => {
+    const c = DATOS.cadenas[d.dataset.sk], sel = catsElegidas[c.cadena];
+    d.addEventListener('toggle', () => d.open ? abiertas.add(c.cadena) : abiertas.delete(c.cadena));
+    d.querySelector('.cols').addEventListener('change', e => {
+      e.target.checked ? sel.add(e.target.value) : sel.delete(e.target.value);
+      renderChips(); actualizarPlan();
+    });
+    d.querySelector('[data-sfiltro]').addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      d.querySelectorAll('.col').forEach(l => l.hidden = q && !l.textContent.toLowerCase().includes(q));
+    });
+    d.querySelectorAll('[data-sacc]').forEach(b => b.addEventListener('click', () => {
+      const falt = faltanSemana(c.cadena);
+      d.querySelectorAll('.col').forEach(l => {
+        const i = l.querySelector('input');
+        if (b.dataset.sacc === 'faltan') i.checked = falt.has(i.value);
+        else if (!l.hidden) i.checked = b.dataset.sacc === 'todas';  // con filtro: solo las que se ven
+        i.checked ? sel.add(i.value) : sel.delete(i.value);
+      });
+      renderChips(); actualizarPlan();
+    }));
+  });
+}
 
 function pasosDelModo() {
   let p = [...MODOS.find(m => m.id === modo).pasos];
@@ -1547,7 +1757,7 @@ function pipelineHTML(incluidos, activo, hechos) {
 function estimar(pasos, cadenas, limite) {
   let s = 0, cats = 0;
   if (pasos.includes('scraping')) cadenas.forEach(c => {
-    const n = c.n == null ? 100 : (limite ? Math.min(c.n, limite) : c.n);
+    const n0 = nCats(c), n = n0 == null ? 100 : (limite ? Math.min(n0, limite) : n0);
     cats += n; s += n * SEG_CATEGORIA[c.tipo];
   });
   pasos.forEach(p => { if (SEG_PASO[p]) s += SEG_PASO[p]; });
@@ -1567,8 +1777,11 @@ function actualizarPlan() {
   const limite = parseInt($('#in-limite').value) || null;
   const cads = DATOS.cadenas.filter(c => elegidas.has(c.cadena));
   const {s, cats} = estimar(pasos, m.cadenas ? cads : [], limite);
+  renderSelCats();
+  const sinCats = m.cadenas && pasos.includes('scraping') ? cads.filter(c => c.categorias && !catsElegidas[c.cadena].size) : [];
   let txt;
   if (m.cadenas && !cads.length) txt = '<b>Elegí al menos una cadena.</b>';
+  else if (sinCats.length) txt = `<b>Elegí al menos una categoría de ${sinCats.map(c => esc(c.cadena)).join(', ')}</b> (o sacá la cadena).`;
   else if (modo === 'completo') txt = `Scrapear <b>${cads.length === DATOS.cadenas.length ? 'todas las cadenas' : cads.map(c => esc(c.cadena)).join(', ')}</b> (${fmtNum(cats)} categorías) y publicar en la web.`;
   else if (modo === 'scraping') txt = `Traer precios de <b>${cads.map(c => esc(c.cadena)).join(', ')}</b> (${fmtNum(cats)} categorías) y guardarlos. <span style="color:var(--text-3)">La web no cambia.</span>`;
   else if (modo === 'matching') txt = 'Clasificar y emparejar los productos pendientes de <b>todas las cadenas</b>.';
@@ -1582,7 +1795,7 @@ function actualizarPlan() {
   if (proc && pasos.some(p => p !== 'scraping')) avisos.push(`${esc(proc.equipo)} está en “${esc(proc.detalle || 'procesando')}”: tu corrida va a esperar a que termine antes de matchear o publicar.`);
   $('#resumen-plan').innerHTML = txt + avisos.map(a => `<div class="aviso-plan">${a}</div>`).join('');
   $('#estimado').textContent = `Tiempo estimado: ≈ ${fmtDur(s)}${limite && pasos.includes('scraping') ? ' · prueba rápida' : ''}`;
-  $('#btn-correr').disabled = corriendo || (m.cadenas && !cads.length);
+  $('#btn-correr').disabled = corriendo || (m.cadenas && !cads.length) || sinCats.length > 0;
 }
 ['#in-limite', '#in-llm', '#in-export', '#in-fotos'].forEach(s => $(s).addEventListener('input', actualizarPlan));
 
@@ -1593,6 +1806,9 @@ $('#btn-correr').addEventListener('click', async () => {
   try {
     await api('/api/correr', {
       modo, cadenas: m.cadenas ? DATOS.cadenas.filter(c => elegidas.has(c.cadena)).map(c => c.cadena) : null,
+      categorias: m.cadenas ? Object.fromEntries(DATOS.cadenas
+        .filter(c => elegidas.has(c.cadena) && c.categorias && nCats(c) < c.categorias.length)
+        .map(c => [c.cadena, [...catsElegidas[c.cadena]]])) : null,
       limite: $('#in-limite').value || null, max_llm: $('#in-llm').value || null, sin_export: !$('#in-export').checked,
       sin_fotos: !$('#in-fotos').checked,
     });
@@ -1749,6 +1965,17 @@ function prepararCorrida(acc, cadena) {
     document.querySelectorAll('#tabs-hist .tab').forEach(x => x.setAttribute('aria-selected', x.dataset.f === 'error'));
     renderHistorial(); document.getElementById('h-hist').scrollIntoView({behavior: 'smooth'}); return;
   }
+  if (acc === 'faltan') {
+    const sem = (ultimoResumen.cadenas.find(x => x.cadena === cadena) || {}).semana || {faltan: []};
+    modo = 'scraping';
+    document.querySelectorAll('input[name=modo]').forEach(i => i.checked = i.value === modo);
+    elegidas.clear(); elegidas.add(cadena);
+    catsElegidas[cadena] = new Set(sem.faltan); abiertas.add(cadena); firmaSel = '';
+    renderChips(); actualizarPlan();
+    document.getElementById('h-nueva').scrollIntoView({behavior: 'smooth'});
+    toast(`Listo para scrapear las ${sem.faltan.length} categorías de ${cadena} que faltan esta semana. Revisá y tocá "Iniciar corrida".`, 'info');
+    return;
+  }
   modo = acc;
   document.querySelectorAll('input[name=modo]').forEach(i => i.checked = i.value === acc);
   if (acc === 'scraping' && cadena) { elegidas.clear(); elegidas.add(cadena); renderChips(); }
@@ -1771,18 +1998,26 @@ async function cargarResumen(forzar) {
     };
     let html = r.cadenas.map(c => {
       const ref = c.ultimo_scraping || c.ultima_captura;
-      const [t, l] = fresco(ref);
+      let [t, l] = fresco(ref);
+      const sem = c.semana, faltan = sem && sem.reconocidas ? sem.faltan.length : 0;
+      if (faltan && t === 'ok') [t, l] = ['warn', 'Faltan categorías'];
+      else if (sem && !sem.reconocidas && t === 'ok') [t, l] = ['warn', 'Revisar categorías'];
       const total = c.productos || 1, solos = c.cobertura['1'] || 0;
       const comp = Math.round((total - solos) / total * 100);
       const acciones = [];
       if (!ref || (Date.now() - new Date(ref)) / 36e5 >= 24) acciones.push(`<button class="accion" data-acc="scraping" data-c="${esc(c.cadena)}">Scrapear</button>`);
       if (c.nuevos_sin_matchear > 0) acciones.push(`<button class="accion" data-acc="matching">Matchear ${fmtNum(c.nuevos_sin_matchear)} nuevos</button>`);
       if (c.cambios_sin_publicar > 0) acciones.push(`<button class="accion" data-acc="publicar">Publicar ${fmtNum(c.cambios_sin_publicar)} cambios</button>`);
+      if (faltan) acciones.push(`<button class="accion" data-acc="faltan" data-c="${esc(c.cadena)}">Scrapear ${fmtNum(faltan)} categorías de esta semana</button>`);
       if (c.errores_recientes) acciones.push(`<button class="accion err" data-acc="errores">${c.errores_recientes} rutas con error</button>`);
+      const semTxt = !sem ? '' : !sem.reconocidas
+        ? `<div class="s" style="color:var(--warn)">Esta semana hubo ${fmtNum(sem.corridas)} scrapings, pero sus rutas no coinciden con las categorías de la config: no puedo decir cuáles faltan.</div>`
+        : `<div class="s">Esta semana: <b class="num" style="color:var(--text)">${fmtNum(sem.hechas)} de ${fmtNum(sem.total)}</b> categorías scrapeadas</div>`;
       return `<div class="fresh-item cad">
         <div class="top"><span class="n">${esc(c.cadena)}</span><span class="badge badge--${t}"><span class="dot"></span>${l}</span></div>
         <div class="v">${fmtNum(c.productos)} <span class="u">productos</span></div>
         <div class="s" title="${ref ? new Date(ref).toLocaleString('es-BO') : ''}">Scrapeado ${ref ? `${fmtFecha(ref)} · ${haceCuanto(ref)}` : 'nunca'}</div>
+        ${semTxt}
         ${barra(c.cobertura, total, 'productos')}
         <div class="s"><b class="num" style="color:var(--text)">${comp}%</b> se compara con otra cadena</div>
         <div class="acciones-cad">${acciones.length ? `<span class="s">Falta:</span>${acciones.join('')}` : '<span class="ok-txt"><svg><use href="#i-ok"/></svg>Todo al día</span>'}</div>
@@ -1817,6 +2052,7 @@ async function cargarResumen(forzar) {
         <div class="s">${grande ? `Tabla más grande: ${esc(grande.tabla)} (${fmtNum(Math.round(grande.mb))} MB) · ` : ''}la transferencia se ve en Supabase → Usage</div></div>`;
     } catch (e) { /* sin datos de uso */ }
     $('#fresh').innerHTML = html;
+    actualizarPlan();  // marca en el selector de categorías las que faltan esta semana
     document.querySelectorAll('#fresh [data-acc]').forEach(b => b.addEventListener('click', () => prepararCorrida(b.dataset.acc, b.dataset.c)));
   } catch (e) {
     $('#fresh').innerHTML = `<div class="fresh-item"><span class="n">No se pudo leer la base</span><span class="s">${esc(e.message)}</span></div>`;
@@ -1952,6 +2188,10 @@ function renderCategorias() {
     if (!handles.length) { toast('Elegí al menos una categoría.', 'error'); return; }
     try {
       await api('/api/guardar_colecciones', {cadena: c.cadena, handles});
+      const previas = Object.fromEntries((c.categorias || []).map(x => [x.id, x]));
+      c.categorias = handles.map(h => previas[h] || {id: h, grupo: '',
+        nombre: document.querySelector(`[data-cols="${k}"] input[value="${CSS.escape(h)}"]`)?.closest('.col').querySelector('span span').textContent || h});
+      catsElegidas[c.cadena] = new Set(handles); firmaSel = '';
       c.colecciones = handles; c.n = handles.length;
       document.querySelector(`.acc[data-k="${k}"] summary .badge`).textContent = `${handles.length} categorías activas`;
       renderChips(); actualizarPlan();
