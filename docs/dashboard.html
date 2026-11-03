@@ -796,7 +796,6 @@
             'Fidalga': { color: '#39A935', logo: './assets/logos/fidalga.jpg' },
             'Amarket': { color: '#E31E24', logo: './assets/logos/amarket.jpg' },
             'Hipermaxi': { color: '#F26522', logo: './assets/logos/hipermaxi.jpg' },
-            'Farmacias Chavez': { color: '#00AEEF', logo: './assets/logos/chavez.png' },
         };
         const metaFor = c => CHAIN_META[c] || { color: '#6B7280', logo: null };
         const iniciales = c => String(c || '').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
@@ -1082,7 +1081,7 @@
             // Insumos Médicos, Suplementos, etc. -- así que adentro (nivel
             // 2, plegable) se desglosa por la etiqueta de categoría CRUDA
             // original de cada cadena, para comparar ej. Farmacorp vs
-            // Chávez segmento por segmento en vez de un solo promedio que
+            // la competencia segmento por segmento en vez de un solo promedio que
             // los tapa a todos.
             const porCat = new Map();
             COMPARACIONES.filter(c => !c.esOutlier).forEach(c => {
