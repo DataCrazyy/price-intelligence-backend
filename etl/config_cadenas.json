@@ -1,5 +1,9 @@
 {
     "_comentario": "Cadenas que se scrapean automaticamente con 'python run_all.py' o desde panel.py. 'shopify': sin navegador, casi gratis, 'colecciones': 'todas' descubre y scrapea el catalogo completo solo (listar_colecciones()); si preferis limitar a categorias puntuales, pone un array de handles en su lugar, ej. [\"lacteos\"]. 'navegador': necesitan Playwright (mas lento, hay que agregar categorias a mano copiando la URL, no hay auto-descubrimiento todavia).",
+    "_ocultas_comentario": "Cadenas que no se muestran en la web ni en precios.json (se pueden seguir scrapeando y ven en el panel). Para volver a mostrar una: sacarla de 'ocultas_en_web' y publicar.",
+    "ocultas_en_web": [
+        "Farmacias Chavez"
+    ],
     "_urls_chavez_pendientes": {
         "_comentario": "URLs de Chavez que estaban comentadas con // (JSON no soporta comentarios, asi que quedaban invalidas). Movidas aca para no perderlas -- para activar una, pasala a la lista 'urls' de Chavez mas abajo.",
         "urls": []

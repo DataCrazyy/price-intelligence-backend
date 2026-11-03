@@ -15,6 +15,8 @@ import psycopg2
 import psycopg2.extras
 from dotenv import load_dotenv
 
+import visibilidad
+
 load_dotenv()
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
@@ -132,7 +134,7 @@ def export_json(out_path: str):
 
         productos.append({
             "id": prod_id,
-            "producto_clave": producto_clave,  # <--- Aquí blindamos el matching
+            "producto_clave": visibilidad.clave_publica(producto_clave),  # <--- Aquí blindamos el matching
             "codigo_cadena": f["codigo_cadena"],
             "nombre": f["nombre"],
             "categoria": f["categoria"],
@@ -149,6 +151,15 @@ def export_json(out_path: str):
             "url": f["url"],
             "historial": hist_fusionado,
         })
+
+    # Cadenas ocultas en la web (config_cadenas.json -> "ocultas_en_web"): este archivo
+    # también es público, así que no lleva sus productos, ni su historial, ni su nombre.
+    ocultas = visibilidad.cadenas_ocultas()
+    if ocultas:
+        productos = [p for p in productos if not visibilidad.oculta(p["cadena"], ocultas)]
+        for p in productos:
+            p["historial"] = [h for h in p["historial"] if not visibilidad.oculta(h.get("cadena", ""), ocultas)]
+        fuentes = [c for c in fuentes if not visibilidad.oculta(c, ocultas)]
 
     payload = {
         "fecha_actualizacion": __import__("datetime").date.today().isoformat(),

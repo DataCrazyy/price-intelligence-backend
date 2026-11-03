@@ -31,6 +31,7 @@ import psycopg2.extras
 from dotenv import load_dotenv
 
 import taxonomia
+import visibilidad
 
 load_dotenv()
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -109,7 +110,10 @@ def leer(conn):
         JOIN precios pr  ON pr.listado_id = l.id
         WHERE l.activo = TRUE AND pr.precio_oferta > 0
     """)
-    filas = cur.fetchall()
+    # Cadenas ocultas en la web (config_cadenas.json -> "ocultas_en_web"): no se publican
+    # ni sus precios ni sus fotos ni su nombre (ver visibilidad.py).
+    ocultas = visibilidad.cadenas_ocultas()
+    filas = [f for f in cur.fetchall() if not visibilidad.oculta(f["cadena"], ocultas)]
     cur.execute("SELECT listado_id, fecha, precio_oferta::float AS p FROM historial_precios ORDER BY fecha")
     hist = defaultdict(list)
     for h in cur.fetchall():
@@ -117,7 +121,7 @@ def leer(conn):
     cur.execute("SELECT max(capturado_en)::date AS f FROM precios")
     fecha = cur.fetchone()["f"]
     cur.execute("SELECT coalesce(array_agg(nombre ORDER BY nombre), '{}') AS c FROM cadenas WHERE activo")
-    cadenas = list(cur.fetchone()["c"])
+    cadenas = [c for c in cur.fetchone()["c"] if not visibilidad.oculta(c, ocultas)]
     # Categorías propias (etl/clasificar.py). Si la tabla no existe todavía, se usa la regla vieja.
     clasif = {}
     cur.execute("SELECT to_regclass('producto_categoria') IS NOT NULL AS hay")
@@ -208,7 +212,7 @@ def calcular(filas, hist, fecha, macro_de, otros, clasif=None):
         historial.sort(key=lambda h: (h["f"], h["c"]))
 
         filas_web.append({
-            "k": k,
+            "k": visibilidad.clave_publica(k),
             "nombre": nombre,
             "macro": macro,
             "sub": sub,
