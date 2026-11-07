@@ -4419,6 +4419,7 @@
             const { data } = await api('web_resumen?select=datos');
             const d = (data[0] || {}).datos || {};
             S.fecha = d.fecha || '';
+            S.capturas = d.capturas || {};   // {cadena: ['2026-10-19', ...]} días en que corrió su scraping
             S.chains = (d.cadenas || []).slice().sort((a, b) => a.localeCompare(b, 'es'));
             if (d.otros) OTROS = d.otros;
             // La columna sub llega con db/migracion_categorias.sql: si todavía no está, la página sigue igual que antes
@@ -4741,9 +4742,21 @@
         }
         function grafico(g) {
             const pts = (g.hist || []).map(h => ({ f: h.f, c: h.c, p: +h.p })).filter(p => p.f && p.p > 0);
-            // Línea en escalones: el precio se mantiene igual hasta la fecha en que cambió.
-            // El historial solo guarda CAMBIOS de precio: si una cadena mantuvo su precio, sumamos un punto
-            // con el precio actual en la fecha de la última actualización, así se ve que se siguió midiendo.
+            // El historial solo guarda CAMBIOS de precio. Para mostrar un punto por cada captura,
+            // se agrega cada día en que corrió el scraping de esa cadena con el precio vigente ese día.
+            const caps = S.capturas || {};
+            [...new Set(pts.map(p => p.c))].forEach(c => {
+                const suyos = pts.filter(p => p.c === c).sort((u, v) => u.f.localeCompare(v.f));
+                const ya = new Set(suyos.map(p => p.f));
+                (caps[c] || []).forEach(d => {
+                    if (d <= suyos[0].f || ya.has(d)) return;
+                    let vig = suyos[0];
+                    for (const p of suyos) { if (p.f <= d) vig = p; else break; }
+                    pts.push({ f: d, c, p: vig.p });
+                    ya.add(d);
+                });
+            });
+            // Si una cadena mantuvo su precio hasta hoy, un punto con el precio actual en la fecha de la web.
             if (S.fecha) (g.list || []).forEach(x => {
                 const ult = pts.filter(p => p.c === x.cadena).reduce((m, p) => p.f > m ? p.f : m, '');
                 if (x.precio_oferta > 0 && ult && ult < S.fecha) pts.push({ f: S.fecha, c: x.cadena, p: +x.precio_oferta });
@@ -4763,7 +4776,7 @@
             Object.entries(porCad).forEach(([c, a], i) => {
                 a.sort((u, v) => u.f.localeCompare(v.f));
                 const col = colores[i % colores.length];
-                s += `<polyline fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" points="${a.map((p, j) => (j ? `${x(p.f)},${y(a[j - 1].p)} ` : '') + `${x(p.f)},${y(p.p)}`).join(' ')}"/>`;
+                s += `<polyline fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" points="${a.map(p => `${x(p.f)},${y(p.p)}`).join(' ')}"/>`;
                 a.forEach(p => s += `<circle cx="${x(p.f)}" cy="${y(p.p)}" r="4" fill="${col}"><title>${esc(c)} · ${fechaCorta(p.f)} · ${money(p.p)}</title></circle>`);
             });
             s += '</svg><div class="legend">' + Object.keys(porCad).map((c, i) => `<span><i style="background:${colores[i % colores.length]}"></i>${esc(c)}</span>`).join('') + '</div>';
