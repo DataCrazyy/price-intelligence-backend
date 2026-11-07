@@ -10,7 +10,7 @@
     <link rel="dns-prefetch" href="https://images.weserv.nl">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <title>Precios Claros — Compará precios en Santa Cruz</title>
-    <meta name="description" content="Compará precios de supermercados y farmacias de Santa Cruz, Bolivia: Fidalga, Hipermaxi, Amarket y Farmacorp.">
+    <meta name="description" content="Compará precios de supermercados y farmacias de Santa Cruz, Bolivia: Fidalga, Hipermaxi, Amarket, Farmacorp y Farmacias Chávez.">
     <meta name="theme-color" content="#F4F8F6" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#02130F" media="(prefers-color-scheme: dark)">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cg transform=%22translate%2832 32%29 rotate%28-18%29 scale%28.9%29 translate%28-32 -32%29%22%3E%3Cpath d=%22M4 32 L19 13 H55 a5 5 0 0 1 5 5 V46 a5 5 0 0 1 -5 5 H19 Z M14.5 32 m-4 0 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 Z%22 fill=%22%2312B886%22 fill-rule=%22evenodd%22/%3E%3Crect x=%2225%22 y=%2223%22 width=%223%22 height=%2218%22 rx=%221.5%22 fill=%22%23fff%22/%3E%3Crect x=%2230%22 y=%2223%22 width=%221.6%22 height=%2218%22 rx=%22.8%22 fill=%22%23fff%22/%3E%3Crect x=%2233.6%22 y=%2223%22 width=%224%22 height=%2218%22 rx=%222%22 fill=%22%23fff%22/%3E%3Crect x=%2239.6%22 y=%2223%22 width=%222%22 height=%2218%22 rx=%221%22 fill=%22%23fff%22/%3E%3Crect x=%2243.6%22 y=%2223%22 width=%223.4%22 height=%2218%22 rx=%221.7%22 fill=%22%23fff%22/%3E%3Crect x=%2249%22 y=%2223%22 width=%221.8%22 height=%2218%22 rx=%22.9%22 fill=%22%23fff%22/%3E%3Ccircle cx=%2214.5%22 cy=%2232%22 r=%225.6%22 fill=%22none%22 stroke=%22%23FFA94D%22 stroke-width=%222.2%22/%3E%3C/g%3E%3C/svg%3E">
@@ -412,6 +412,7 @@
             font-weight: 500;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden
         }
@@ -676,6 +677,7 @@
             line-height: 1.35;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
             min-height: 2.7em
@@ -1780,6 +1782,7 @@
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden
         }
@@ -2154,6 +2157,7 @@
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden
         }
@@ -2511,6 +2515,7 @@
             color: var(--text-2);
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden
         }
@@ -3251,6 +3256,7 @@
         .hb-dato .nom {
             display: -webkit-box;
             -webkit-line-clamp: 1;
+            line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden;
             font-size: 14.5px;
@@ -3305,6 +3311,7 @@
 
             .hb-dato .nom {
                 -webkit-line-clamp: 2;
+                line-clamp: 2;
                 font-size: 16px
             }
 
@@ -4378,81 +4385,18 @@
         // Solo lectura: la clave "anon" es pública por diseño y únicamente puede leer
         // web_productos y web_resumen (ver db/migracion_web.sql).
         let CARD = 'k,nombre,macro,img,n,precio,precio_regular,cadena,ahorro,best_off';   // + sub si ya existe (ver cargarResumen)
-        /* ===== Cadenas ocultas en la web =====
-           Se ocultan SOLO acá, en el navegador: los datos de Supabase no se tocan.
-           Para volver a mostrar una cadena, sacala de esta lista. */
-        const OCULTAS = ['Farmacias Chavez'];
-        const normCad = c => String(c || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
-        const OCULTAS_N = OCULTAS.map(normCad);
-        const esOculta = c => { const n = normCad(c); return !!n && OCULTAS_N.some(o => n === o || n.endsWith(' ' + o) || o.endsWith(' ' + n)) };
-        const sinOcultas = arr => Array.isArray(arr) ? arr.filter(c => !esOculta(c)) : arr;
-        // Limpia una fila de web_productos: saca la cadena oculta de listados/historial
-        // y, si era la más barata, recalcula el mejor precio con las cadenas que quedan.
-        // Devuelve null si el producto solo estaba en cadenas ocultas.
-        function limpiarFila(r) {
-            if (!r || typeof r !== 'object') return r;
-            if (Array.isArray(r.cadenas)) { r.cadenas = sinOcultas(r.cadenas); if (!r.cadenas.length) return null }
-            if (Array.isArray(r.historial)) r.historial = r.historial.filter(h => !esOculta(h.c));
-            if (Array.isArray(r.listados)) {
-                const ls = r.listados.filter(x => !esOculta(x.c)).sort((a, b) => a.p - b.p);
-                if (!ls.length) return null;
-                r.listados = ls;
-                const b = ls[0], w = ls[ls.length - 1];
-                if ('n' in r) r.n = ls.length;
-                if ('cadena' in r) r.cadena = b.c;
-                if ('precio' in r) r.precio = b.p;
-                if ('precio_regular' in r) r.precio_regular = b.r;
-                if ('url' in r) r.url = b.u || r.url;
-                if ('best_off' in r) r.best_off = b.r > b.p ? Math.round((1 - b.p / b.r) * 10000) / 100 : 0;
-                if ('ahorro' in r) r.ahorro = Math.round((w.p - b.p) * 100) / 100;
-                if ('cadena_cara' in r) r.cadena_cara = w.c;
-            } else if (r.cadena && esOculta(r.cadena)) return null;
-            return r;
-        }
-        // Lista de compras (IA): los productos traen {k, nombre, img, listados}
-        function limpiarProd(p) {
-            if (!p || !Array.isArray(p.listados)) return p;
-            const ls = p.listados.filter(x => !esOculta(x.c));
-            return ls.length ? { ...p, listados: ls } : null;
-        }
-        function limpiarLista(res) {
-            if (!res || !Array.isArray(res.items)) return res;
-            res.items.forEach(it => {
-                if (!it) return;
-                it.alternativas = (it.alternativas || []).map(limpiarProd).filter(Boolean);
-                if (it.elegido) it.elegido = limpiarProd(it.elegido) || it.alternativas.shift() || null;
-            });
-            return res;
-        }
-        const esTablaProd = path => /^(web_productos|rpc\/buscar_aprox)\?/.test(path);
-        // Pide también `listados` cuando la consulta trae precios, para poder recalcularlos sin la cadena oculta
-        function conListados(path) {
-            return path.replace(/([?&]select=)([^&]*)/, (m, a, sel) =>
-                sel === '*' || /(^|,)listados(,|$)/.test(sel) || !/(^|,)(precio|cadena|n|ahorro|best_off)(,|$)/.test(sel) ? m : a + sel + ',listados');
-        }
-        // Filtro en el servidor: excluye productos que solo están en una cadena oculta (así los conteos cuadran)
-        const filtroServidor = () => OCULTAS.map(c => `&cadenas=not.eq.${encodeURIComponent('{"' + c + '"}')}`).join('');
         const cacheApi = new Map();
         function api(path, count = false) {
             const clave = path + (count ? '#c' : '');
             if (cacheApi.has(clave)) return cacheApi.get(clave);
-            const pedir = p => fetch(`${API}/${p}`, { headers: { ...(API.startsWith(SUPABASE_URL) ? { apikey: API_KEY, Authorization: `Bearer ${API_KEY}` } : {}), ...(count ? { Prefer: 'count=exact' } : {}) } });
-            const pr = (async () => {
-                const prod = esTablaProd(path);
-                let r;
-                if (prod && OCULTAS.length) {
-                    const p2 = conListados(path);
-                    r = await pedir(p2 + filtroServidor());
-                    if (!r.ok) r = await pedir(p2);          // si el filtro no anda, se limpia igual en el navegador
-                    if (!r.ok) r = await pedir(path);
-                } else r = await pedir(path);
-                if (!r.ok) throw Error(`HTTP ${r.status}`);
-                let data = await r.json();
-                let total = null;
-                if (count) { const cr = r.headers.get('content-range') || ''; const t = cr.split('/')[1]; total = t && t !== '*' ? +t : data.length }
-                if (prod && Array.isArray(data)) data = data.map(limpiarFila).filter(Boolean);
-                return { data, total };
-            })();
+            const pr = fetch(`${API}/${path}`, { headers: { ...(API.startsWith(SUPABASE_URL) ? { apikey: API_KEY, Authorization: `Bearer ${API_KEY}` } : {}), ...(count ? { Prefer: 'count=exact' } : {}) } })
+                .then(async r => {
+                    if (!r.ok) throw Error(`HTTP ${r.status}`);
+                    const data = await r.json();
+                    let total = null;
+                    if (count) { const cr = r.headers.get('content-range') || ''; const t = cr.split('/')[1]; total = t && t !== '*' ? +t : data.length }
+                    return { data, total };
+                });
             cacheApi.set(clave, pr);
             pr.catch(() => cacheApi.delete(clave));
             return pr;
@@ -4475,7 +4419,7 @@
             const { data } = await api('web_resumen?select=datos');
             const d = (data[0] || {}).datos || {};
             S.fecha = d.fecha || '';
-            S.chains = sinOcultas(d.cadenas || []).slice().sort((a, b) => a.localeCompare(b, 'es'));
+            S.chains = (d.cadenas || []).slice().sort((a, b) => a.localeCompare(b, 'es'));
             if (d.otros) OTROS = d.otros;
             // La columna sub llega con db/migracion_categorias.sql: si todavía no está, la página sigue igual que antes
             if (d.subs && Object.keys(d.subs).length) {
@@ -4489,12 +4433,6 @@
             S.cats = (d.orden && d.orden.length ? d.orden.filter(c => c in S.catCount) : Object.keys(S.catCount))
                 .sort((a, b) => (a === OTROS) - (b === OTROS) || (d.orden && d.orden.length ? 0 : S.catCount[b] - S.catCount[a]));
             S.total = d.total || 0;
-            // descontar los productos que solo están en cadenas ocultas
-            try {
-                const r = await fetch(`${API}/web_productos?select=k&limit=1&or=(${OCULTAS.map(c => 'cadenas.eq.' + encodeURIComponent('{"' + c + '"}')).join(',')})`, { headers: { ...(API.startsWith(SUPABASE_URL) ? { apikey: API_KEY, Authorization: `Bearer ${API_KEY}` } : {}), Prefer: 'count=exact' } });
-                const t = r.ok ? +((r.headers.get('content-range') || '').split('/')[1]) : 0;
-                if (t > 0 && t < S.total) S.total -= t;
-            } catch (e) { }
             S.ofertas = d.ofertas || 0;
             S.ready = true;
         }
@@ -4694,7 +4632,7 @@
         function heroHome() {
             const nCad = S.chains.length || 5;
             const fechaTxt = S.fecha ? `Precios del ${fecha(S.fecha)}` : 'Precios actualizados a diario';
-            const cad = S.chains.length ? listaCadenas(S.chains) : 'Fidalga, Hipermaxi, Amarket y Farmacorp';
+            const cad = S.chains.length ? listaCadenas(S.chains) : 'Fidalga, Hipermaxi, Amarket, Farmacorp y Farmacias Chávez';
             return `<section class="hero"><h1>Compará precios en ${nCad} cadenas de Santa Cruz</h1><p>${esc(fechaTxt)} · ${esc(cad)}</p></section>`;
         }
         function esqueletoHome() {
@@ -4803,8 +4741,14 @@
         }
         function grafico(g) {
             const pts = (g.hist || []).map(h => ({ f: h.f, c: h.c, p: +h.p })).filter(p => p.f && p.p > 0);
+            // El historial solo guarda CAMBIOS de precio: si una cadena mantuvo su precio, sumamos un punto
+            // con el precio actual en la fecha de la última actualización, así se ve que se siguió midiendo.
+            if (S.fecha) (g.list || []).forEach(x => {
+                const ult = pts.filter(p => p.c === x.cadena).reduce((m, p) => p.f > m ? p.f : m, '');
+                if (x.precio_oferta > 0 && ult && ult < S.fecha) pts.push({ f: S.fecha, c: x.cadena, p: +x.precio_oferta });
+            });
             const fechas = [...new Set(pts.map(p => p.f))].sort();
-            if (fechas.length < 3) return `<p>Empezamos a seguir este precio el ${esc(fecha(fechas[0] || S.fecha))}. El gráfico aparece cuando tengamos más días de datos.</p>`;
+            if (fechas.length < 2) return `<p>Empezamos a seguir este precio el ${esc(fecha(fechas[0] || S.fecha))}. El gráfico aparece cuando tengamos más días de datos.</p>`;
             const W = 640, H = 220, L = 56, R = 12, T = 12, B = 28;
             const ps = pts.map(p => p.p), lo = Math.min(...ps), hi = Math.max(...ps), span = (hi - lo) || 1;
             const x = f => L + fechas.indexOf(f) * (W - L - R) / (fechas.length - 1), y = v => T + (hi - v) * (H - T - B) / span;
@@ -4887,7 +4831,7 @@
         const I_CARRO = ic('<path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.5L20.5 8H6.2"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/>', 1.8);
         const I_MIC = ic('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', 1.8);
         const L = { texto: '', res: null, abierto: -1, cargando: false, error: '' };
-        try { L.texto = localStorage.getItem('pi_lista_texto') || ''; L.res = limpiarLista(JSON.parse(localStorage.getItem('pi_lista_res') || 'null')) } catch (e) { }
+        try { L.texto = localStorage.getItem('pi_lista_texto') || ''; L.res = JSON.parse(localStorage.getItem('pi_lista_res') || 'null') } catch (e) { }
         function pintarMiLista() {
             const n = L.res ? L.res.items.reduce((a, i) => a + (i.cantidad || 1), 0) : 0;
             const b = $('#mi-lista-n'); if (b) { b.textContent = n > 99 ? '99+' : n; b.hidden = !n }
@@ -4997,7 +4941,7 @@
             const cats = ['Lácteos y Huevos', 'Despensa', 'Bebidas', 'Limpieza', 'Snacks y Dulces', 'Farmacia'];
             const cae = cats.map((c, i) => `<span class="arm-cae" style="--x:${[-70, 60, -30, 80, -80, 30][i]}px;--r:${[-18, 14, -8, 20, -12, 10][i]}deg;animation-delay:${i * .4}s">${CAT_ICON[c] || I.bag}</span>`).join('');
             const pedido = (L.texto || '').split(/[,;\n]+|\s+y\s+/i).map(x => x.trim()).filter(Boolean).slice(0, 12);
-            const cadenas = (S.chains.length ? S.chains : ['Amarket', 'Farmacorp', 'Fidalga', 'Hipermaxi']);
+            const cadenas = (S.chains.length ? S.chains : ['Amarket', 'Farmacias Chavez', 'Farmacorp', 'Fidalga', 'Hipermaxi']);
             return `<div class="armando" role="status" aria-live="polite"><div class="arm-escena" aria-hidden="true">${cae}<span class="arm-carro">${I_CARRO}</span></div>
                 <div class="arm-cadenas" id="arm-cadenas" aria-hidden="true">${cadenas.map(c => `<span>${esc(c)}</span>`).join('')}</div>
                 <ol class="arm-pasos" id="arm-pasos">${PASOS_ARMANDO.map((p, i) => `<li class="${i === 0 ? 'activo' : ''}"><i></i>${p}…</li>`).join('')}</ol>
@@ -5029,7 +4973,7 @@
                 const r = await fetch(FN_LISTA, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(FN_LISTA.startsWith(SUPABASE_URL) ? { apikey: API_KEY, Authorization: `Bearer ${API_KEY}` } : {}) }, body: JSON.stringify({ texto }) });
                 const d = await r.json().catch(() => ({}));
                 if (!r.ok) throw Error(d.error || `No pudimos armar la lista (error ${r.status}).`);
-                L.res = limpiarLista(d); guardarLista();
+                L.res = d; guardarLista();
                 registrar('lista', { resultados: d.items.length, extra: { encontrados: d.items.filter(i => i.elegido).length, modo: d.modo } });
             } catch (e) {
                 L.error = /Failed to fetch|NetworkError|Load failed/i.test(e.message) ? 'No pudimos conectarnos. Revisá tu conexión y probá de nuevo.' : e.message;
