@@ -4741,6 +4741,7 @@
         }
         function grafico(g) {
             const pts = (g.hist || []).map(h => ({ f: h.f, c: h.c, p: +h.p })).filter(p => p.f && p.p > 0);
+            // Línea en escalones: el precio se mantiene igual hasta la fecha en que cambió.
             // El historial solo guarda CAMBIOS de precio: si una cadena mantuvo su precio, sumamos un punto
             // con el precio actual en la fecha de la última actualización, así se ve que se siguió midiendo.
             if (S.fecha) (g.list || []).forEach(x => {
@@ -4762,7 +4763,7 @@
             Object.entries(porCad).forEach(([c, a], i) => {
                 a.sort((u, v) => u.f.localeCompare(v.f));
                 const col = colores[i % colores.length];
-                s += `<polyline fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" points="${a.map(p => `${x(p.f)},${y(p.p)}`).join(' ')}"/>`;
+                s += `<polyline fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round" points="${a.map((p, j) => (j ? `${x(p.f)},${y(a[j - 1].p)} ` : '') + `${x(p.f)},${y(p.p)}`).join(' ')}"/>`;
                 a.forEach(p => s += `<circle cx="${x(p.f)}" cy="${y(p.p)}" r="4" fill="${col}"><title>${esc(c)} · ${fechaCorta(p.f)} · ${money(p.p)}</title></circle>`);
             });
             s += '</svg><div class="legend">' + Object.keys(porCad).map((c, i) => `<span><i style="background:${colores[i % colores.length]}"></i>${esc(c)}</span>`).join('') + '</div>';
